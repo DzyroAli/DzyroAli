@@ -11,97 +11,87 @@ export default function ProfilePage() {
   const profileUser = MOCK_USERS.find(u => u.username === username);
   const [isFollowing, setIsFollowing] = useState(false);
 
-  if (!profileUser) {
-    return (
-      <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-        <div className="text-5xl mb-4">👤</div>
-        <h2 className="text-2xl font-bold mb-2">User not found</h2>
-        <Link to="/" className="btn-primary mt-4">Go Home</Link>
-      </div>
-    );
-  }
+  if (!profileUser) return (
+    <div className="max-w-4xl mx-auto px-4 py-16 text-center">
+      <div className="font-scrawl text-6xl text-ink-faint mb-4">👤</div>
+      <h2 className="font-scrawl font-bold text-2xl text-ink mb-4">Foydalanuvchi topilmadi</h2>
+      <Link to="/" className="btn-primary">Bosh sahifa</Link>
+    </div>
+  );
 
   const userProducts = MOCK_PRODUCTS.filter(p => p.maker.id === profileUser.id);
   const isOwnProfile = currentUser?.id === profileUser.id;
-  const totalVotes = userProducts.reduce((sum, p) => sum + p.votesCount, 0);
+  const totalVotes = userProducts.reduce((s, p) => s + p.votesCount, 0);
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-      {/* Profile Header */}
       <div className="card p-6 mb-6">
         <div className="flex items-start gap-5">
-          <div className={`w-20 h-20 ${getAvatarColor(profileUser.name)} rounded-2xl flex items-center justify-center text-white font-bold text-2xl`}>
+          <div className={`w-20 h-20 ${getAvatarColor(profileUser.name)} border-2 border-ink flex items-center justify-center text-white font-scrawl font-bold text-3xl`}
+            style={{ borderRadius: '18px 10px 20px 8px / 10px 18px 8px 20px' }}>
             {getInitials(profileUser.name)}
           </div>
-          <div className="flex-1 min-w-0">
+          <div className="flex-1">
             <div className="flex items-start justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{profileUser.name}</h1>
-                <p className="text-gray-500 dark:text-gray-400">@{profileUser.username}</p>
+                <h1 className="font-scrawl font-bold text-2xl text-ink">{profileUser.name}</h1>
+                <p className="text-ink-faint font-mono text-sm">@{profileUser.username}</p>
               </div>
-              {!isOwnProfile && currentUser && (
-                <button
-                  onClick={() => setIsFollowing(!isFollowing)}
-                  className={isFollowing ? 'btn-secondary' : 'btn-primary'}
-                >
-                  {isFollowing ? 'Following' : 'Follow'}
+              {!isOwnProfile && currentUser ? (
+                <button onClick={() => setIsFollowing(!isFollowing)}
+                  className={isFollowing ? 'btn-secondary' : 'btn-primary'}>
+                  {isFollowing ? 'Kuzatyapsiz' : 'Kuzatish'}
                 </button>
-              )}
-              {isOwnProfile && (
-                <Link to="/dashboard" className="btn-secondary">Edit Profile</Link>
-              )}
+              ) : isOwnProfile ? (
+                <Link to="/dashboard" className="btn-secondary">Profilni tahrirlash</Link>
+              ) : null}
             </div>
-            {profileUser.bio && (
-              <p className="text-gray-600 dark:text-gray-400 mt-3">{profileUser.bio}</p>
-            )}
-            <div className="flex flex-wrap gap-4 mt-4">
+            {profileUser.bio && <p className="text-ink-soft mt-2">{profileUser.bio}</p>}
+            <div className="flex flex-wrap gap-4 mt-3">
               {profileUser.website && (
                 <a href={profileUser.website} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-sm text-primary-500 hover:text-primary-600">
-                  <Globe className="w-4 h-4" /> Website
+                  className="flex items-center gap-1.5 text-sm text-accent hover:underline">
+                  <Globe className="w-3.5 h-3.5" /> Sayt
                 </a>
               )}
               {profileUser.twitter && (
-                <a href={`https://twitter.com/${profileUser.twitter}`} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-sm text-blue-500 hover:text-blue-600">
-                  <Twitter className="w-4 h-4" /> {profileUser.twitter}
-                </a>
+                <span className="flex items-center gap-1.5 text-sm text-ink-soft">
+                  <Twitter className="w-3.5 h-3.5" /> {profileUser.twitter}
+                </span>
               )}
               {profileUser.github && (
-                <a href={`https://github.com/${profileUser.github}`} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400">
-                  <Github className="w-4 h-4" /> {profileUser.github}
-                </a>
+                <span className="flex items-center gap-1.5 text-sm text-ink-soft">
+                  <Github className="w-3.5 h-3.5" /> {profileUser.github}
+                </span>
               )}
-              <span className="flex items-center gap-1.5 text-sm text-gray-500">
-                <Calendar className="w-4 h-4" /> Joined {new Date(profileUser.createdAt).toLocaleDateString('en', { month: 'long', year: 'numeric' })}
+              <span className="flex items-center gap-1.5 text-sm text-ink-faint font-mono">
+                <Calendar className="w-3.5 h-3.5" />
+                {new Date(profileUser.createdAt).toLocaleDateString('uz', { month: 'long', year: 'numeric' })}
               </span>
             </div>
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-4 gap-4 mt-6 pt-6 border-t border-gray-100 dark:border-gray-800">
+        <div className="grid grid-cols-4 gap-4 mt-6 pt-4 border-t-2 border-ink">
           {[
-            { label: 'Products', value: userProducts.length, icon: Package },
-            { label: 'Total Votes', value: totalVotes, icon: Heart },
-            { label: 'Followers', value: profileUser.followersCount + (isFollowing ? 1 : 0), icon: Users },
-            { label: 'Following', value: profileUser.followingCount, icon: Users },
-          ].map(stat => (
-            <div key={stat.label} className="text-center">
-              <div className="text-xl font-bold text-gray-900 dark:text-white">{stat.value.toLocaleString()}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{stat.label}</div>
+            ['Mahsulotlar', userProducts.length],
+            ['Ovozlar', totalVotes],
+            ['Kuzatuvchilar', profileUser.followersCount + (isFollowing ? 1 : 0)],
+            ['Kuzatadi', profileUser.followingCount],
+          ].map(([label, value]) => (
+            <div key={label} className="text-center">
+              <div className="font-scrawl font-bold text-2xl text-ink">{(value as number).toLocaleString()}</div>
+              <div className="text-xs text-ink-soft font-mono mt-1">{label}</div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Products */}
-      <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Products ({userProducts.length})</h2>
+      <h2 className="font-scrawl font-bold text-xl text-ink mb-4">Mahsulotlar ({userProducts.length})</h2>
       {userProducts.length === 0 ? (
-        <div className="card p-12 text-center text-gray-400">
-          <Package className="w-12 h-12 mx-auto mb-3 opacity-50" />
-          <p>No products yet</p>
+        <div className="card p-12 text-center">
+          <Package className="w-12 h-12 mx-auto mb-3 text-ink-faint" />
+          <p className="text-ink-soft font-mono text-sm">Hali mahsulot yo'q</p>
         </div>
       ) : (
         <div className="space-y-3">
