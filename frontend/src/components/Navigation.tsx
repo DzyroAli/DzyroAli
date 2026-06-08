@@ -133,7 +133,7 @@ export default function Navigation() {
               <div className="flex items-center gap-2">
                 <Link to="/auth" className="btn-ghost text-sm">{lang === 'uz' ? 'Kirish' : 'Войти'}</Link>
                 <Link to="/auth?tab=signup" className="btn-primary py-1.5 px-3 text-sm">
-                  {lang === 'uz' ? 'Ro'yxat' : 'Регистрация'}
+                  {lang === 'uz' ? "Ro'yxat" : 'Регистрация'}
                 </Link>
               </div>
             )}
