@@ -231,15 +231,15 @@ export async function sendMagicLink(
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "validation" };
   if (!isSupabaseConfigured()) return { error: "demoMode" };
 
+  const locale = String(formData.get("locale") ?? "uz");
   const supabase = await createClient();
   const site = await requestOrigin();
+  const localePrefix = locale !== "uz" ? `/${locale}` : "";
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: `${site}/api/auth/confirm`,
-      // Открытой регистрации нет: ссылка работает только для существующих
-      // аккаунтов, новые создаются через Google/Telegram.
-      shouldCreateUser: false,
+      emailRedirectTo: `${site}/api/auth/confirm${localePrefix ? `?locale=${locale}` : ""}`,
+      shouldCreateUser: true,
     },
   });
   if (error) return { error: "generic" };

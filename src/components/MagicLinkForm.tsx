@@ -1,12 +1,13 @@
 "use client";
 
 import { useActionState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { sendMagicLink, type MagicLinkState } from "@/lib/actions";
 
 export function MagicLinkForm() {
   const t = useTranslations("login");
   const tErr = useTranslations("errors");
+  const locale = useLocale();
   const [state, formAction, pending] = useActionState<MagicLinkState, FormData>(
     sendMagicLink,
     {}
@@ -22,6 +23,7 @@ export function MagicLinkForm() {
 
   return (
     <form action={formAction} className="space-y-2">
+      <input type="hidden" name="locale" value={locale} />
       <div className="flex gap-2">
         <input
           type="email"
