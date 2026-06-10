@@ -35,14 +35,10 @@
 ## 🚀 Быстрый старт
 
 ```bash
-cd frontend
 npm install
 cp .env.example .env.local   # заполните переменные (или оставьте пустыми для демо-режима)
 npm run dev                  # http://localhost:3000
 ```
-
-> Приложение находится в папке `frontend/` — она соответствует Root Directory
-> проекта на Vercel.
 
 Без переменных Supabase приложение запускается в **демо-режиме** с примерными
 продуктами — удобно для просмотра дизайна.
@@ -81,24 +77,22 @@ npm run dev                  # http://localhost:3000
 ## 📁 Структура
 
 ```
-supabase/migrations/       # SQL-схема и сиды
-frontend/                  # Next.js-приложение (Root Directory на Vercel)
-├── messages/              # переводы uz / ru / en
-├── .env.production        # публичные env-значения (URL и anon-ключ Supabase)
-└── src/
-    ├── app/
-    │   ├── [locale]/      # страницы: главная, каталог, продукт, категория,
-    │   │                  # профиль, submit, login, admin
-    │   ├── api/auth/      # Telegram OAuth + подтверждение magic link
-    │   ├── sitemap.ts, robots.ts, manifest.ts, opengraph-image.tsx
-    ├── components/        # Header, ProductCard, VoteButton, CommentSection...
-    ├── i18n/              # конфигурация next-intl
-    ├── lib/
-    │   ├── data.ts        # слой данных (Supabase + демо-фоллбэк)
-    │   ├── actions.ts     # server actions: голос, комментарий, submit, подписка
-    │   ├── demo-data.ts   # данные демо-режима
-    │   └── supabase/      # клиенты: server / admin / middleware
-    └── proxy.ts           # локали + обновление сессии Supabase
+messages/              # переводы uz / ru / en
+supabase/migrations/   # SQL-схема и сиды
+src/
+├── app/
+│   ├── [locale]/      # страницы: главная, каталог, продукт, категория,
+│   │                  # профиль, submit, login, admin
+│   ├── api/auth/      # Telegram OAuth + подтверждение magic link
+│   ├── sitemap.ts, robots.ts, manifest.ts, opengraph-image.tsx
+├── components/        # Header, ProductCard, VoteButton, CommentSection...
+├── i18n/              # конфигурация next-intl
+├── lib/
+│   ├── data.ts        # слой данных (Supabase + демо-фоллбэк)
+│   ├── actions.ts     # server actions: голос, комментарий, submit, подписка
+│   ├── demo-data.ts   # данные демо-режима
+│   └── supabase/      # клиенты: server / admin / middleware
+└── proxy.ts           # локали + обновление сессии Supabase
 ```
 
 ## 🚢 Деплой
