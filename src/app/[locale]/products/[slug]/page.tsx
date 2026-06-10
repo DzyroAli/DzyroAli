@@ -103,6 +103,17 @@ export default async function ProductPage({
           {t("pendingNotice")}
         </p>
       )}
+      {/* Уведомление автору об отклонении с причиной от модератора */}
+      {product.status === "rejected" && (
+        <div className="mb-6 rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-700">
+          <p className="font-semibold">{t("rejectedNotice")}</p>
+          {product.rejection_reason && (
+            <p className="mt-1">
+              {t("rejectedReason")}: {product.rejection_reason}
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Hero */}
       <div className="flex flex-col gap-5 sm:flex-row sm:items-start">

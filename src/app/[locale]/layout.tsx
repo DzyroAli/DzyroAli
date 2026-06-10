@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { AuthModalProvider } from "@/components/auth/AuthModalContext";
 import { DemoBanner } from "@/components/DemoBanner";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
@@ -70,10 +71,14 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <body className="flex min-h-screen flex-col">
         <NextIntlClientProvider messages={messages}>
-          <DemoBanner />
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <AuthModalProvider
+            telegramBot={process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME}
+          >
+            <DemoBanner />
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </AuthModalProvider>
         </NextIntlClientProvider>
       </body>
     </html>

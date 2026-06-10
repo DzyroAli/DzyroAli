@@ -17,7 +17,18 @@ function localized(path: string): MetadataRoute.Sitemap[number]["alternates"] {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [];
 
-  const staticPaths = ["", "/products", "/submit", "/login"];
+  const staticPaths = [
+    "",
+    "/products",
+    "/submit",
+    "/login",
+    "/about",
+    "/leaderboard",
+    "/map",
+    "/launch-guide",
+    "/privacy",
+    "/terms",
+  ];
   for (const path of staticPaths) {
     entries.push({
       url: `${SITE_URL}${path || "/"}`,

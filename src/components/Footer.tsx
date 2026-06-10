@@ -44,8 +44,18 @@ export async function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/login" className="hover:text-slate-900">
-                {tc("login")}
+              <Link href="/leaderboard" className="hover:text-slate-900">
+                {t("leaderboard")}
+              </Link>
+            </li>
+            <li>
+              <Link href="/map" className="hover:text-slate-900">
+                {t("ecosystemMap")}
+              </Link>
+            </li>
+            <li>
+              <Link href="/about" className="hover:text-slate-900">
+                {t("about")}
               </Link>
             </li>
           </ul>
@@ -79,6 +89,14 @@ export async function Footer() {
       </div>
       <div className="border-t border-slate-100 py-5 text-center text-xs text-slate-400">
         © {new Date().getFullYear()} TechRadar.uz — {t("rights")}
+        <span className="mx-2">·</span>
+        <Link href="/privacy" className="hover:text-slate-600">
+          {t("privacy")}
+        </Link>
+        <span className="mx-2">·</span>
+        <Link href="/terms" className="hover:text-slate-600">
+          {t("terms")}
+        </Link>
       </div>
     </footer>
   );

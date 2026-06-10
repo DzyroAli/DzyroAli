@@ -1,33 +1,13 @@
-import { LogOut, Plus, Radar, Search, Shield, User } from "lucide-react";
+import { LogOut, Plus, Radar, Shield, User } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { signOut } from "@/lib/actions";
 import { getCurrentUser } from "@/lib/data";
 import { gradientFor, initials } from "@/lib/utils";
+import { LoginButton } from "./auth/LoginButton";
+import { HeaderMenus } from "./HeaderMenus";
+import { HeaderSearch } from "./HeaderSearch";
 import { LocaleSwitcher } from "./LocaleSwitcher";
-
-function SearchForm({
-  action,
-  placeholder,
-}: {
-  action: string;
-  placeholder: string;
-}) {
-  return (
-    <form action={action} className="relative w-full">
-      <Search
-        size={16}
-        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-      />
-      <input
-        type="search"
-        name="q"
-        placeholder={placeholder}
-        className="w-full rounded-xl border border-slate-200 bg-slate-100/70 py-2 pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-slate-400 focus:border-teal-500 focus:bg-white"
-      />
-    </form>
-  );
-}
 
 export async function Header() {
   const t = await getTranslations("common");
@@ -49,11 +29,14 @@ export async function Header() {
             </span>
           </Link>
 
+          <HeaderMenus />
+
           <div className="hidden flex-1 justify-center md:flex">
             <div className="w-full max-w-md">
-              <SearchForm
+              <HeaderSearch
                 action={searchAction}
                 placeholder={t("searchPlaceholder")}
+                hotkey
               />
             </div>
           </div>
@@ -108,18 +91,16 @@ export async function Header() {
                 </div>
               </details>
             ) : (
-              <Link
-                href="/login"
-                className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:border-slate-300 hover:bg-slate-50"
-              >
-                {t("login")}
-              </Link>
+              <LoginButton />
             )}
           </nav>
         </div>
 
         <div className="pb-3 md:hidden">
-          <SearchForm action={searchAction} placeholder={t("searchPlaceholder")} />
+          <HeaderSearch
+            action={searchAction}
+            placeholder={t("searchPlaceholder")}
+          />
         </div>
       </div>
     </header>

@@ -328,6 +328,116 @@ export async function getStats(): Promise<AdminStats> {
   return { totalProducts, pendingProducts, totalUsers, totalVotes, totalComments, subscribers };
 }
 
+/** Счётчики дня запуска: что произошло на платформе сегодня. */
+export interface LaunchDayStats {
+  productsToday: number;
+  signupsToday: number;
+  votesToday: number;
+  commentsToday: number;
+}
+
+export async function getLaunchDayStats(): Promise<LaunchDayStats> {
+  if (!isSupabaseConfigured()) {
+    return { productsToday: 0, signupsToday: 0, votesToday: 0, commentsToday: 0 };
+  }
+  const supabase = await createClient();
+  const dayStart = new Date();
+  dayStart.setUTCHours(0, 0, 0, 0);
+  const since = dayStart.toISOString();
+
+  const countSince = async (table: string, col: string, extra?: { col: string; val: string }) => {
+    let q = supabase
+      .from(table)
+      .select("*", { count: "exact", head: true })
+      .gte(col, since);
+    if (extra) q = q.eq(extra.col, extra.val);
+    const { count } = await q;
+    return count ?? 0;
+  };
+
+  const [productsToday, signupsToday, votesToday, commentsToday] =
+    await Promise.all([
+      countSince("products", "launched_at", { col: "status", val: "approved" }),
+      countSince("profiles", "created_at"),
+      countSince("votes", "created_at"),
+      countSince("comments", "created_at"),
+    ]);
+  return { productsToday, signupsToday, votesToday, commentsToday };
+}
+
+/** Все продукты для модерационной таблицы админки (любой статус). */
+export async function getAdminProducts(
+  status?: "pending" | "approved" | "rejected"
+): Promise<Product[]> {
+  if (!isSupabaseConfigured()) return [];
+  const supabase = await createClient();
+  let q = supabase
+    .from("products")
+    .select(PRODUCT_SELECT)
+    .order("created_at", { ascending: false })
+    .limit(200);
+  if (status) q = q.eq("status", status);
+  const { data } = await q;
+  return (data ?? []) as unknown as Product[];
+}
+
+export async function getAllUsers(limit = 100): Promise<Profile[]> {
+  if (!isSupabaseConfigured()) return DEMO_MAKERS;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("profiles")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  return (data ?? []) as Profile[];
+}
+
+export interface MakerRank {
+  profile: Profile;
+  products: number;
+  votes: number;
+}
+
+/** Лидерборд мейкеров: сумма голосов по их одобренным продуктам. */
+export async function getLeaderboard(limit = 20): Promise<MakerRank[]> {
+  if (!isSupabaseConfigured()) {
+    return DEMO_MAKERS.map((profile) => ({
+      profile,
+      products: DEMO_PRODUCTS.filter((p) => p.created_by === profile.id).length,
+      votes: DEMO_PRODUCTS.filter((p) => p.created_by === profile.id).reduce(
+        (s, p) => s + p.votes_count,
+        0
+      ),
+    })).sort((a, b) => b.votes - a.votes);
+  }
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("products")
+    .select("votes_count, maker:profiles!products_created_by_fkey(*)")
+    .eq("status", "approved")
+    .not("created_by", "is", null)
+    .limit(1000);
+
+  const byMaker = new Map<string, MakerRank>();
+  for (const row of (data ?? []) as unknown as Array<{
+    votes_count: number;
+    maker: Profile | null;
+  }>) {
+    if (!row.maker) continue;
+    const entry = byMaker.get(row.maker.id) ?? {
+      profile: row.maker,
+      products: 0,
+      votes: 0,
+    };
+    entry.products += 1;
+    entry.votes += row.votes_count;
+    byMaker.set(row.maker.id, entry);
+  }
+  return [...byMaker.values()]
+    .sort((a, b) => b.votes - a.votes || b.products - a.products)
+    .slice(0, limit);
+}
+
 export async function getAllApprovedSlugs(): Promise<
   Array<{ slug: string; updated: string }>
 > {

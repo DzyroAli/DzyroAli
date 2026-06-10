@@ -20,6 +20,7 @@ export interface Profile {
   website: string | null;
   telegram_username: string | null;
   role: "user" | "admin";
+  digest_opt_in?: boolean;
   created_at: string;
 }
 
@@ -34,6 +35,7 @@ export interface Product {
   logo_url: string | null;
   category_id: number;
   status: ProductStatus;
+  rejection_reason?: string | null;
   created_by: string | null;
   votes_count: number;
   comments_count: number;
