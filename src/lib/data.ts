@@ -11,7 +11,10 @@ import type {
   RankingPeriod,
 } from "./types";
 
-const PRODUCT_SELECT = "*, category:categories(*), maker:profiles(*)";
+// FK указан явно: между products и profiles PostgREST видит ещё два
+// many-to-many пути (через votes и comments), без хинта embed отвечает HTTP 300.
+const PRODUCT_SELECT =
+  "*, category:categories(*), maker:profiles!products_created_by_fkey(*)";
 
 export function getCategories(): Category[] {
   return CATEGORIES;
@@ -203,7 +206,7 @@ export async function getComments(productId: string): Promise<Comment[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("comments")
-    .select("*, author:profiles(*)")
+    .select("*, author:profiles!comments_user_id_fkey(*)")
     .eq("product_id", productId)
     .order("created_at", { ascending: true });
   return ((data ?? []) as unknown as Comment[]);

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { findCategory } from "./categories";
 import { isSupabaseConfigured } from "./supabase/config";
 import { createClient } from "./supabase/server";
@@ -206,7 +207,15 @@ export async function sendMagicLink(
   if (!isSupabaseConfigured()) return { error: "demoMode" };
 
   const supabase = await createClient();
-  const site = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  // Домен берём из запроса, чтобы ссылка вела на тот хост, где открыт сайт
+  // (vercel.app, кастомный домен, localhost) без правки переменных окружения.
+  const h = await headers();
+  const forwardedHost = h.get("x-forwarded-host");
+  const site =
+    h.get("origin") ??
+    (forwardedHost
+      ? `${h.get("x-forwarded-proto") ?? "https"}://${forwardedHost}`
+      : process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000");
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: { emailRedirectTo: `${site}/api/auth/confirm` },
