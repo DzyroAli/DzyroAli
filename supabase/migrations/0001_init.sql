@@ -187,6 +187,11 @@ $$;
 
 grant execute on function public.get_ranking(timestamptz, integer) to anon, authenticated;
 
+-- Trigger/internal functions must not be callable via the public RPC API.
+revoke execute on function public.handle_new_user() from public, anon, authenticated;
+revoke execute on function public.bump_votes_count() from public, anon, authenticated;
+revoke execute on function public.bump_comments_count() from public, anon, authenticated;
+
 -- ============================================================ row level security
 
 alter table public.profiles enable row level security;
