@@ -26,3 +26,29 @@ details.dropdown[open] > summary::before {
 details.dropdown > .dropdown-panel {
   z-index: 40;
 }
+
+/* Плавные появления модалок и выпадающих панелей */
+@keyframes tr-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes tr-scale-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.anim-fade-in {
+  animation: tr-fade-in 0.15s ease-out;
+}
+.anim-scale-in {
+  animation: tr-scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}

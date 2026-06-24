@@ -45,10 +45,13 @@ export default async function HomePage({
       {/* Hero */}
       <section className="border-b border-slate-200 bg-gradient-to-b from-teal-50/80 via-white to-white">
         <div className="mx-auto max-w-6xl px-4 py-14 text-center sm:py-20">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-700">
+          <Link
+            href="/about"
+            className="inline-flex items-center gap-1.5 rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-700 transition-colors hover:bg-teal-100"
+          >
             <Sparkles size={13} />
-            {t("heroBadge")}
-          </span>
+            {t("launchedBadge")} →
+          </Link>
           <h1 className="mx-auto mt-5 max-w-3xl text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
             {t("heroTitle")}
           </h1>

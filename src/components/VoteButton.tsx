@@ -4,8 +4,8 @@ import { ChevronUp } from "lucide-react";
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { toggleVote } from "@/lib/actions";
-import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { useAuthModal } from "./auth/AuthModalContext";
 
 export function VoteButton({
   productId,
@@ -19,7 +19,7 @@ export function VoteButton({
   size?: "md" | "lg";
 }) {
   const t = useTranslations("errors");
-  const router = useRouter();
+  const { openAuthModal } = useAuthModal();
   const [votes, setVotes] = useState(initialVotes);
   const [voted, setVoted] = useState(initialVoted);
   const [message, setMessage] = useState<string | null>(null);
@@ -30,7 +30,8 @@ export function VoteButton({
     startTransition(async () => {
       const result = await toggleVote(productId);
       if (result.error === "loginRequired") {
-        router.push("/login");
+        // Неавторизованный клик перехватываем модалкой входа.
+        openAuthModal();
         return;
       }
       if (result.error) {

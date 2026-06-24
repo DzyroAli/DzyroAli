@@ -1,10 +1,29 @@
 "use server";
 
+import { createServerClient } from "@supabase/ssr";
 import { revalidatePath } from "next/cache";
+import { cookies, headers } from "next/headers";
 import { findCategory } from "./categories";
-import { isSupabaseConfigured } from "./supabase/config";
+import { createAdminClient } from "./supabase/admin";
+import {
+  isSupabaseConfigured,
+  SUPABASE_ANON_KEY,
+  SUPABASE_URL,
+} from "./supabase/config";
 import { createClient } from "./supabase/server";
 import { slugify } from "./utils";
+
+/** Origin текущего запроса: работает на vercel.app, кастомном домене и localhost. */
+async function requestOrigin(): Promise<string> {
+  const h = await headers();
+  const forwardedHost = h.get("x-forwarded-host");
+  return (
+    h.get("origin") ??
+    (forwardedHost
+      ? `${h.get("x-forwarded-proto") ?? "https"}://${forwardedHost}`
+      : process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000")
+  );
+}
 
 export interface ActionResult {
   ok?: boolean;
@@ -169,7 +188,8 @@ export async function subscribe(
 
 export async function setProductStatus(
   productId: string,
-  status: "approved" | "rejected"
+  status: "approved" | "rejected",
+  reason?: string
 ): Promise<ActionResult> {
   if (!isSupabaseConfigured()) return { error: "demoMode" };
   const { supabase, user } = await requireUser();
@@ -184,7 +204,13 @@ export async function setProductStatus(
 
   const { error } = await supabase
     .from("products")
-    .update({ status, launched_at: new Date().toISOString() })
+    .update({
+      status,
+      launched_at: new Date().toISOString(),
+      // Причина видна автору на странице продукта; при одобрении очищается.
+      rejection_reason:
+        status === "rejected" ? (reason ?? "").trim().slice(0, 500) || null : null,
+    })
     .eq("id", productId);
   if (error) return { error: "generic" };
 
@@ -205,13 +231,125 @@ export async function sendMagicLink(
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "validation" };
   if (!isSupabaseConfigured()) return { error: "demoMode" };
 
+  const locale = String(formData.get("locale") ?? "uz");
   const supabase = await createClient();
-  const site = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const site = await requestOrigin();
+  const localePrefix = locale !== "uz" ? `/${locale}` : "";
   const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: { emailRedirectTo: `${site}/api/auth/confirm` },
+    options: {
+      emailRedirectTo: `${site}/api/auth/confirm${localePrefix ? `?locale=${locale}` : ""}`,
+      shouldCreateUser: true,
+    },
   });
   if (error) return { error: "generic" };
+  return { ok: true };
+}
+
+export interface PasswordLoginState {
+  ok?: boolean;
+  error?: "validation" | "credentials" | "generic" | "demoMode";
+}
+
+/**
+ * Вход по логину/email и паролю. «Запомнить меня» управляет временем жизни
+ * cookie сессии: без галочки cookie сессионная и исчезает при закрытии браузера.
+ */
+export async function signInWithPassword(
+  _prev: PasswordLoginState,
+  formData: FormData
+): Promise<PasswordLoginState> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+
+  const identifier = String(formData.get("identifier") ?? "").trim();
+  const password = String(formData.get("password") ?? "");
+  const remember = formData.get("remember") === "on";
+  const digest = formData.get("digest") === "on";
+  if (!identifier || password.length < 6) return { error: "validation" };
+
+  let email = identifier.toLowerCase();
+  if (!email.includes("@")) {
+    // Логин → email через service-role (email хранится только в auth.users).
+    try {
+      const admin = createAdminClient();
+      const { data: profile } = await admin
+        .from("profiles")
+        .select("id")
+        .eq("username", identifier.toLowerCase())
+        .maybeSingle();
+      if (!profile) return { error: "credentials" };
+      const { data: authUser } = await admin.auth.admin.getUserById(profile.id);
+      if (!authUser.user?.email) return { error: "credentials" };
+      email = authUser.user.email;
+    } catch {
+      // Без SUPABASE_SERVICE_ROLE_KEY вход возможен только по email.
+      return { error: "credentials" };
+    }
+  }
+
+  const cookieStore = await cookies();
+  const supabase = createServerClient(SUPABASE_URL!, SUPABASE_ANON_KEY!, {
+    cookieOptions: remember ? { maxAge: 60 * 60 * 24 * 365 } : { maxAge: undefined },
+    cookies: {
+      getAll: () => cookieStore.getAll(),
+      setAll: (list) =>
+        list.forEach(({ name, value, options }) =>
+          cookieStore.set(name, value, options)
+        ),
+    },
+  });
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+  if (error) return { error: "credentials" };
+
+  if (digest && data.user) {
+    await supabase
+      .from("profiles")
+      .update({ digest_opt_in: true })
+      .eq("id", data.user.id);
+  }
+
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
+
+export interface PasswordResetState {
+  ok?: boolean;
+  error?: "validation" | "generic" | "demoMode";
+}
+
+export async function requestPasswordReset(
+  _prev: PasswordResetState,
+  formData: FormData
+): Promise<PasswordResetState> {
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "validation" };
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+
+  const supabase = await createClient();
+  const site = await requestOrigin();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${site}/api/auth/confirm?next=/reset-password`,
+  });
+  if (error) return { error: "generic" };
+  return { ok: true };
+}
+
+export async function updatePassword(
+  _prev: PasswordResetState,
+  formData: FormData
+): Promise<PasswordResetState> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+  const password = String(formData.get("password") ?? "");
+  if (password.length < 8) return { error: "validation" };
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) return { error: "generic" };
+  revalidatePath("/", "layout");
   return { ok: true };
 }
 
