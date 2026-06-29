@@ -80,7 +80,8 @@
     "ratings": "оценок",
     "ratingNone": "Ещё нет оценок",
     "yourRating": "Ваша оценка",
-    "rateHint": "Оцените продукт"
+    "rateHint": "Оцените продукт",
+    "delete": "Удалить"
   },
   "bookmarks": {
     "title": "Закладки",
@@ -218,6 +219,10 @@
     "unban": "Разблокировать",
     "bannedBadge": "заблокирован",
     "youLabel": "Вы",
+    "delete": "Удалить",
+    "deleteTitle": "Удалить продукт?",
+    "deleteHint": "Действие необратимо. Продукт будет удалён навсегда.",
+    "deleteConfirm": "Удалить",
     "usersSubtitle": "Всего показано: {count}",
     "analyticsSubtitle": "Суммарные метрики платформы и рейтинг продуктов",
     "topProducts": "Топ продуктов по голосам",

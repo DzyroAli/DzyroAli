@@ -80,7 +80,8 @@
     "ratings": "baho",
     "ratingNone": "Hali baholanmagan",
     "yourRating": "Sizning bahoyingiz",
-    "rateHint": "Mahsulotni baholang"
+    "rateHint": "Mahsulotni baholang",
+    "delete": "O'chirish"
   },
   "bookmarks": {
     "title": "Saqlanganlar",
@@ -218,6 +219,10 @@
     "unban": "Blokdan chiqarish",
     "bannedBadge": "bloklangan",
     "youLabel": "Siz",
+    "delete": "O'chirish",
+    "deleteTitle": "Mahsulotni o'chirish?",
+    "deleteHint": "Bu amalni qaytarib bo'lmaydi. Mahsulot butunlay o'chiriladi.",
+    "deleteConfirm": "O'chirish",
     "usersSubtitle": "Jami ko'rsatildi: {count}",
     "analyticsSubtitle": "Platformaning umumiy ko'rsatkichlari va mahsulotlar reytingi",
     "topProducts": "Ovozlar bo'yicha top mahsulotlar",

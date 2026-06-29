@@ -80,7 +80,8 @@
     "ratings": "ratings",
     "ratingNone": "No ratings yet",
     "yourRating": "Your rating",
-    "rateHint": "Rate this product"
+    "rateHint": "Rate this product",
+    "delete": "Delete"
   },
   "bookmarks": {
     "title": "Bookmarks",
@@ -218,6 +219,10 @@
     "unban": "Unban",
     "bannedBadge": "banned",
     "youLabel": "You",
+    "delete": "Delete",
+    "deleteTitle": "Delete product?",
+    "deleteHint": "This action cannot be undone. The product will be permanently removed.",
+    "deleteConfirm": "Delete",
     "usersSubtitle": "Showing {count} total",
     "analyticsSubtitle": "Platform-wide metrics and product rankings",
     "topProducts": "Top products by votes",

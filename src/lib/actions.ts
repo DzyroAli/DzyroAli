@@ -127,6 +127,33 @@ export async function setUserBanned(
   return { ok: true };
 }
 
+export async function deleteProduct(productId: string): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+  const { supabase, userId, isAdmin } = await requireAdmin();
+  if (!userId || !isAdmin) return { error: "loginRequired" };
+
+  const { error } = await supabase.from("products").delete().eq("id", productId);
+  if (error) return { error: "generic" };
+
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
+
+export async function deleteComment(commentId: string): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+  const { supabase, userId, isAdmin } = await requireAdmin();
+  if (!userId || !isAdmin) return { error: "loginRequired" };
+
+  const { error } = await supabase
+    .from("comments")
+    .delete()
+    .eq("id", commentId);
+  if (error) return { error: "generic" };
+
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
+
 export async function toggleVote(productId: string): Promise<ActionResult> {
   if (!isSupabaseConfigured()) return { error: "demoMode" };
   const { supabase, user } = await requireUser();

@@ -83,7 +83,7 @@ export default async function ProductPage({
 
   const locale = await getLocale();
   const t = await getTranslations("product");
-  const [comments, voted, bookmarked, userRating, similar, { userId }] =
+  const [comments, voted, bookmarked, userRating, similar, { userId, profile }] =
     await Promise.all([
       getComments(product.id),
       hasVoted(product.id),
@@ -233,6 +233,7 @@ export default async function ProductPage({
             productId={product.id}
             comments={comments}
             canComment={Boolean(userId)}
+            canModerate={profile?.role === "admin"}
           />
         </div>
 
