@@ -10,6 +10,7 @@
     "logout": "Sign out",
     "myProfile": "My profile",
     "bookmarks": "Bookmarks",
+    "settings": "Settings",
     "admin": "Admin panel",
     "viewAll": "View all",
     "votes": "votes",
@@ -87,6 +88,14 @@
     "empty": "No saved products yet.",
     "loginRequired": "Sign in to save products.",
     "browse": "Browse catalog"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account and notifications",
+    "loginRequired": "Sign in to open settings.",
+    "notifications": "Notifications",
+    "commentNotifications": "Comment emails",
+    "commentNotificationsDesc": "Get an email when someone comments on your product."
   },
   "submit": {
     "title": "Submit a product",

@@ -1,4 +1,4 @@
-import { Bookmark, LogOut, Plus, Radar, Shield, User } from "lucide-react";
+import { Bookmark, LogOut, Plus, Radar, Settings, Shield, User } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { signOut } from "@/lib/actions";
@@ -79,6 +79,12 @@ export async function Header() {
                     className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
                   >
                     <Bookmark size={15} /> {t("bookmarks")}
+                  </Link>
+                  <Link
+                    href="/settings"
+                    className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                  >
+                    <Settings size={15} /> {t("settings")}
                   </Link>
                   {profile.role === "admin" && (
                     <Link

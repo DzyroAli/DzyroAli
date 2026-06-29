@@ -10,6 +10,7 @@
     "logout": "Chiqish",
     "myProfile": "Mening profilim",
     "bookmarks": "Saqlanganlar",
+    "settings": "Sozlamalar",
     "admin": "Admin-panel",
     "viewAll": "Barchasini ko'rish",
     "votes": "ovoz",
@@ -87,6 +88,14 @@
     "empty": "Hozircha saqlangan mahsulotlar yo'q.",
     "loginRequired": "Mahsulotlarni saqlash uchun tizimga kiring.",
     "browse": "Katalogni ko'rish"
+  },
+  "settings": {
+    "title": "Sozlamalar",
+    "subtitle": "Hisobingiz va bildirishnomalarni boshqaring",
+    "loginRequired": "Sozlamalarni ko'rish uchun tizimga kiring.",
+    "notifications": "Bildirishnomalar",
+    "commentNotifications": "Izohlar haqida email",
+    "commentNotificationsDesc": "Mahsulotingizga yangi izoh qoldirilganda email keladi."
   },
   "submit": {
     "title": "Loyihani joylash",

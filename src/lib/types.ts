@@ -21,6 +21,7 @@ export interface Profile {
   telegram_username: string | null;
   role: "user" | "admin";
   digest_opt_in?: boolean;
+  comment_notifications?: boolean;
   created_at: string;
 }
 
