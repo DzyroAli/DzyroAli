@@ -7,8 +7,10 @@ import { Link } from "@/i18n/navigation";
 import {
   requestPasswordReset,
   signInWithPassword,
+  signUp,
   type PasswordLoginState,
   type PasswordResetState,
+  type SignUpState,
 } from "@/lib/actions";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -59,6 +61,7 @@ export function AuthPanel({
   const [digest, setDigest] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [resetMode, setResetMode] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [oauthError, setOauthError] = useState(false);
 
   const consented = agreePrivacy && agreeTerms;
@@ -67,6 +70,10 @@ export function AuthPanel({
     PasswordLoginState,
     FormData
   >(signInWithPassword, {});
+  const [signUpState, signUpAction, signUpPending] = useActionState<
+    SignUpState,
+    FormData
+  >(signUp, {});
   const [resetState, resetAction, resetPending] = useActionState<
     PasswordResetState,
     FormData
@@ -87,6 +94,14 @@ export function AuthPanel({
       window.location.reload();
     }
   }, [loginState.ok, onSuccess]);
+
+  // Регистрация с моментальной сессией (без подтверждения email) — перезагружаем.
+  useEffect(() => {
+    if (signUpState.ok && !signUpState.needsConfirm) {
+      onSuccess?.();
+      window.location.reload();
+    }
+  }, [signUpState.ok, signUpState.needsConfirm, onSuccess]);
 
   async function signInGoogle() {
     if (!consented) return;
@@ -247,79 +262,181 @@ export function AuthPanel({
           </form>
         )
       ) : (
-        <form action={loginAction} className="space-y-2.5">
-          <div className="relative">
-            <User
-              size={15}
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-            />
-            <input
-              type="text"
-              name="identifier"
-              required
-              autoComplete="username"
-              placeholder={t("identifierPlaceholder")}
-              className={inputCls}
-            />
-          </div>
-          <div className="relative">
-            <Lock
-              size={15}
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-            />
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              required
-              minLength={6}
-              autoComplete="current-password"
-              placeholder={t("passwordPlaceholder")}
-              className={cn(inputCls, "pr-10")}
-            />
+        <div className="space-y-3">
+          {/* Вкладки: вход / регистрация */}
+          <div className="flex rounded-xl bg-slate-100 p-1 text-sm font-semibold">
             <button
               type="button"
-              tabIndex={-1}
-              onClick={() => setShowPassword((v) => !v)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-              aria-label={showPassword ? t("hidePassword") : t("showPassword")}
+              onClick={() => setAuthMode("login")}
+              className={cn(
+                "flex-1 rounded-lg py-1.5 transition-colors",
+                authMode === "login"
+                  ? "bg-white text-slate-900 shadow-sm"
+                  : "text-slate-500 hover:text-slate-700"
+              )}
             >
-              {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+              {t("loginTab")}
             </button>
-          </div>
-          {digest && <input type="hidden" name="digest" value="on" />}
-          <div className="flex items-center justify-between text-xs">
-            <label className="flex cursor-pointer items-center gap-1.5 text-slate-600">
-              <input
-                type="checkbox"
-                name="remember"
-                defaultChecked
-                className="h-3.5 w-3.5 rounded accent-teal-600"
-              />
-              {t("rememberMe")}
-            </label>
             <button
               type="button"
-              onClick={() => setResetMode(true)}
-              className="font-medium text-teal-700 hover:underline"
+              onClick={() => setAuthMode("register")}
+              className={cn(
+                "flex-1 rounded-lg py-1.5 transition-colors",
+                authMode === "register"
+                  ? "bg-white text-slate-900 shadow-sm"
+                  : "text-slate-500 hover:text-slate-700"
+              )}
             >
-              {t("forgotPassword")}
+              {t("registerTab")}
             </button>
           </div>
-          <button
-            type="submit"
-            disabled={!consented || loginPending}
-            className="w-full rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            {loginPending ? t("loggingIn") : t("loginButton")}
-          </button>
-          {loginState.error && (
-            <p className="text-xs text-rose-600">
-              {loginState.error === "credentials"
-                ? t("credentialsError")
-                : t("genericError")}
+
+          {authMode === "login" ? (
+            <form action={loginAction} className="space-y-2.5">
+              <div className="relative">
+                <User
+                  size={15}
+                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                />
+                <input
+                  type="text"
+                  name="identifier"
+                  required
+                  autoComplete="username"
+                  placeholder={t("identifierPlaceholder")}
+                  className={inputCls}
+                />
+              </div>
+              <div className="relative">
+                <Lock
+                  size={15}
+                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  required
+                  minLength={6}
+                  autoComplete="current-password"
+                  placeholder={t("passwordPlaceholder")}
+                  className={cn(inputCls, "pr-10")}
+                />
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  aria-label={showPassword ? t("hidePassword") : t("showPassword")}
+                >
+                  {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                </button>
+              </div>
+              {digest && <input type="hidden" name="digest" value="on" />}
+              <div className="flex items-center justify-between text-xs">
+                <label className="flex cursor-pointer items-center gap-1.5 text-slate-600">
+                  <input
+                    type="checkbox"
+                    name="remember"
+                    defaultChecked
+                    className="h-3.5 w-3.5 rounded accent-teal-600"
+                  />
+                  {t("rememberMe")}
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setResetMode(true)}
+                  className="font-medium text-teal-700 hover:underline"
+                >
+                  {t("forgotPassword")}
+                </button>
+              </div>
+              <button
+                type="submit"
+                disabled={!consented || loginPending}
+                className="w-full rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {loginPending ? t("loggingIn") : t("loginButton")}
+              </button>
+              {loginState.error && (
+                <p className="text-xs text-rose-600">
+                  {loginState.error === "credentials"
+                    ? t("credentialsError")
+                    : t("genericError")}
+                </p>
+              )}
+            </form>
+          ) : signUpState.ok && signUpState.needsConfirm ? (
+            <p className="rounded-xl bg-teal-50 px-4 py-3 text-sm font-medium text-teal-700">
+              {t("registerConfirm")}
             </p>
+          ) : (
+            <form action={signUpAction} className="space-y-2.5">
+              <div className="relative">
+                <User
+                  size={15}
+                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                />
+                <input
+                  type="text"
+                  name="fullName"
+                  autoComplete="name"
+                  placeholder={t("namePlaceholder")}
+                  className={inputCls}
+                />
+              </div>
+              <input
+                type="email"
+                name="email"
+                required
+                autoComplete="email"
+                placeholder={t("emailPlaceholder")}
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-teal-500"
+              />
+              <div className="relative">
+                <Lock
+                  size={15}
+                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  required
+                  minLength={8}
+                  autoComplete="new-password"
+                  placeholder={t("newPasswordPlaceholder")}
+                  className={cn(inputCls, "pr-10")}
+                />
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  aria-label={showPassword ? t("hidePassword") : t("showPassword")}
+                >
+                  {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                </button>
+              </div>
+              <p className="text-[11px] text-slate-400">{t("passwordHint")}</p>
+              {digest && <input type="hidden" name="digest" value="on" />}
+              <button
+                type="submit"
+                disabled={!consented || signUpPending}
+                className="w-full rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {signUpPending ? t("registering") : t("registerButton")}
+              </button>
+              {signUpState.error && (
+                <p className="text-xs text-rose-600">
+                  {signUpState.error === "exists"
+                    ? t("emailExists")
+                    : signUpState.error === "validation"
+                      ? t("passwordHint")
+                      : t("genericError")}
+                </p>
+              )}
+            </form>
           )}
-        </form>
+        </div>
       )}
 
       <div className="flex items-center gap-3 text-xs text-slate-400">

@@ -28,7 +28,7 @@ async function requestOrigin(): Promise<string> {
 
 export interface ActionResult {
   ok?: boolean;
-  error?: "demoMode" | "loginRequired" | "generic" | "validation";
+  error?: "demoMode" | "loginRequired" | "generic" | "validation" | "banned";
   votes?: number;
   voted?: boolean;
   bookmarked?: boolean;
@@ -43,6 +43,138 @@ async function requireUser() {
     data: { user },
   } = await supabase.auth.getUser();
   return { supabase, user };
+}
+
+/** Проверяет, забанен ли пользователь (для блокировки действий). */
+async function isBanned(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string
+): Promise<boolean> {
+  const { data } = await supabase
+    .from("profiles")
+    .select("banned")
+    .eq("id", userId)
+    .maybeSingle();
+  return Boolean((data as { banned?: boolean } | null)?.banned);
+}
+
+/** Текущий пользователь + флаг администратора (для admin-действий). */
+async function requireAdmin(): Promise<{
+  supabase: Awaited<ReturnType<typeof createClient>>;
+  userId: string | null;
+  isAdmin: boolean;
+}> {
+  const { supabase, user } = await requireUser();
+  if (!user) return { supabase, userId: null, isAdmin: false };
+  const { data } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+  return {
+    supabase,
+    userId: user.id,
+    isAdmin: (data as { role?: string } | null)?.role === "admin",
+  };
+}
+
+export async function setUserRole(
+  userId: string,
+  role: "user" | "admin"
+): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+  if (role !== "user" && role !== "admin") return { error: "validation" };
+  const { supabase, userId: meId, isAdmin } = await requireAdmin();
+  if (!meId || !isAdmin) return { error: "loginRequired" };
+  if (userId === meId) return { error: "validation" }; // свою роль не меняем
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({ role })
+    .eq("id", userId);
+  if (error) return { error: "generic" };
+
+  revalidatePath("/admin/users");
+  return { ok: true };
+}
+
+export async function setUserBanned(
+  userId: string,
+  banned: boolean
+): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+  const { supabase, userId: meId, isAdmin } = await requireAdmin();
+  if (!meId || !isAdmin) return { error: "loginRequired" };
+  if (userId === meId) return { error: "validation" }; // себя не банить
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({ banned })
+    .eq("id", userId);
+  if (error) return { error: "generic" };
+
+  // Бонус: блокировка на уровне auth (нельзя войти), если есть service-role.
+  try {
+    const admin = createAdminClient();
+    await admin.auth.admin.updateUserById(userId, {
+      ban_duration: banned ? "876000h" : "none",
+    });
+  } catch {
+    // Без SUPABASE_SERVICE_ROLE_KEY ограничиваемся флагом profiles.banned.
+  }
+
+  revalidatePath("/admin/users");
+  return { ok: true };
+}
+
+export async function deleteProduct(productId: string): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+  const { supabase, userId, isAdmin } = await requireAdmin();
+  if (!userId || !isAdmin) return { error: "loginRequired" };
+
+  const { error } = await supabase.from("products").delete().eq("id", productId);
+  if (error) return { error: "generic" };
+
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
+
+export async function deleteComment(commentId: string): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+  const { supabase, userId, isAdmin } = await requireAdmin();
+  if (!userId || !isAdmin) return { error: "loginRequired" };
+
+  const { error } = await supabase
+    .from("comments")
+    .delete()
+    .eq("id", commentId);
+  if (error) return { error: "generic" };
+
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
+
+export async function updateCategory(
+  id: number,
+  names: { name_uz: string; name_ru: string; name_en: string }
+): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+  const { supabase, userId, isAdmin } = await requireAdmin();
+  if (!userId || !isAdmin) return { error: "loginRequired" };
+
+  const name_uz = names.name_uz.trim().slice(0, 60);
+  const name_ru = names.name_ru.trim().slice(0, 60);
+  const name_en = names.name_en.trim().slice(0, 60);
+  if (!name_uz || !name_ru || !name_en) return { error: "validation" };
+
+  const { error } = await supabase
+    .from("categories")
+    .update({ name_uz, name_ru, name_en })
+    .eq("id", id);
+  if (error) return { error: "generic" };
+
+  revalidatePath("/", "layout");
+  return { ok: true };
 }
 
 export async function toggleVote(productId: string): Promise<ActionResult> {
@@ -178,6 +310,7 @@ export async function addComment(
   if (!isSupabaseConfigured()) return { error: "demoMode" };
   const { supabase, user } = await requireUser();
   if (!user) return { error: "loginRequired" };
+  if (await isBanned(supabase, user.id)) return { error: "banned" };
 
   const text = content.trim();
   if (!text || text.length > 2000) return { error: "validation" };
@@ -274,7 +407,7 @@ async function notifyProductOwner(
 
 export interface SubmitState {
   ok?: boolean;
-  error?: "demoMode" | "loginRequired" | "validation" | "generic";
+  error?: "demoMode" | "loginRequired" | "validation" | "generic" | "banned";
 }
 
 export async function submitProduct(
@@ -284,6 +417,7 @@ export async function submitProduct(
   if (!isSupabaseConfigured()) return { error: "demoMode" };
   const { supabase, user } = await requireUser();
   if (!user) return { error: "loginRequired" };
+  if (await isBanned(supabase, user.id)) return { error: "banned" };
 
   const name = String(formData.get("name") ?? "").trim();
   const tagline = String(formData.get("tagline") ?? "").trim();
@@ -413,6 +547,75 @@ export async function sendMagicLink(
   });
   if (error) return { error: "generic" };
   return { ok: true };
+}
+
+export interface SignUpState {
+  ok?: boolean;
+  needsConfirm?: boolean;
+  error?: "validation" | "exists" | "generic" | "demoMode";
+}
+
+/**
+ * Регистрация по email и паролю. Не зависит от внешних провайдеров.
+ * Если в проекте включено подтверждение email — возвращаем needsConfirm
+ * (пользователь подтверждает по ссылке из письма), иначе сразу логиним.
+ */
+export async function signUp(
+  _prev: SignUpState,
+  formData: FormData
+): Promise<SignUpState> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const password = String(formData.get("password") ?? "");
+  const fullName = String(formData.get("fullName") ?? "").trim().slice(0, 80);
+  const digest = formData.get("digest") === "on";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || password.length < 8) {
+    return { error: "validation" };
+  }
+
+  const cookieStore = await cookies();
+  const supabase = createServerClient(SUPABASE_URL!, SUPABASE_ANON_KEY!, {
+    cookies: {
+      getAll: () => cookieStore.getAll(),
+      setAll: (list) =>
+        list.forEach(({ name, value, options }) =>
+          cookieStore.set(name, value, options)
+        ),
+    },
+  });
+
+  const site = await requestOrigin();
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${site}/api/auth/confirm`,
+      data: fullName ? { full_name: fullName } : undefined,
+    },
+  });
+  if (error) {
+    if (/registered|already|exists/i.test(error.message)) {
+      return { error: "exists" };
+    }
+    return { error: "generic" };
+  }
+  // Supabase прячет факт существования email: возвращает user без identities.
+  if (data.user && (data.user.identities?.length ?? 0) === 0) {
+    return { error: "exists" };
+  }
+
+  if (data.session) {
+    if (digest && data.user) {
+      await supabase
+        .from("profiles")
+        .update({ digest_opt_in: true })
+        .eq("id", data.user.id);
+    }
+    revalidatePath("/", "layout");
+    return { ok: true };
+  }
+  return { ok: true, needsConfirm: true };
 }
 
 export interface PasswordLoginState {

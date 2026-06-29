@@ -80,7 +80,8 @@
     "ratings": "оценок",
     "ratingNone": "Ещё нет оценок",
     "yourRating": "Ваша оценка",
-    "rateHint": "Оцените продукт"
+    "rateHint": "Оцените продукт",
+    "delete": "Удалить"
   },
   "bookmarks": {
     "title": "Закладки",
@@ -140,6 +141,15 @@
     "forgotPassword": "Забыли пароль?",
     "loginButton": "Войти",
     "loggingIn": "Входим...",
+    "loginTab": "Вход",
+    "registerTab": "Регистрация",
+    "registerButton": "Зарегистрироваться",
+    "registering": "Регистрируем...",
+    "registerConfirm": "Проверьте почту, чтобы подтвердить регистрацию.",
+    "namePlaceholder": "Ваше имя (необязательно)",
+    "newPasswordPlaceholder": "Пароль (минимум 8 символов)",
+    "passwordHint": "Пароль должен быть не короче 8 символов.",
+    "emailExists": "Этот email уже зарегистрирован.",
     "credentialsError": "Неверный логин или пароль",
     "genericError": "Произошла ошибка. Попробуйте ещё раз.",
     "showPassword": "Показать пароль",
@@ -202,6 +212,17 @@
     "colRole": "Роль",
     "colDigest": "Дайджест",
     "colRegistered": "Регистрация",
+    "colActions": "Действия",
+    "promote": "Сделать админом",
+    "demote": "Снять админа",
+    "ban": "Заблокировать",
+    "unban": "Разблокировать",
+    "bannedBadge": "заблокирован",
+    "youLabel": "Вы",
+    "delete": "Удалить",
+    "deleteTitle": "Удалить продукт?",
+    "deleteHint": "Действие необратимо. Продукт будет удалён навсегда.",
+    "deleteConfirm": "Удалить",
     "usersSubtitle": "Всего показано: {count}",
     "analyticsSubtitle": "Суммарные метрики платформы и рейтинг продуктов",
     "topProducts": "Топ продуктов по голосам",
@@ -220,7 +241,11 @@
     "settingSiteUrl": "NEXT_PUBLIC_SITE_URL",
     "settingOk": "Настроено",
     "settingMissing": "Не задано",
-    "settingsNote": "Значения задаются в переменных окружения Vercel (Settings → Environment Variables). После изменения переменных нужен redeploy."
+    "settingsNote": "Значения задаются в переменных окружения Vercel (Settings → Environment Variables). После изменения переменных нужен redeploy.",
+    "categoriesTitle": "Названия категорий",
+    "categoriesHint": "Измените отображаемые названия категорий в каталоге. Слаг и эмодзи остаются прежними.",
+    "save": "Сохранить",
+    "saved": "Сохранено"
   },
   "footer": {
     "description": "Площадка для публикации и поиска стартапов, ИИ-сервисов и Telegram-ботов Узбекистана.",
@@ -250,7 +275,8 @@
   "errors": {
     "demoMode": "Действие недоступно в демо-режиме. Подключите Supabase.",
     "loginRequired": "Сначала войдите в систему",
-    "generic": "Произошла ошибка. Попробуйте ещё раз."
+    "generic": "Произошла ошибка. Попробуйте ещё раз.",
+    "banned": "Ваш аккаунт заблокирован."
   },
   "nav": {
     "bestProducts": "Лучшие продукты",

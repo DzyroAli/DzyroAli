@@ -27,7 +27,7 @@ export default async function HomePage({
     getRanking(period, 10),
     getNewest(5),
   ]);
-  const categories = getCategories();
+  const categories = await getCategories();
 
   const periods: Array<{ key: RankingPeriod; label: string }> = [
     { key: "day", label: t("day") },

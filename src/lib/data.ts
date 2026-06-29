@@ -16,8 +16,20 @@ import type {
 const PRODUCT_SELECT =
   "*, category:categories(*), maker:profiles!products_created_by_fkey(*)";
 
-export function getCategories(): Category[] {
-  return CATEGORIES;
+/**
+ * Категории из БД — названия редактируются админом в настройках.
+ * Слаги/id/позиции стабильны (заданы кодом, эмодзи). В демо-режиме или
+ * при пустой/недоступной БД возвращаем статичный каталог из кода.
+ */
+export async function getCategories(): Promise<Category[]> {
+  if (!isSupabaseConfigured()) return CATEGORIES;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("categories")
+    .select("*")
+    .order("position", { ascending: true });
+  const rows = (data ?? []) as Category[];
+  return rows.length > 0 ? rows : CATEGORIES;
 }
 
 export async function getCurrentUser(): Promise<{

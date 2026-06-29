@@ -1,13 +1,17 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getAllUsers } from "@/lib/data";
+import { UserAdminActions } from "@/components/admin/UserAdminActions";
+import { getAllUsers, getCurrentUser } from "@/lib/data";
 import { formatDate, gradientFor, initials } from "@/lib/utils";
 
 /** Список пользователей платформы. */
 export default async function AdminUsersPage() {
   const t = await getTranslations("admin");
   const locale = await getLocale();
-  const users = await getAllUsers();
+  const [users, { userId: meId }] = await Promise.all([
+    getAllUsers(),
+    getCurrentUser(),
+  ]);
 
   return (
     <div>
@@ -24,6 +28,7 @@ export default async function AdminUsersPage() {
               <th className="px-4 py-3 font-semibold">{t("colRole")}</th>
               <th className="px-4 py-3 font-semibold">{t("colDigest")}</th>
               <th className="px-4 py-3 font-semibold">{t("colRegistered")}</th>
+              <th className="px-4 py-3 font-semibold">{t("colActions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -51,14 +56,21 @@ export default async function AdminUsersPage() {
                   </Link>
                 </td>
                 <td className="px-4 py-3">
-                  <span
-                    className={
-                      u.role === "admin"
-                        ? "rounded-full bg-violet-100 px-2.5 py-0.5 text-xs font-bold uppercase text-violet-700"
-                        : "rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-500"
-                    }
-                  >
-                    {u.role}
+                  <span className="flex flex-wrap items-center gap-1.5">
+                    <span
+                      className={
+                        u.role === "admin"
+                          ? "rounded-full bg-violet-100 px-2.5 py-0.5 text-xs font-bold uppercase text-violet-700"
+                          : "rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-500"
+                      }
+                    >
+                      {u.role}
+                    </span>
+                    {u.banned && (
+                      <span className="rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-bold uppercase text-rose-600">
+                        {t("bannedBadge")}
+                      </span>
+                    )}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-slate-500">
@@ -66,6 +78,14 @@ export default async function AdminUsersPage() {
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap text-slate-500">
                   {formatDate(u.created_at, locale)}
+                </td>
+                <td className="px-4 py-3">
+                  <UserAdminActions
+                    userId={u.id}
+                    role={u.role}
+                    banned={Boolean(u.banned)}
+                    isSelf={u.id === meId}
+                  />
                 </td>
               </tr>
             ))}

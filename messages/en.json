@@ -80,7 +80,8 @@
     "ratings": "ratings",
     "ratingNone": "No ratings yet",
     "yourRating": "Your rating",
-    "rateHint": "Rate this product"
+    "rateHint": "Rate this product",
+    "delete": "Delete"
   },
   "bookmarks": {
     "title": "Bookmarks",
@@ -140,6 +141,15 @@
     "forgotPassword": "Forgot password?",
     "loginButton": "Sign in",
     "loggingIn": "Signing in...",
+    "loginTab": "Sign in",
+    "registerTab": "Sign up",
+    "registerButton": "Create account",
+    "registering": "Creating...",
+    "registerConfirm": "Check your email to confirm your registration.",
+    "namePlaceholder": "Your name (optional)",
+    "newPasswordPlaceholder": "Password (min 8 characters)",
+    "passwordHint": "Password must be at least 8 characters.",
+    "emailExists": "This email is already registered.",
     "credentialsError": "Invalid username or password",
     "genericError": "Something went wrong. Please try again.",
     "showPassword": "Show password",
@@ -202,6 +212,17 @@
     "colRole": "Role",
     "colDigest": "Digest",
     "colRegistered": "Registered",
+    "colActions": "Actions",
+    "promote": "Make admin",
+    "demote": "Remove admin",
+    "ban": "Ban",
+    "unban": "Unban",
+    "bannedBadge": "banned",
+    "youLabel": "You",
+    "delete": "Delete",
+    "deleteTitle": "Delete product?",
+    "deleteHint": "This action cannot be undone. The product will be permanently removed.",
+    "deleteConfirm": "Delete",
     "usersSubtitle": "Showing {count} total",
     "analyticsSubtitle": "Platform-wide metrics and product rankings",
     "topProducts": "Top products by votes",
@@ -220,7 +241,11 @@
     "settingSiteUrl": "NEXT_PUBLIC_SITE_URL",
     "settingOk": "Configured",
     "settingMissing": "Not set",
-    "settingsNote": "Values are set in Vercel environment variables (Settings → Environment Variables). A redeploy is required after changes."
+    "settingsNote": "Values are set in Vercel environment variables (Settings → Environment Variables). A redeploy is required after changes.",
+    "categoriesTitle": "Category names",
+    "categoriesHint": "Edit the category names shown in the catalog. Slug and emoji stay fixed.",
+    "save": "Save",
+    "saved": "Saved"
   },
   "footer": {
     "description": "A platform to launch and discover startups, AI services and Telegram bots of Uzbekistan.",
@@ -250,7 +275,8 @@
   "errors": {
     "demoMode": "This action is unavailable in demo mode. Connect Supabase.",
     "loginRequired": "Please sign in first",
-    "generic": "Something went wrong. Please try again."
+    "generic": "Something went wrong. Please try again.",
+    "banned": "Your account is banned."
   },
   "nav": {
     "bestProducts": "Best Products",

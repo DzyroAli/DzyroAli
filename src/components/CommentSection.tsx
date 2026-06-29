@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter as useNextRouter } from "next/navigation";
-import { addComment } from "@/lib/actions";
+import { addComment, deleteComment } from "@/lib/actions";
 import { Link } from "@/i18n/navigation";
 import type { Comment } from "@/lib/types";
 import { cn, gradientFor, initials, timeAgo } from "@/lib/utils";
@@ -45,7 +45,13 @@ function CommentForm({
       const result = await addComment(productId, content, parentId);
       if (result.error) {
         setError(
-          tErr(result.error === "demoMode" ? "demoMode" : "generic")
+          tErr(
+            result.error === "demoMode"
+              ? "demoMode"
+              : result.error === "banned"
+                ? "banned"
+                : "generic"
+          )
         );
         return;
       }
@@ -85,16 +91,26 @@ function CommentItem({
   replies,
   productId,
   canComment,
+  canModerate,
 }: {
   comment: Comment;
   replies: Comment[];
   productId: string;
   canComment: boolean;
+  canModerate: boolean;
 }) {
   const t = useTranslations("product");
   const locale = useLocale();
+  const router = useNextRouter();
   const [replying, setReplying] = useState(false);
+  const [deletePending, startDelete] = useTransition();
   const name = comment.author?.full_name ?? comment.author?.username ?? "?";
+
+  const remove = () =>
+    startDelete(async () => {
+      await deleteComment(comment.id);
+      router.refresh();
+    });
 
   return (
     <div className="flex gap-3">
@@ -118,15 +134,27 @@ function CommentItem({
         <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-slate-700">
           {comment.content}
         </p>
-        {canComment && (
-          <button
-            type="button"
-            onClick={() => setReplying((v) => !v)}
-            className="mt-1 text-xs font-medium text-slate-400 hover:text-teal-600"
-          >
-            {t("reply")}
-          </button>
-        )}
+        <div className="mt-1 flex items-center gap-3">
+          {canComment && (
+            <button
+              type="button"
+              onClick={() => setReplying((v) => !v)}
+              className="text-xs font-medium text-slate-400 hover:text-teal-600"
+            >
+              {t("reply")}
+            </button>
+          )}
+          {canModerate && (
+            <button
+              type="button"
+              onClick={remove}
+              disabled={deletePending}
+              className="text-xs font-medium text-slate-400 hover:text-rose-600 disabled:opacity-50"
+            >
+              {t("delete")}
+            </button>
+          )}
+        </div>
         {replying && (
           <div className="mt-3">
             <CommentForm
@@ -146,6 +174,7 @@ function CommentItem({
                 replies={[]}
                 productId={productId}
                 canComment={canComment}
+                canModerate={canModerate}
               />
             ))}
           </div>
@@ -159,10 +188,12 @@ export function CommentSection({
   productId,
   comments,
   canComment,
+  canModerate = false,
 }: {
   productId: string;
   comments: Comment[];
   canComment: boolean;
+  canModerate?: boolean;
 }) {
   const t = useTranslations("product");
   const topLevel = comments.filter((c) => !c.parent_id);
@@ -196,6 +227,7 @@ export function CommentSection({
               replies={repliesOf(c.id)}
               productId={productId}
               canComment={canComment}
+              canModerate={canModerate}
             />
           ))}
         </div>

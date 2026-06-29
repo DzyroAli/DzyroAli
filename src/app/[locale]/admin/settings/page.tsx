@@ -1,10 +1,13 @@
 import { CheckCircle2, XCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { CategoryEditor } from "@/components/admin/CategoryEditor";
+import { getCategories } from "@/lib/data";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
-/** Системные настройки: статус интеграций окружения (read-only). */
+/** Системные настройки: статус интеграций + редактирование категорий. */
 export default async function AdminSettingsPage() {
   const t = await getTranslations("admin");
+  const categories = await getCategories();
 
   const checks = [
     { label: "Supabase", ok: isSupabaseConfigured() },
@@ -53,6 +56,16 @@ export default async function AdminSettingsPage() {
       <p className="mt-6 rounded-2xl bg-slate-100 px-4 py-3 text-xs leading-relaxed text-slate-500">
         {t("settingsNote")}
       </p>
+
+      <div className="mt-10">
+        <h2 className="text-lg font-bold text-slate-900">
+          {t("categoriesTitle")}
+        </h2>
+        <p className="mb-4 mt-1 text-sm text-slate-500">
+          {t("categoriesHint")}
+        </p>
+        <CategoryEditor categories={categories} />
+      </div>
     </div>
   );
 }

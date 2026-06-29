@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Pagination } from "@/components/Pagination";
 import { ProductCard } from "@/components/ProductCard";
-import { CATEGORY_EMOJI, findCategory } from "@/lib/categories";
-import { getProducts } from "@/lib/data";
+import { CATEGORY_EMOJI } from "@/lib/categories";
+import { getCategories, getProducts } from "@/lib/data";
 import { categoryName } from "@/lib/types";
 
 const PER_PAGE = 20;
@@ -15,7 +15,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const category = findCategory(slug);
+  const category = (await getCategories()).find((c) => c.slug === slug);
   if (!category) return {};
   const t = await getTranslations({ locale, namespace: "meta" });
   return {
@@ -33,7 +33,7 @@ export default async function CategoryPage({
 }) {
   const { slug } = await params;
   const { page: rawPage } = await searchParams;
-  const category = findCategory(slug);
+  const category = (await getCategories()).find((c) => c.slug === slug);
   if (!category) notFound();
 
   const page = Math.max(1, Number(rawPage) || 1);
