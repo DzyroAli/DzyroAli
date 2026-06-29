@@ -9,7 +9,7 @@ export async function Footer() {
   const t = await getTranslations("footer");
   const tc = await getTranslations("common");
   const locale = await getLocale();
-  const categories = getCategories();
+  const categories = await getCategories();
 
   return (
     <footer className="mt-16 border-t border-slate-200 bg-white">

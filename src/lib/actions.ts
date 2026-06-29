@@ -154,6 +154,29 @@ export async function deleteComment(commentId: string): Promise<ActionResult> {
   return { ok: true };
 }
 
+export async function updateCategory(
+  id: number,
+  names: { name_uz: string; name_ru: string; name_en: string }
+): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+  const { supabase, userId, isAdmin } = await requireAdmin();
+  if (!userId || !isAdmin) return { error: "loginRequired" };
+
+  const name_uz = names.name_uz.trim().slice(0, 60);
+  const name_ru = names.name_ru.trim().slice(0, 60);
+  const name_en = names.name_en.trim().slice(0, 60);
+  if (!name_uz || !name_ru || !name_en) return { error: "validation" };
+
+  const { error } = await supabase
+    .from("categories")
+    .update({ name_uz, name_ru, name_en })
+    .eq("id", id);
+  if (error) return { error: "generic" };
+
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
+
 export async function toggleVote(productId: string): Promise<ActionResult> {
   if (!isSupabaseConfigured()) return { error: "demoMode" };
   const { supabase, user } = await requireUser();

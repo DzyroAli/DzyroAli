@@ -241,7 +241,11 @@
     "settingSiteUrl": "NEXT_PUBLIC_SITE_URL",
     "settingOk": "Sozlangan",
     "settingMissing": "Belgilanmagan",
-    "settingsNote": "Qiymatlar Vercel muhit o'zgaruvchilarida belgilanadi (Settings → Environment Variables). O'zgartirishdan keyin redeploy kerak."
+    "settingsNote": "Qiymatlar Vercel muhit o'zgaruvchilarida belgilanadi (Settings → Environment Variables). O'zgartirishdan keyin redeploy kerak.",
+    "categoriesTitle": "Kategoriyalar nomlari",
+    "categoriesHint": "Katalogda ko'rinadigan kategoriya nomlarini tahrirlang. Slug va emoji o'zgarmaydi.",
+    "save": "Saqlash",
+    "saved": "Saqlandi"
   },
   "footer": {
     "description": "O'zbekiston startaplari, AI-xizmatlari va Telegram-botlarini e'lon qilish va kashf etish maydonchasi.",

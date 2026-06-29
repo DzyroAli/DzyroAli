@@ -241,7 +241,11 @@
     "settingSiteUrl": "NEXT_PUBLIC_SITE_URL",
     "settingOk": "Configured",
     "settingMissing": "Not set",
-    "settingsNote": "Values are set in Vercel environment variables (Settings → Environment Variables). A redeploy is required after changes."
+    "settingsNote": "Values are set in Vercel environment variables (Settings → Environment Variables). A redeploy is required after changes.",
+    "categoriesTitle": "Category names",
+    "categoriesHint": "Edit the category names shown in the catalog. Slug and emoji stay fixed.",
+    "save": "Save",
+    "saved": "Saved"
   },
   "footer": {
     "description": "A platform to launch and discover startups, AI services and Telegram bots of Uzbekistan.",

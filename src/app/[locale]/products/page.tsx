@@ -35,7 +35,7 @@ export default async function ProductsPage({
   const page = Math.max(1, Number(rawPage) || 1);
 
   const t = await getTranslations("products");
-  const categories = getCategories();
+  const categories = await getCategories();
   const { products, total } = await getProducts({
     q,
     categorySlug: category,

@@ -241,7 +241,11 @@
     "settingSiteUrl": "NEXT_PUBLIC_SITE_URL",
     "settingOk": "Настроено",
     "settingMissing": "Не задано",
-    "settingsNote": "Значения задаются в переменных окружения Vercel (Settings → Environment Variables). После изменения переменных нужен redeploy."
+    "settingsNote": "Значения задаются в переменных окружения Vercel (Settings → Environment Variables). После изменения переменных нужен redeploy.",
+    "categoriesTitle": "Названия категорий",
+    "categoriesHint": "Измените отображаемые названия категорий в каталоге. Слаг и эмодзи остаются прежними.",
+    "save": "Сохранить",
+    "saved": "Сохранено"
   },
   "footer": {
     "description": "Площадка для публикации и поиска стартапов, ИИ-сервисов и Telegram-ботов Узбекистана.",

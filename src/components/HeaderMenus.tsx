@@ -23,7 +23,7 @@ const itemCls =
 async function BestProductsMenu() {
   const t = await getTranslations("nav");
   const locale = await getLocale();
-  const categories = getCategories();
+  const categories = await getCategories();
   const trending = await getRanking("week", 4);
   const top = trending[0];
 
