@@ -45,11 +45,21 @@ export async function generateMetadata({
       title: t("homeTitle"),
       description: t("homeDescription"),
       locale,
+      images: [
+        {
+          url: "/opengraph-image.png",
+          width: 1200,
+          height: 630,
+          alt: "TechRadar.uz - Узбекистан стартапларининг радари",
+          type: "image/png",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: t("homeTitle"),
       description: t("homeDescription"),
+      images: ["/opengraph-image.png"],
     },
   };
 }
