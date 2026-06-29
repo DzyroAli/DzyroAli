@@ -8,6 +8,7 @@ import { LoginButton } from "./auth/LoginButton";
 import { HeaderMenus } from "./HeaderMenus";
 import { HeaderSearch } from "./HeaderSearch";
 import { LocaleSwitcher } from "./LocaleSwitcher";
+import { ThemeSwitcher } from "./ThemeSwitcher";
 
 export async function Header() {
   const t = await getTranslations("common");
@@ -17,7 +18,7 @@ export async function Header() {
   const searchAction = `${prefix}/products`;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/85 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/85 backdrop-blur dark:border-slate-700 dark:bg-slate-900/85">
       <div className="mx-auto max-w-6xl px-4">
         <div className="flex h-16 items-center gap-3 sm:gap-5">
           <Link href="/" className="flex shrink-0 items-center gap-2">
@@ -49,6 +50,7 @@ export async function Header() {
               {t("products")}
             </Link>
             <LocaleSwitcher />
+            <ThemeSwitcher />
             <Link
               href="/submit"
               className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90"
