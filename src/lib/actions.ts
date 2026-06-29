@@ -415,6 +415,75 @@ export async function sendMagicLink(
   return { ok: true };
 }
 
+export interface SignUpState {
+  ok?: boolean;
+  needsConfirm?: boolean;
+  error?: "validation" | "exists" | "generic" | "demoMode";
+}
+
+/**
+ * Регистрация по email и паролю. Не зависит от внешних провайдеров.
+ * Если в проекте включено подтверждение email — возвращаем needsConfirm
+ * (пользователь подтверждает по ссылке из письма), иначе сразу логиним.
+ */
+export async function signUp(
+  _prev: SignUpState,
+  formData: FormData
+): Promise<SignUpState> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const password = String(formData.get("password") ?? "");
+  const fullName = String(formData.get("fullName") ?? "").trim().slice(0, 80);
+  const digest = formData.get("digest") === "on";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || password.length < 8) {
+    return { error: "validation" };
+  }
+
+  const cookieStore = await cookies();
+  const supabase = createServerClient(SUPABASE_URL!, SUPABASE_ANON_KEY!, {
+    cookies: {
+      getAll: () => cookieStore.getAll(),
+      setAll: (list) =>
+        list.forEach(({ name, value, options }) =>
+          cookieStore.set(name, value, options)
+        ),
+    },
+  });
+
+  const site = await requestOrigin();
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${site}/api/auth/confirm`,
+      data: fullName ? { full_name: fullName } : undefined,
+    },
+  });
+  if (error) {
+    if (/registered|already|exists/i.test(error.message)) {
+      return { error: "exists" };
+    }
+    return { error: "generic" };
+  }
+  // Supabase прячет факт существования email: возвращает user без identities.
+  if (data.user && (data.user.identities?.length ?? 0) === 0) {
+    return { error: "exists" };
+  }
+
+  if (data.session) {
+    if (digest && data.user) {
+      await supabase
+        .from("profiles")
+        .update({ digest_opt_in: true })
+        .eq("id", data.user.id);
+    }
+    revalidatePath("/", "layout");
+    return { ok: true };
+  }
+  return { ok: true, needsConfirm: true };
+}
+
 export interface PasswordLoginState {
   ok?: boolean;
   error?: "validation" | "credentials" | "generic" | "demoMode";
