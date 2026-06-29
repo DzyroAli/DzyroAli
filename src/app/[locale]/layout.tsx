@@ -39,6 +39,9 @@ export async function generateMetadata({
         "x-default": "/",
       },
     },
+    other: {
+      "application/rss+xml": `${SITE_URL}${locale === "uz" ? "" : `/${locale}`}/feed`,
+    },
     openGraph: {
       type: "website",
       siteName: "TechRadar.uz",
