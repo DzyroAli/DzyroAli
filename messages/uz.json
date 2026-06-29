@@ -9,6 +9,7 @@
     "login": "Kirish",
     "logout": "Chiqish",
     "myProfile": "Mening profilim",
+    "bookmarks": "Saqlanganlar",
     "admin": "Admin-panel",
     "viewAll": "Barchasini ko'rish",
     "votes": "ovoz",
@@ -72,7 +73,16 @@
     "rejectedReason": "Sabab",
     "share": "Ulashish",
     "copyLink": "Havolani nusxalash",
-    "copied": "Nusxalandi"
+    "copied": "Nusxalandi",
+    "bookmark": "Saqlash",
+    "bookmarked": "Saqlandi"
+  },
+  "bookmarks": {
+    "title": "Saqlanganlar",
+    "subtitle": "Siz saqlab qo'ygan mahsulotlar",
+    "empty": "Hozircha saqlangan mahsulotlar yo'q.",
+    "loginRequired": "Mahsulotlarni saqlash uchun tizimga kiring.",
+    "browse": "Katalogni ko'rish"
   },
   "submit": {
     "title": "Loyihani joylash",

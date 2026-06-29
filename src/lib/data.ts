@@ -228,6 +228,56 @@ export async function hasVoted(productId: string): Promise<boolean> {
   return Boolean(data);
 }
 
+export async function isBookmarked(productId: string): Promise<boolean> {
+  if (!isSupabaseConfigured()) return false;
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return false;
+  const { data } = await supabase
+    .from("bookmarks")
+    .select("product_id")
+    .eq("product_id", productId)
+    .eq("user_id", user.id)
+    .maybeSingle();
+  return Boolean(data);
+}
+
+/** Сохранённые пользователем продукты, недавние — первыми. */
+export async function getBookmarkedProducts(): Promise<Product[]> {
+  if (!isSupabaseConfigured()) return [];
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  const { data: rows } = await supabase
+    .from("bookmarks")
+    .select("product_id, created_at")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  const ids = ((rows ?? []) as Array<{ product_id: string }>).map(
+    (r) => r.product_id
+  );
+  if (ids.length === 0) return [];
+
+  const { data } = await supabase
+    .from("products")
+    .select(PRODUCT_SELECT)
+    .in("id", ids);
+
+  const byId = new Map(
+    ((data ?? []) as unknown as Product[]).map((p) => [p.id, p])
+  );
+  // Сохраняем порядок закладок (самые свежие сверху).
+  return ids
+    .map((id) => byId.get(id))
+    .filter((p): p is Product => Boolean(p));
+}
+
 export async function getMaker(
   username: string
 ): Promise<{ profile: Profile; products: Product[] } | null> {

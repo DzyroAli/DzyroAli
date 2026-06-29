@@ -30,6 +30,7 @@ export interface ActionResult {
   error?: "demoMode" | "loginRequired" | "generic" | "validation";
   votes?: number;
   voted?: boolean;
+  bookmarked?: boolean;
 }
 
 async function requireUser() {
@@ -77,6 +78,35 @@ export async function toggleVote(productId: string): Promise<ActionResult> {
     voted: !existing,
     votes: product?.votes_count ?? 0,
   };
+}
+
+export async function toggleBookmark(productId: string): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+  const { supabase, user } = await requireUser();
+  if (!user) return { error: "loginRequired" };
+
+  const { data: existing } = await supabase
+    .from("bookmarks")
+    .select("product_id")
+    .eq("product_id", productId)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (existing) {
+    await supabase
+      .from("bookmarks")
+      .delete()
+      .eq("product_id", productId)
+      .eq("user_id", user.id);
+  } else {
+    const { error } = await supabase
+      .from("bookmarks")
+      .insert({ product_id: productId, user_id: user.id });
+    if (error) return { error: "generic" };
+  }
+
+  revalidatePath("/bookmarks");
+  return { ok: true, bookmarked: !existing };
 }
 
 export async function addComment(

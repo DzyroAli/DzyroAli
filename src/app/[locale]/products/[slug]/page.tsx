@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { BookmarkButton } from "@/components/BookmarkButton";
 import { CommentSection } from "@/components/CommentSection";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductLogo } from "@/components/ProductLogo";
@@ -15,6 +16,7 @@ import {
   getProductBySlug,
   getSimilar,
   hasVoted,
+  isBookmarked,
 } from "@/lib/data";
 import { categoryName } from "@/lib/types";
 import { formatDate, gradientFor, initials } from "@/lib/utils";
@@ -79,9 +81,10 @@ export default async function ProductPage({
 
   const locale = await getLocale();
   const t = await getTranslations("product");
-  const [comments, voted, similar, { userId }] = await Promise.all([
+  const [comments, voted, bookmarked, similar, { userId }] = await Promise.all([
     getComments(product.id),
     hasVoted(product.id),
+    isBookmarked(product.id),
     getSimilar(product),
     getCurrentUser(),
   ]);
@@ -188,6 +191,7 @@ export default async function ProductPage({
             {t("openTelegram")}
           </a>
         )}
+        <BookmarkButton productId={product.id} initialBookmarked={bookmarked} />
       </div>
 
       {/* Поделиться */}

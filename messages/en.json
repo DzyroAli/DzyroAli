@@ -9,6 +9,7 @@
     "login": "Sign in",
     "logout": "Sign out",
     "myProfile": "My profile",
+    "bookmarks": "Bookmarks",
     "admin": "Admin panel",
     "viewAll": "View all",
     "votes": "votes",
@@ -72,7 +73,16 @@
     "rejectedReason": "Reason",
     "share": "Share",
     "copyLink": "Copy link",
-    "copied": "Copied"
+    "copied": "Copied",
+    "bookmark": "Save",
+    "bookmarked": "Saved"
+  },
+  "bookmarks": {
+    "title": "Bookmarks",
+    "subtitle": "Products you have saved",
+    "empty": "No saved products yet.",
+    "loginRequired": "Sign in to save products.",
+    "browse": "Browse catalog"
   },
   "submit": {
     "title": "Submit a product",
