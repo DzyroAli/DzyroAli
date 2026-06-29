@@ -135,7 +135,9 @@ export function SubmitForm() {
             ? tErr("demoMode")
             : state.error === "loginRequired"
               ? tErr("loginRequired")
-              : tErr("generic")}
+              : state.error === "banned"
+                ? tErr("banned")
+                : tErr("generic")}
         </p>
       )}
 

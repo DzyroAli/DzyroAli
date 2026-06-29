@@ -45,7 +45,13 @@ function CommentForm({
       const result = await addComment(productId, content, parentId);
       if (result.error) {
         setError(
-          tErr(result.error === "demoMode" ? "demoMode" : "generic")
+          tErr(
+            result.error === "demoMode"
+              ? "demoMode"
+              : result.error === "banned"
+                ? "banned"
+                : "generic"
+          )
         );
         return;
       }

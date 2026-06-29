@@ -28,7 +28,7 @@ async function requestOrigin(): Promise<string> {
 
 export interface ActionResult {
   ok?: boolean;
-  error?: "demoMode" | "loginRequired" | "generic" | "validation";
+  error?: "demoMode" | "loginRequired" | "generic" | "validation" | "banned";
   votes?: number;
   voted?: boolean;
   bookmarked?: boolean;
@@ -43,6 +43,88 @@ async function requireUser() {
     data: { user },
   } = await supabase.auth.getUser();
   return { supabase, user };
+}
+
+/** Проверяет, забанен ли пользователь (для блокировки действий). */
+async function isBanned(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string
+): Promise<boolean> {
+  const { data } = await supabase
+    .from("profiles")
+    .select("banned")
+    .eq("id", userId)
+    .maybeSingle();
+  return Boolean((data as { banned?: boolean } | null)?.banned);
+}
+
+/** Текущий пользователь + флаг администратора (для admin-действий). */
+async function requireAdmin(): Promise<{
+  supabase: Awaited<ReturnType<typeof createClient>>;
+  userId: string | null;
+  isAdmin: boolean;
+}> {
+  const { supabase, user } = await requireUser();
+  if (!user) return { supabase, userId: null, isAdmin: false };
+  const { data } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+  return {
+    supabase,
+    userId: user.id,
+    isAdmin: (data as { role?: string } | null)?.role === "admin",
+  };
+}
+
+export async function setUserRole(
+  userId: string,
+  role: "user" | "admin"
+): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+  if (role !== "user" && role !== "admin") return { error: "validation" };
+  const { supabase, userId: meId, isAdmin } = await requireAdmin();
+  if (!meId || !isAdmin) return { error: "loginRequired" };
+  if (userId === meId) return { error: "validation" }; // свою роль не меняем
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({ role })
+    .eq("id", userId);
+  if (error) return { error: "generic" };
+
+  revalidatePath("/admin/users");
+  return { ok: true };
+}
+
+export async function setUserBanned(
+  userId: string,
+  banned: boolean
+): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+  const { supabase, userId: meId, isAdmin } = await requireAdmin();
+  if (!meId || !isAdmin) return { error: "loginRequired" };
+  if (userId === meId) return { error: "validation" }; // себя не банить
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({ banned })
+    .eq("id", userId);
+  if (error) return { error: "generic" };
+
+  // Бонус: блокировка на уровне auth (нельзя войти), если есть service-role.
+  try {
+    const admin = createAdminClient();
+    await admin.auth.admin.updateUserById(userId, {
+      ban_duration: banned ? "876000h" : "none",
+    });
+  } catch {
+    // Без SUPABASE_SERVICE_ROLE_KEY ограничиваемся флагом profiles.banned.
+  }
+
+  revalidatePath("/admin/users");
+  return { ok: true };
 }
 
 export async function toggleVote(productId: string): Promise<ActionResult> {
@@ -178,6 +260,7 @@ export async function addComment(
   if (!isSupabaseConfigured()) return { error: "demoMode" };
   const { supabase, user } = await requireUser();
   if (!user) return { error: "loginRequired" };
+  if (await isBanned(supabase, user.id)) return { error: "banned" };
 
   const text = content.trim();
   if (!text || text.length > 2000) return { error: "validation" };
@@ -274,7 +357,7 @@ async function notifyProductOwner(
 
 export interface SubmitState {
   ok?: boolean;
-  error?: "demoMode" | "loginRequired" | "validation" | "generic";
+  error?: "demoMode" | "loginRequired" | "validation" | "generic" | "banned";
 }
 
 export async function submitProduct(
@@ -284,6 +367,7 @@ export async function submitProduct(
   if (!isSupabaseConfigured()) return { error: "demoMode" };
   const { supabase, user } = await requireUser();
   if (!user) return { error: "loginRequired" };
+  if (await isBanned(supabase, user.id)) return { error: "banned" };
 
   const name = String(formData.get("name") ?? "").trim();
   const tagline = String(formData.get("tagline") ?? "").trim();

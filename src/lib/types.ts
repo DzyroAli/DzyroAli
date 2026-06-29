@@ -22,6 +22,7 @@ export interface Profile {
   role: "user" | "admin";
   digest_opt_in?: boolean;
   comment_notifications?: boolean;
+  banned?: boolean;
   created_at: string;
 }
 

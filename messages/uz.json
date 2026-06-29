@@ -211,6 +211,13 @@
     "colRole": "Rol",
     "colDigest": "Dayjest",
     "colRegistered": "Ro'yxatdan o'tgan",
+    "colActions": "Amallar",
+    "promote": "Admin qilish",
+    "demote": "Adminni olish",
+    "ban": "Bloklash",
+    "unban": "Blokdan chiqarish",
+    "bannedBadge": "bloklangan",
+    "youLabel": "Siz",
     "usersSubtitle": "Jami ko'rsatildi: {count}",
     "analyticsSubtitle": "Platformaning umumiy ko'rsatkichlari va mahsulotlar reytingi",
     "topProducts": "Ovozlar bo'yicha top mahsulotlar",
@@ -259,7 +266,8 @@
   "errors": {
     "demoMode": "Demo rejimida bu amal mavjud emas. Supabase ulang.",
     "loginRequired": "Avval tizimga kiring",
-    "generic": "Xatolik yuz berdi. Qaytadan urinib ko'ring."
+    "generic": "Xatolik yuz berdi. Qaytadan urinib ko'ring.",
+    "banned": "Hisobingiz bloklangan."
   },
   "nav": {
     "bestProducts": "Eng yaxshi mahsulotlar",

@@ -211,6 +211,13 @@
     "colRole": "Role",
     "colDigest": "Digest",
     "colRegistered": "Registered",
+    "colActions": "Actions",
+    "promote": "Make admin",
+    "demote": "Remove admin",
+    "ban": "Ban",
+    "unban": "Unban",
+    "bannedBadge": "banned",
+    "youLabel": "You",
     "usersSubtitle": "Showing {count} total",
     "analyticsSubtitle": "Platform-wide metrics and product rankings",
     "topProducts": "Top products by votes",
@@ -259,7 +266,8 @@
   "errors": {
     "demoMode": "This action is unavailable in demo mode. Connect Supabase.",
     "loginRequired": "Please sign in first",
-    "generic": "Something went wrong. Please try again."
+    "generic": "Something went wrong. Please try again.",
+    "banned": "Your account is banned."
   },
   "nav": {
     "bestProducts": "Best Products",
