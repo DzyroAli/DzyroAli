@@ -69,7 +69,10 @@
     "similar": "Similar products",
     "pendingNotice": "This product is under review. Only you and admins can see it.",
     "rejectedNotice": "This product was rejected by moderation. Only you and admins can see it.",
-    "rejectedReason": "Reason"
+    "rejectedReason": "Reason",
+    "share": "Share",
+    "copyLink": "Copy link",
+    "copied": "Copied"
   },
   "submit": {
     "title": "Submit a product",

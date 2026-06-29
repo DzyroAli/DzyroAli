@@ -69,7 +69,10 @@
     "similar": "O'xshash mahsulotlar",
     "pendingNotice": "Bu mahsulot moderatsiyada. Faqat siz va administratorlar ko'ra oladi.",
     "rejectedNotice": "Mahsulot moderatsiyadan o'tmadi. Uni faqat siz va administratorlar ko'radi.",
-    "rejectedReason": "Sabab"
+    "rejectedReason": "Sabab",
+    "share": "Ulashish",
+    "copyLink": "Havolani nusxalash",
+    "copied": "Nusxalandi"
   },
   "submit": {
     "title": "Loyihani joylash",

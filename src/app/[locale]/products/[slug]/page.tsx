@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { CommentSection } from "@/components/CommentSection";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductLogo } from "@/components/ProductLogo";
+import { ShareButtons } from "@/components/ShareButtons";
 import { VoteButton } from "@/components/VoteButton";
 import { CATEGORY_EMOJI } from "@/lib/categories";
 import {
@@ -187,6 +188,14 @@ export default async function ProductPage({
             {t("openTelegram")}
           </a>
         )}
+      </div>
+
+      {/* Поделиться */}
+      <div className="mt-5">
+        <ShareButtons
+          url={`${SITE_URL}${locale === "uz" ? "" : `/${locale}`}/products/${product.slug}`}
+          title={`${product.name} — ${product.tagline}`}
+        />
       </div>
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_280px]">
