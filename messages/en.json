@@ -46,9 +46,12 @@
     "searchResults": "Search results",
     "sortNewest": "Newest",
     "sortTop": "Top rated",
+    "sort": "Sort",
+    "categories": "Categories",
     "allCategories": "All categories",
     "empty": "Nothing found. Try a different query.",
-    "found": "products found"
+    "found": "products found",
+    "clear": "Clear"
   },
   "product": {
     "visit": "Visit website",

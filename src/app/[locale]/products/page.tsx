@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
 import { Pagination } from "@/components/Pagination";
 import { ProductCard } from "@/components/ProductCard";
-import { CATEGORY_EMOJI } from "@/lib/categories";
+import { ProductFilters } from "@/components/ProductFilters";
 import { getCategories, getProducts } from "@/lib/data";
-import { categoryName } from "@/lib/types";
-import { cn } from "@/lib/utils";
 
 const PER_PAGE = 20;
 
@@ -61,84 +58,55 @@ export default async function ProductsPage({
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="text-2xl font-bold text-slate-900">
-        {q ? `${t("searchResults")}: «${q}»` : t("title")}
-      </h1>
-      <p className="mt-1 text-sm text-slate-500">
-        {q ? `${total} ${t("found")}` : t("subtitle")}
-      </p>
-
-      <div className="mt-6 flex flex-wrap items-center gap-2">
-        <Link
-          href={filterHref({ category: undefined })}
-          className={cn(
-            "rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors",
-            !category
-              ? "border-slate-900 bg-slate-900 text-white"
-              : "border-slate-200 bg-white text-slate-600 hover:border-slate-400"
-          )}
-        >
-          {t("allCategories")}
-        </Link>
-        {categories.map((c) => (
-          <Link
-            key={c.slug}
-            href={filterHref({ category: c.slug })}
-            className={cn(
-              "rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors",
-              category === c.slug
-                ? "border-slate-900 bg-slate-900 text-white"
-                : "border-slate-200 bg-white text-slate-600 hover:border-slate-400"
-            )}
-          >
-            <span aria-hidden className="mr-1">
-              {CATEGORY_EMOJI[c.slug]}
-            </span>
-            {categoryName(c, locale)}
-          </Link>
-        ))}
-      </div>
-
-      <div className="mt-5 flex gap-2 text-sm font-semibold">
-        {(
-          [
-            { key: "top", label: t("sortTop") },
-            { key: "newest", label: t("sortNewest") },
-          ] as const
-        ).map((s) => (
-          <Link
-            key={s.key}
-            href={filterHref({ sort: s.key === "top" ? undefined : s.key })}
-            className={cn(
-              "rounded-lg px-3 py-1.5 transition-colors",
-              sort === s.key
-                ? "bg-teal-100 text-teal-800"
-                : "text-slate-500 hover:text-slate-900"
-            )}
-          >
-            {s.label}
-          </Link>
-        ))}
-      </div>
-
-      {products.length === 0 ? (
-        <p className="mt-10 rounded-2xl border border-dashed border-slate-300 p-10 text-center text-slate-500">
-          {t("empty")}
+      <div>
+        <h1 className="text-3xl font-bold text-slate-900">
+          {t("title")}
+        </h1>
+        <p className="mt-2 text-slate-600">
+          {total > 0 ? `${total} ${t("found")}` : t("subtitle")}
         </p>
-      ) : (
-        <div className="mt-6 space-y-3">
-          {products.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
-      )}
+      </div>
 
-      <Pagination
-        page={page}
-        totalPages={totalPages}
-        basePath="/products"
-        params={{ q, category, sort: rawSort }}
-      />
+      <div className="mt-8 grid gap-6 lg:grid-cols-[300px_1fr]">
+        {/* Фильтры */}
+        <aside className="hidden lg:block">
+          <div className="sticky top-20 rounded-xl border border-slate-200 bg-white p-4">
+            <ProductFilters
+              categories={categories}
+              currentCategory={category}
+              currentSort={sort}
+              currentSearch={q}
+              onFilterChange={filterHref}
+            />
+          </div>
+        </aside>
+
+        {/* Результаты */}
+        <main>
+          {products.length === 0 ? (
+            <div className="rounded-2xl border-2 border-dashed border-slate-300 p-12 text-center">
+              <p className="text-slate-500">{t("empty")}</p>
+            </div>
+          ) : (
+            <>
+              <div className="space-y-3">
+                {products.map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
+              </div>
+
+              <div className="mt-8">
+                <Pagination
+                  page={page}
+                  totalPages={totalPages}
+                  basePath="/products"
+                  params={{ q, category, sort: rawSort }}
+                />
+              </div>
+            </>
+          )}
+        </main>
+      </div>
     </div>
   );
 }

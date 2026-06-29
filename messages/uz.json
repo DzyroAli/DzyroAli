@@ -46,9 +46,12 @@
     "searchResults": "Qidiruv natijalari",
     "sortNewest": "Yangi",
     "sortTop": "Mashhur",
+    "sort": "Tartiblash",
+    "categories": "Kategoriyalar",
     "allCategories": "Barcha kategoriyalar",
     "empty": "Hech narsa topilmadi. Qidiruv so'rovini o'zgartirib ko'ring.",
-    "found": "ta mahsulot topildi"
+    "found": "ta mahsulot topildi",
+    "clear": "Tozalash"
   },
   "product": {
     "visit": "Saytga o'tish",
