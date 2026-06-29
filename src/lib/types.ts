@@ -39,6 +39,8 @@ export interface Product {
   created_by: string | null;
   votes_count: number;
   comments_count: number;
+  rating_sum?: number;
+  rating_count?: number;
   launched_at: string;
   created_at: string;
   category?: Category | null;

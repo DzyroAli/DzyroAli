@@ -7,6 +7,7 @@ import { BookmarkButton } from "@/components/BookmarkButton";
 import { CommentSection } from "@/components/CommentSection";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductLogo } from "@/components/ProductLogo";
+import { RatingStars } from "@/components/RatingStars";
 import { ShareButtons } from "@/components/ShareButtons";
 import { VoteButton } from "@/components/VoteButton";
 import { CATEGORY_EMOJI } from "@/lib/categories";
@@ -15,6 +16,7 @@ import {
   getCurrentUser,
   getProductBySlug,
   getSimilar,
+  getUserRating,
   hasVoted,
   isBookmarked,
 } from "@/lib/data";
@@ -81,13 +83,18 @@ export default async function ProductPage({
 
   const locale = await getLocale();
   const t = await getTranslations("product");
-  const [comments, voted, bookmarked, similar, { userId }] = await Promise.all([
-    getComments(product.id),
-    hasVoted(product.id),
-    isBookmarked(product.id),
-    getSimilar(product),
-    getCurrentUser(),
-  ]);
+  const [comments, voted, bookmarked, userRating, similar, { userId }] =
+    await Promise.all([
+      getComments(product.id),
+      hasVoted(product.id),
+      isBookmarked(product.id),
+      getUserRating(product.id),
+      getSimilar(product),
+      getCurrentUser(),
+    ]);
+
+  const ratingCount = product.rating_count ?? 0;
+  const ratingAvg = ratingCount > 0 ? (product.rating_sum ?? 0) / ratingCount : 0;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -97,11 +104,13 @@ export default async function ProductPage({
     url: `${SITE_URL}/products/${product.slug}`,
     applicationCategory: product.category?.name_en,
     aggregateRating:
-      product.votes_count > 0
+      ratingCount > 0
         ? {
             "@type": "AggregateRating",
-            ratingValue: 5,
-            ratingCount: product.votes_count,
+            ratingValue: Number(ratingAvg.toFixed(1)),
+            ratingCount,
+            bestRating: 5,
+            worstRating: 1,
           }
         : undefined,
     author: product.maker
@@ -192,6 +201,16 @@ export default async function ProductPage({
           </a>
         )}
         <BookmarkButton productId={product.id} initialBookmarked={bookmarked} />
+      </div>
+
+      {/* Рейтинг */}
+      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
+        <RatingStars
+          productId={product.id}
+          initialAvg={ratingAvg}
+          initialCount={ratingCount}
+          initialUserRating={userRating}
+        />
       </div>
 
       {/* Поделиться */}

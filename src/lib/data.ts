@@ -278,6 +278,23 @@ export async function getBookmarkedProducts(): Promise<Product[]> {
     .filter((p): p is Product => Boolean(p));
 }
 
+/** Оценка текущего пользователя для продукта (1–5) или null. */
+export async function getUserRating(productId: string): Promise<number | null> {
+  if (!isSupabaseConfigured()) return null;
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+  const { data } = await supabase
+    .from("ratings")
+    .select("value")
+    .eq("product_id", productId)
+    .eq("user_id", user.id)
+    .maybeSingle();
+  return (data as { value: number } | null)?.value ?? null;
+}
+
 export async function getMaker(
   username: string
 ): Promise<{ profile: Profile; products: Product[] } | null> {

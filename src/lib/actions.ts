@@ -31,6 +31,9 @@ export interface ActionResult {
   votes?: number;
   voted?: boolean;
   bookmarked?: boolean;
+  rating?: number;
+  ratingAvg?: number;
+  ratingCount?: number;
 }
 
 async function requireUser() {
@@ -107,6 +110,46 @@ export async function toggleBookmark(productId: string): Promise<ActionResult> {
 
   revalidatePath("/bookmarks");
   return { ok: true, bookmarked: !existing };
+}
+
+export async function rateProduct(
+  productId: string,
+  value: number
+): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+  if (!Number.isInteger(value) || value < 1 || value > 5) {
+    return { error: "validation" };
+  }
+  const { supabase, user } = await requireUser();
+  if (!user) return { error: "loginRequired" };
+
+  const { error } = await supabase.from("ratings").upsert(
+    {
+      product_id: productId,
+      user_id: user.id,
+      value,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "product_id,user_id" }
+  );
+  if (error) return { error: "generic" };
+
+  const { data: product } = await supabase
+    .from("products")
+    .select("rating_sum, rating_count")
+    .eq("id", productId)
+    .single();
+
+  const sum = (product as { rating_sum?: number } | null)?.rating_sum ?? 0;
+  const count = (product as { rating_count?: number } | null)?.rating_count ?? 0;
+
+  revalidatePath("/", "layout");
+  return {
+    ok: true,
+    rating: value,
+    ratingAvg: count > 0 ? sum / count : 0,
+    ratingCount: count,
+  };
 }
 
 export async function addComment(

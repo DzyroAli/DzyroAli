@@ -75,7 +75,11 @@
     "copyLink": "Havolani nusxalash",
     "copied": "Nusxalandi",
     "bookmark": "Saqlash",
-    "bookmarked": "Saqlandi"
+    "bookmarked": "Saqlandi",
+    "ratings": "baho",
+    "ratingNone": "Hali baholanmagan",
+    "yourRating": "Sizning bahoyingiz",
+    "rateHint": "Mahsulotni baholang"
   },
   "bookmarks": {
     "title": "Saqlanganlar",

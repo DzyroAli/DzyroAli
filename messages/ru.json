@@ -75,7 +75,11 @@
     "copyLink": "Копировать ссылку",
     "copied": "Скопировано",
     "bookmark": "Сохранить",
-    "bookmarked": "Сохранено"
+    "bookmarked": "Сохранено",
+    "ratings": "оценок",
+    "ratingNone": "Ещё нет оценок",
+    "yourRating": "Ваша оценка",
+    "rateHint": "Оцените продукт"
   },
   "bookmarks": {
     "title": "Закладки",

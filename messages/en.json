@@ -75,7 +75,11 @@
     "copyLink": "Copy link",
     "copied": "Copied",
     "bookmark": "Save",
-    "bookmarked": "Saved"
+    "bookmarked": "Saved",
+    "ratings": "ratings",
+    "ratingNone": "No ratings yet",
+    "yourRating": "Your rating",
+    "rateHint": "Rate this product"
   },
   "bookmarks": {
     "title": "Bookmarks",
