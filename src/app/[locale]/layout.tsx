@@ -39,17 +39,30 @@ export async function generateMetadata({
         "x-default": "/",
       },
     },
+    other: {
+      "application/rss+xml": `${SITE_URL}${locale === "uz" ? "" : `/${locale}`}/feed`,
+    },
     openGraph: {
       type: "website",
       siteName: "TechRadar.uz",
       title: t("homeTitle"),
       description: t("homeDescription"),
       locale,
+      images: [
+        {
+          url: "/opengraph-image.png",
+          width: 1200,
+          height: 630,
+          alt: "TechRadar.uz - Узбекистан стартапларининг радари",
+          type: "image/png",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: t("homeTitle"),
       description: t("homeDescription"),
+      images: ["/opengraph-image.png"],
     },
   };
 }
@@ -68,7 +81,14 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;var e=document.documentElement;e.classList.toggle('dark',d);e.style.colorScheme=d?'dark':'light';}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="flex min-h-screen flex-col">
         <NextIntlClientProvider messages={messages}>
           <AuthModalProvider

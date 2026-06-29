@@ -9,6 +9,8 @@
     "login": "Kirish",
     "logout": "Chiqish",
     "myProfile": "Mening profilim",
+    "bookmarks": "Saqlanganlar",
+    "settings": "Sozlamalar",
     "admin": "Admin-panel",
     "viewAll": "Barchasini ko'rish",
     "votes": "ovoz",
@@ -46,9 +48,12 @@
     "searchResults": "Qidiruv natijalari",
     "sortNewest": "Yangi",
     "sortTop": "Mashhur",
+    "sort": "Tartiblash",
+    "categories": "Kategoriyalar",
     "allCategories": "Barcha kategoriyalar",
     "empty": "Hech narsa topilmadi. Qidiruv so'rovini o'zgartirib ko'ring.",
-    "found": "ta mahsulot topildi"
+    "found": "ta mahsulot topildi",
+    "clear": "Tozalash"
   },
   "product": {
     "visit": "Saytga o'tish",
@@ -66,7 +71,31 @@
     "similar": "O'xshash mahsulotlar",
     "pendingNotice": "Bu mahsulot moderatsiyada. Faqat siz va administratorlar ko'ra oladi.",
     "rejectedNotice": "Mahsulot moderatsiyadan o'tmadi. Uni faqat siz va administratorlar ko'radi.",
-    "rejectedReason": "Sabab"
+    "rejectedReason": "Sabab",
+    "share": "Ulashish",
+    "copyLink": "Havolani nusxalash",
+    "copied": "Nusxalandi",
+    "bookmark": "Saqlash",
+    "bookmarked": "Saqlandi",
+    "ratings": "baho",
+    "ratingNone": "Hali baholanmagan",
+    "yourRating": "Sizning bahoyingiz",
+    "rateHint": "Mahsulotni baholang"
+  },
+  "bookmarks": {
+    "title": "Saqlanganlar",
+    "subtitle": "Siz saqlab qo'ygan mahsulotlar",
+    "empty": "Hozircha saqlangan mahsulotlar yo'q.",
+    "loginRequired": "Mahsulotlarni saqlash uchun tizimga kiring.",
+    "browse": "Katalogni ko'rish"
+  },
+  "settings": {
+    "title": "Sozlamalar",
+    "subtitle": "Hisobingiz va bildirishnomalarni boshqaring",
+    "loginRequired": "Sozlamalarni ko'rish uchun tizimga kiring.",
+    "notifications": "Bildirishnomalar",
+    "commentNotifications": "Izohlar haqida email",
+    "commentNotificationsDesc": "Mahsulotingizga yangi izoh qoldirilganda email keladi."
   },
   "submit": {
     "title": "Loyihani joylash",

@@ -1,4 +1,4 @@
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Star } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { CATEGORY_EMOJI } from "@/lib/categories";
@@ -49,6 +49,14 @@ export async function ProductCard({
             <MessageCircle size={12} />
             {product.comments_count} {t("comments")}
           </span>
+          {(product.rating_count ?? 0) > 0 && (
+            <span className="inline-flex items-center gap-1">
+              <Star size={12} className="fill-amber-400 text-amber-400" />
+              {((product.rating_sum ?? 0) / (product.rating_count ?? 1)).toFixed(
+                1
+              )}
+            </span>
+          )}
         </div>
       </div>
       <div className="relative z-10">

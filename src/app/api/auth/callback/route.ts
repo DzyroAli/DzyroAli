@@ -9,7 +9,9 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/";
+  const locale = searchParams.get("locale");
+  const localePrefix = locale && locale !== "uz" ? `/${locale}` : "";
+  const next = searchParams.get("next") ?? `${localePrefix}/`;
 
   if (code && isSupabaseConfigured()) {
     const supabase = await createClient();
@@ -20,5 +22,5 @@ export async function GET(request: NextRequest) {
       return response;
     }
   }
-  return NextResponse.redirect(new URL("/login?error=oauth", request.url));
+  return NextResponse.redirect(new URL(`${localePrefix}/login?error=oauth`, request.url));
 }

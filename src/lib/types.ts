@@ -21,6 +21,7 @@ export interface Profile {
   telegram_username: string | null;
   role: "user" | "admin";
   digest_opt_in?: boolean;
+  comment_notifications?: boolean;
   created_at: string;
 }
 
@@ -39,6 +40,8 @@ export interface Product {
   created_by: string | null;
   votes_count: number;
   comments_count: number;
+  rating_sum?: number;
+  rating_count?: number;
   launched_at: string;
   created_at: string;
   category?: Category | null;

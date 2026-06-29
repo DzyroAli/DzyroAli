@@ -9,6 +9,8 @@
     "login": "Sign in",
     "logout": "Sign out",
     "myProfile": "My profile",
+    "bookmarks": "Bookmarks",
+    "settings": "Settings",
     "admin": "Admin panel",
     "viewAll": "View all",
     "votes": "votes",
@@ -46,9 +48,12 @@
     "searchResults": "Search results",
     "sortNewest": "Newest",
     "sortTop": "Top rated",
+    "sort": "Sort",
+    "categories": "Categories",
     "allCategories": "All categories",
     "empty": "Nothing found. Try a different query.",
-    "found": "products found"
+    "found": "products found",
+    "clear": "Clear"
   },
   "product": {
     "visit": "Visit website",
@@ -66,7 +71,31 @@
     "similar": "Similar products",
     "pendingNotice": "This product is under review. Only you and admins can see it.",
     "rejectedNotice": "This product was rejected by moderation. Only you and admins can see it.",
-    "rejectedReason": "Reason"
+    "rejectedReason": "Reason",
+    "share": "Share",
+    "copyLink": "Copy link",
+    "copied": "Copied",
+    "bookmark": "Save",
+    "bookmarked": "Saved",
+    "ratings": "ratings",
+    "ratingNone": "No ratings yet",
+    "yourRating": "Your rating",
+    "rateHint": "Rate this product"
+  },
+  "bookmarks": {
+    "title": "Bookmarks",
+    "subtitle": "Products you have saved",
+    "empty": "No saved products yet.",
+    "loginRequired": "Sign in to save products.",
+    "browse": "Browse catalog"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account and notifications",
+    "loginRequired": "Sign in to open settings.",
+    "notifications": "Notifications",
+    "commentNotifications": "Comment emails",
+    "commentNotificationsDesc": "Get an email when someone comments on your product."
   },
   "submit": {
     "title": "Submit a product",

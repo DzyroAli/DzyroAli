@@ -4,6 +4,7 @@ import { createServerClient } from "@supabase/ssr";
 import { revalidatePath } from "next/cache";
 import { cookies, headers } from "next/headers";
 import { findCategory } from "./categories";
+import { isEmailConfigured, sendEmail } from "./email";
 import { createAdminClient } from "./supabase/admin";
 import {
   isSupabaseConfigured,
@@ -30,6 +31,10 @@ export interface ActionResult {
   error?: "demoMode" | "loginRequired" | "generic" | "validation";
   votes?: number;
   voted?: boolean;
+  bookmarked?: boolean;
+  rating?: number;
+  ratingAvg?: number;
+  ratingCount?: number;
 }
 
 async function requireUser() {
@@ -79,6 +84,92 @@ export async function toggleVote(productId: string): Promise<ActionResult> {
   };
 }
 
+export async function toggleBookmark(productId: string): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+  const { supabase, user } = await requireUser();
+  if (!user) return { error: "loginRequired" };
+
+  const { data: existing } = await supabase
+    .from("bookmarks")
+    .select("product_id")
+    .eq("product_id", productId)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (existing) {
+    await supabase
+      .from("bookmarks")
+      .delete()
+      .eq("product_id", productId)
+      .eq("user_id", user.id);
+  } else {
+    const { error } = await supabase
+      .from("bookmarks")
+      .insert({ product_id: productId, user_id: user.id });
+    if (error) return { error: "generic" };
+  }
+
+  revalidatePath("/bookmarks");
+  return { ok: true, bookmarked: !existing };
+}
+
+export async function updateCommentNotifications(
+  enabled: boolean
+): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+  const { supabase, user } = await requireUser();
+  if (!user) return { error: "loginRequired" };
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({ comment_notifications: enabled })
+    .eq("id", user.id);
+  if (error) return { error: "generic" };
+
+  revalidatePath("/settings");
+  return { ok: true };
+}
+
+export async function rateProduct(
+  productId: string,
+  value: number
+): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+  if (!Number.isInteger(value) || value < 1 || value > 5) {
+    return { error: "validation" };
+  }
+  const { supabase, user } = await requireUser();
+  if (!user) return { error: "loginRequired" };
+
+  const { error } = await supabase.from("ratings").upsert(
+    {
+      product_id: productId,
+      user_id: user.id,
+      value,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "product_id,user_id" }
+  );
+  if (error) return { error: "generic" };
+
+  const { data: product } = await supabase
+    .from("products")
+    .select("rating_sum, rating_count")
+    .eq("id", productId)
+    .single();
+
+  const sum = (product as { rating_sum?: number } | null)?.rating_sum ?? 0;
+  const count = (product as { rating_count?: number } | null)?.rating_count ?? 0;
+
+  revalidatePath("/", "layout");
+  return {
+    ok: true,
+    rating: value,
+    ratingAvg: count > 0 ? sum / count : 0,
+    ratingCount: count,
+  };
+}
+
 export async function addComment(
   productId: string,
   content: string,
@@ -99,8 +190,86 @@ export async function addComment(
   });
   if (error) return { error: "generic" };
 
+  // Уведомляем владельца продукта письмом. Никогда не роняет комментирование.
+  await notifyProductOwner(supabase, productId, user.id, text).catch(() => {});
+
   revalidatePath("/", "layout");
   return { ok: true };
+}
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+/**
+ * Отправляет владельцу продукта письмо о новом комментарии.
+ * Полностью защищено: при отсутствии почты/сервис-ключа — тихий no-op,
+ * себе не пишем, уважаем opt-out (comment_notifications = false).
+ */
+async function notifyProductOwner(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  productId: string,
+  commenterId: string,
+  commentText: string
+): Promise<void> {
+  if (!isEmailConfigured() || !process.env.SUPABASE_SERVICE_ROLE_KEY) return;
+
+  const { data: product } = await supabase
+    .from("products")
+    .select("name, slug, created_by")
+    .eq("id", productId)
+    .single();
+  const p = product as {
+    name: string;
+    slug: string;
+    created_by: string | null;
+  } | null;
+  if (!p?.created_by || p.created_by === commenterId) return;
+
+  const { data: owner } = await supabase
+    .from("profiles")
+    .select("comment_notifications")
+    .eq("id", p.created_by)
+    .single();
+  if ((owner as { comment_notifications?: boolean } | null)?.comment_notifications === false) {
+    return;
+  }
+
+  const { data: commenter } = await supabase
+    .from("profiles")
+    .select("full_name, username")
+    .eq("id", commenterId)
+    .single();
+  const c = commenter as { full_name?: string | null; username?: string } | null;
+  const who = escapeHtml(c?.full_name || c?.username || "Кто-то");
+
+  const admin = createAdminClient();
+  const { data: ownerUser } = await admin.auth.admin.getUserById(p.created_by);
+  const email = ownerUser?.user?.email;
+  if (!email) return;
+
+  const origin = await requestOrigin();
+  const url = `${origin}/products/${p.slug}`;
+  const snippet = escapeHtml(
+    commentText.length > 200 ? `${commentText.slice(0, 200)}…` : commentText
+  );
+  const productName = escapeHtml(p.name);
+
+  await sendEmail({
+    to: email,
+    subject: `Новый комментарий к «${p.name}» — TechRadar.uz`,
+    html: `<div style="font-family:system-ui,sans-serif;max-width:520px">
+  <p><strong>${who}</strong> оставил(а) комментарий к вашему продукту <strong>${productName}</strong>:</p>
+  <blockquote style="border-left:3px solid #14b8a6;margin:12px 0;padding:8px 14px;color:#334155">${snippet}</blockquote>
+  <p><a href="${url}" style="color:#0d9488;font-weight:600">Открыть продукт →</a></p>
+  <hr style="border:none;border-top:1px solid #e2e8f0;margin:18px 0">
+  <p style="font-size:12px;color:#94a3b8">Отключить эти письма можно в настройках профиля на TechRadar.uz</p>
+</div>`,
+  });
 }
 
 export interface SubmitState {
@@ -231,15 +400,15 @@ export async function sendMagicLink(
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "validation" };
   if (!isSupabaseConfigured()) return { error: "demoMode" };
 
+  const locale = String(formData.get("locale") ?? "uz");
   const supabase = await createClient();
   const site = await requestOrigin();
+  const localePrefix = locale !== "uz" ? `/${locale}` : "";
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: `${site}/api/auth/confirm`,
-      // Открытой регистрации нет: ссылка работает только для существующих
-      // аккаунтов, новые создаются через Google/Telegram.
-      shouldCreateUser: false,
+      emailRedirectTo: `${site}/api/auth/confirm${localePrefix ? `?locale=${locale}` : ""}`,
+      shouldCreateUser: true,
     },
   });
   if (error) return { error: "generic" };
