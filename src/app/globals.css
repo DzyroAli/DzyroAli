@@ -3,16 +3,14 @@
 @theme {
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
+
+html {
   color-scheme: light dark;
 }
 
-@supports (selector(:has())) {
-  html {
-    @apply [color-scheme:light];
-  }
-  html.dark {
-    @apply [color-scheme:dark];
-  }
+html.dark {
+  color-scheme: dark;
 }
 
 body {
