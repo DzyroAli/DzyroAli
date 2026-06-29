@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { Pagination } from "@/components/Pagination";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductFilters } from "@/components/ProductFilters";
@@ -35,7 +35,6 @@ export default async function ProductsPage({
   const page = Math.max(1, Number(rawPage) || 1);
 
   const t = await getTranslations("products");
-  const locale = await getLocale();
   const categories = getCategories();
   const { products, total } = await getProducts({
     q,

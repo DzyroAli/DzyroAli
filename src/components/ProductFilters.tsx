@@ -1,8 +1,7 @@
 "use client";
 
-import { ChevronDown, X } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useLocale } from "next-intl";
+import { X } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { CATEGORY_EMOJI } from "@/lib/categories";
 import { categoryName, type Category } from "@/lib/types";

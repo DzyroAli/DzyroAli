@@ -1,6 +1,5 @@
 "use client";
 
-import { useLocale } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { Globe } from "lucide-react";
@@ -12,7 +11,6 @@ const languageNames: Record<string, string> = {
 };
 
 export function LocaleSwitcher() {
-  const locale = useLocale();
   const pathname = usePathname();
 
   return (
