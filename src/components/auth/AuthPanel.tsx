@@ -65,6 +65,10 @@ export function AuthPanel({
   const [oauthError, setOauthError] = useState(false);
 
   const consented = agreePrivacy && agreeTerms;
+  // Google показываем только если провайдер включён в Supabase и задан флаг —
+  // иначе клик падал бы с «provider is not enabled».
+  const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_ENABLED === "true";
+  const hasOAuth = googleEnabled || Boolean(telegramBot);
 
   const [loginState, loginAction, loginPending] = useActionState<
     PasswordLoginState,
@@ -182,48 +186,45 @@ export function AuthPanel({
         )}
       </div>
 
-      {/* OAuth-провайдеры */}
-      <div className="space-y-2.5">
-        <button
-          type="button"
-          onClick={signInGoogle}
-          disabled={!consented}
-          className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          <GoogleIcon />
-          {t("googleButton")}
-        </button>
+      {hasOAuth && (
+        <>
+          {/* OAuth-провайдеры (показываем только настроенные) */}
+          <div className="space-y-2.5">
+            {googleEnabled && (
+              <button
+                type="button"
+                onClick={signInGoogle}
+                disabled={!consented}
+                className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <GoogleIcon />
+                {t("googleButton")}
+              </button>
+            )}
 
-        {telegramBot ? (
-          <div className="relative">
-            <TelegramLogin botUsername={telegramBot} />
-            {!consented && (
-              <div
-                className="absolute inset-0 z-10 cursor-not-allowed rounded-xl bg-white/60"
-                title={t("consentHint")}
-              />
+            {telegramBot && (
+              <div className="relative">
+                <TelegramLogin botUsername={telegramBot} />
+                {!consented && (
+                  <div
+                    className="absolute inset-0 z-10 cursor-not-allowed rounded-xl bg-white/60"
+                    title={t("consentHint")}
+                  />
+                )}
+              </div>
+            )}
+            {oauthError && (
+              <p className="text-xs text-rose-600">{t("oauthError")}</p>
             )}
           </div>
-        ) : (
-          <button
-            type="button"
-            disabled
-            title={t("telegramUnavailable")}
-            className="flex w-full items-center justify-center gap-2.5 rounded-xl bg-[#54a9eb] px-4 py-2.5 text-sm font-semibold text-white opacity-40"
-          >
-            ✈️ {t("telegramButton")}
-          </button>
-        )}
-        {oauthError && (
-          <p className="text-xs text-rose-600">{t("oauthError")}</p>
-        )}
-      </div>
 
-      <div className="flex items-center gap-3 text-xs text-slate-400">
-        <span className="h-px flex-1 bg-slate-200" />
-        {t("passwordDivider")}
-        <span className="h-px flex-1 bg-slate-200" />
-      </div>
+          <div className="flex items-center gap-3 text-xs text-slate-400">
+            <span className="h-px flex-1 bg-slate-200" />
+            {t("passwordDivider")}
+            <span className="h-px flex-1 bg-slate-200" />
+          </div>
+        </>
+      )}
 
       {resetMode ? (
         resetState.ok ? (
