@@ -5,6 +5,7 @@ import {
   Inbox,
   LayoutDashboard,
   Settings,
+  Upload,
   Users,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -20,6 +21,7 @@ export function AdminNav() {
     { href: "/admin", icon: LayoutDashboard, label: t("navOverview") },
     { href: "/admin/moderation", icon: Inbox, label: t("navModeration") },
     { href: "/admin/users", icon: Users, label: t("navUsers") },
+    { href: "/admin/import", icon: Upload, label: t("navImport") },
     { href: "/admin/analytics", icon: BarChart3, label: t("navAnalytics") },
     { href: "/admin/settings", icon: Settings, label: t("navSettings") },
   ] as const;
