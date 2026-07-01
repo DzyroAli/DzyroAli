@@ -177,6 +177,96 @@ export async function updateCategory(
   return { ok: true };
 }
 
+export interface ImportState {
+  ok?: boolean;
+  created?: number;
+  skipped?: number;
+  error?: "demoMode" | "loginRequired" | "validation" | "generic";
+}
+
+function normalizeUrl(value: unknown): string | null {
+  const s = String(value ?? "").trim();
+  if (!s) return null;
+  if (/^https?:\/\//i.test(s)) return s.slice(0, 500);
+  return `https://${s}`.slice(0, 500);
+}
+
+/**
+ * Массовый импорт продуктов админом из JSON-массива.
+ * Каждый элемент: { name, tagline|description, description?, website?, logo?, category? }.
+ * Категория сопоставляется по slug; неизвестная → «other». Пустые/без названия — пропуск.
+ */
+export async function importProducts(
+  _prev: ImportState,
+  formData: FormData
+): Promise<ImportState> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+  const { supabase, userId, isAdmin } = await requireAdmin();
+  if (!userId || !isAdmin) return { error: "loginRequired" };
+
+  let items: unknown;
+  try {
+    items = JSON.parse(String(formData.get("data") ?? ""));
+  } catch {
+    return { error: "validation" };
+  }
+  if (!Array.isArray(items)) return { error: "validation" };
+
+  const fallback = findCategory("other");
+  let created = 0;
+  let skipped = 0;
+
+  for (const raw of items.slice(0, 500)) {
+    const it = (raw ?? {}) as Record<string, unknown>;
+    const name = String(it.name ?? "").trim().slice(0, 60);
+    const tagline = String(it.tagline ?? it.description ?? "")
+      .trim()
+      .slice(0, 140);
+    if (!name || !tagline) {
+      skipped++;
+      continue;
+    }
+    const description = it.description
+      ? String(it.description).trim().slice(0, 5000)
+      : null;
+    const website_url = normalizeUrl(it.website ?? it.website_url);
+    const logo_url = normalizeUrl(it.logo ?? it.logo_url);
+    const category =
+      findCategory(String(it.category ?? "").trim()) ?? fallback;
+    if (!category) {
+      skipped++;
+      continue;
+    }
+
+    const base = slugify(name) || "startup";
+    let inserted = false;
+    for (let n = 0; n < 5 && !inserted; n++) {
+      const slug = n === 0 ? base : `${base}-${n + 1}`;
+      const { error } = await supabase.from("products").insert({
+        slug,
+        name,
+        tagline,
+        description,
+        website_url,
+        logo_url,
+        category_id: category.id,
+        status: "approved",
+        created_by: null,
+      });
+      if (!error) {
+        inserted = true;
+        created++;
+      } else if (!/duplicate|unique/i.test(error.message)) {
+        break; // не конфликт slug — этот элемент пропускаем
+      }
+    }
+    if (!inserted) skipped++;
+  }
+
+  revalidatePath("/", "layout");
+  return { ok: true, created, skipped };
+}
+
 export async function toggleVote(productId: string): Promise<ActionResult> {
   if (!isSupabaseConfigured()) return { error: "demoMode" };
   const { supabase, user } = await requireUser();
