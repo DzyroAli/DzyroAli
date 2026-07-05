@@ -1,66 +1,36 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+:root {
+  /* Fallbacks for browser mode; TelegramProvider overrides these from
+     Telegram themeParams at runtime. */
+  --tg-bg: #ffffff;
+  --tg-bg-secondary: #f2f2f7;
+  --tg-text: #111111;
+  --tg-hint: #8e8e93;
+  --tg-link: #2481cc;
+  --tg-button: #2481cc;
+  --tg-button-text: #ffffff;
 }
 
-html {
-  color-scheme: light dark;
+html.tg-dark {
+  --tg-bg: #18222d;
+  --tg-bg-secondary: #131c26;
+  --tg-text: #ffffff;
+  --tg-hint: #7d8b99;
+  --tg-link: #64b5ef;
+  --tg-button: #2ea6ff;
+  --tg-button-text: #ffffff;
 }
 
-html.dark {
-  color-scheme: dark;
-}
-
+html,
 body {
-  @apply bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-/* CSS-only dropdowns (<details>) used in the header */
-details.dropdown > summary {
-  list-style: none;
-  cursor: pointer;
-}
-details.dropdown > summary::-webkit-details-marker {
-  display: none;
-}
-details.dropdown[open] > summary::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 30;
-}
-details.dropdown > .dropdown-panel {
-  z-index: 40;
-}
-
-/* Плавные появления модалок и выпадающих панелей */
-@keyframes tr-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@keyframes tr-scale-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-.anim-fade-in {
-  animation: tr-fade-in 0.15s ease-out;
-}
-.anim-scale-in {
-  animation: tr-scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+/* Fabric.js text editing textarea should not zoom the page on iOS */
+.canvas-container textarea {
+  font-size: 16px !important;
 }
