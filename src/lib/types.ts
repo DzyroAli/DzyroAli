@@ -1,78 +1,116 @@
-export type Locale = "uz" | "ru" | "en";
+// ── Slide document model ────────────────────────────────────────────────
+// This is the persistent format stored in Supabase / localStorage.
+// It is deliberately independent from Fabric.js serialization so that
+// upgrading Fabric never breaks saved projects.
 
-export type ProductStatus = "pending" | "approved" | "rejected";
+export const SLIDE_FORMATS = {
+  "1080x1080": { width: 1080, height: 1080 },
+  "1080x1350": { width: 1080, height: 1350 },
+} as const;
 
-export interface Category {
+export type SlideFormat = keyof typeof SLIDE_FORMATS;
+
+export interface ColorBackground {
+  type: "color";
+  color: string;
+}
+
+export interface GradientBackground {
+  type: "gradient";
+  from: string;
+  to: string;
+  /** degrees, 0 = left→right, 90 = top→bottom */
+  angle: number;
+}
+
+export interface ImageBackground {
+  type: "image";
+  /** data URL or https URL */
+  src: string;
+}
+
+export type SlideBackground = ColorBackground | GradientBackground | ImageBackground;
+
+interface BaseElement {
+  id: string;
+  x: number;
+  y: number;
+  angle: number;
+  scaleX: number;
+  scaleY: number;
+  opacity: number;
+}
+
+export interface TextElement extends BaseElement {
+  type: "text";
+  text: string;
+  fontFamily: "Inter" | "Montserrat";
+  fontSize: number;
+  fontWeight: "normal" | "bold";
+  fill: string;
+  textAlign: "left" | "center" | "right";
+  width: number;
+  lineHeight: number;
+}
+
+export interface StickerElement extends BaseElement {
+  type: "sticker";
+  emoji: string;
+  fontSize: number;
+}
+
+export interface ShapeElement extends BaseElement {
+  type: "shape";
+  shape: "rect" | "circle";
+  width: number;
+  height: number;
+  fill: string;
+  rx: number;
+}
+
+export type SlideElement = TextElement | StickerElement | ShapeElement;
+
+export interface Slide {
+  id: string;
+  background: SlideBackground;
+  elements: SlideElement[];
+}
+
+export interface Project {
+  id: string;
+  title: string;
+  format: SlideFormat;
+  slides: Slide[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TgUser {
   id: number;
-  slug: string;
-  name_uz: string;
-  name_ru: string;
-  name_en: string;
-  position: number;
+  firstName: string;
+  username?: string;
+  photoUrl?: string;
+  languageCode?: string;
 }
 
-export interface Profile {
-  id: string;
-  username: string;
-  full_name: string | null;
-  avatar_url: string | null;
-  bio: string | null;
-  website: string | null;
-  telegram_username: string | null;
-  role: "user" | "admin";
-  digest_opt_in?: boolean;
-  comment_notifications?: boolean;
-  banned?: boolean;
-  created_at: string;
+export const MAX_SLIDES = 10;
+
+export function uid(): string {
+  return Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 }
 
-export interface Product {
-  id: string;
-  slug: string;
-  name: string;
-  tagline: string;
-  description: string | null;
-  website_url: string | null;
-  telegram_url: string | null;
-  logo_url: string | null;
-  category_id: number;
-  status: ProductStatus;
-  rejection_reason?: string | null;
-  created_by: string | null;
-  votes_count: number;
-  comments_count: number;
-  rating_sum?: number;
-  rating_count?: number;
-  launched_at: string;
-  created_at: string;
-  category?: Category | null;
-  maker?: Profile | null;
-  period_votes?: number;
+export function createSlide(background: SlideBackground = { type: "color", color: "#ffffff" }): Slide {
+  return { id: uid(), background, elements: [] };
 }
 
-export interface Comment {
-  id: string;
-  product_id: string;
-  user_id: string;
-  parent_id: string | null;
-  content: string;
-  created_at: string;
-  author?: Profile | null;
-}
-
-export interface AdminStats {
-  totalProducts: number;
-  pendingProducts: number;
-  totalUsers: number;
-  totalVotes: number;
-  totalComments: number;
-  subscribers: number;
-}
-
-export type RankingPeriod = "day" | "week" | "month";
-
-export function categoryName(category: Category, locale: string): string {
-  if (locale === "ru") return category.name_ru;
-  if (locale === "en") return category.name_en;
-  return category.name_uz;
+export function createProject(title: string, format: SlideFormat, slides?: Slide[]): Project {
+  const now = new Date().toISOString();
+  return {
+    id: uid(),
+    title,
+    format,
+    slides: slides && slides.length > 0 ? slides : [createSlide()],
+    createdAt: now,
+    updatedAt: now,
+  };
 }

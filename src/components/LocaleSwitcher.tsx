@@ -1,38 +1,43 @@
 "use client";
 
-import { Link, usePathname } from "@/i18n/navigation";
-import { routing } from "@/i18n/routing";
-import { Globe } from "lucide-react";
+import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { useTelegram } from "./TelegramProvider";
 
-const languageNames: Record<string, string> = {
-  uz: "Ўзбек",
-  ru: "Русский",
-  en: "English",
-};
+const locales = [
+  { code: "uz", label: "O‘zbekcha" },
+  { code: "ru", label: "Русский" },
+  { code: "en", label: "English" },
+];
 
 export function LocaleSwitcher() {
-  const pathname = usePathname();
+  const locale = useLocale();
+  const router = useRouter();
+  const [pending, startTransition] = useTransition();
+  const { haptic } = useTelegram();
+
+  function setLocale(code: string) {
+    haptic("light");
+    document.cookie = `NEXT_LOCALE=${code};path=/;max-age=31536000;SameSite=None;Secure`;
+    startTransition(() => router.refresh());
+  }
 
   return (
-    <details className="dropdown relative">
-      <summary
-        className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition-colors hover:text-slate-900"
-        aria-label="Select language"
-      >
-        <Globe size={18} />
-      </summary>
-      <div className="dropdown-panel absolute right-0 top-full mt-2 w-40 rounded-xl border border-slate-200 bg-white shadow-lg">
-        {routing.locales.map((l) => (
-          <Link
-            key={l}
-            href={pathname}
-            locale={l}
-            className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-100 first:rounded-t-lg last:rounded-b-lg"
-          >
-            {languageNames[l] || l}
-          </Link>
-        ))}
-      </div>
-    </details>
+    <div className={`flex gap-2 ${pending ? "opacity-60" : ""}`}>
+      {locales.map((l) => (
+        <button
+          key={l.code}
+          onClick={() => setLocale(l.code)}
+          className={`flex-1 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
+            locale === l.code
+              ? "bg-tg-button text-tg-button-text"
+              : "bg-tg-bg-secondary text-tg-text"
+          }`}
+        >
+          {l.label}
+        </button>
+      ))}
+    </div>
   );
 }
