@@ -14,7 +14,6 @@ import { Avatar } from "@/components/ui/Avatar";
 import { buttonClass, focusRing } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
-import { categoryIcon } from "@/lib/categories";
 import {
   getComments,
   getCurrentUser,
@@ -27,6 +26,7 @@ import {
 import { categoryName } from "@/lib/types";
 import { cityLabel } from "@/lib/cities";
 import { cn, formatDate } from "@/lib/utils";
+import { CategoryIcon } from "@/components/ui/CategoryIcon";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://techradar.uz";
 
@@ -126,7 +126,6 @@ export default async function ProductPage({
       : undefined,
   };
 
-  const CategoryIcon = categoryIcon(product.category?.slug);
   const makerCity = cityLabel(product.maker?.city, locale);
 
   return (
@@ -175,7 +174,10 @@ export default async function ProductPage({
                     href={`/category/${product.category.slug}`}
                     className={cn("rounded-md", focusRing)}
                   >
-                    <Badge tone="brand" icon={CategoryIcon}>
+                    <Badge
+                      tone="brand"
+                      icon={<CategoryIcon slug={product.category.slug} size={12} />}
+                    >
                       {categoryName(product.category, locale)}
                     </Badge>
                   </Link>

@@ -157,16 +157,25 @@ async function main() {
           });
           page.on("pageerror", (err) => consoleErrors.push(String(err)));
           page.on("requestfailed", (req) => {
-            failedRequests.push(`${req.url()} — ${req.failure()?.errorText}`);
+            const url = req.url();
+            const error = req.failure()?.errorText ?? "";
+            // App-router prefetches are cancelled when we close the page;
+            // that's teardown noise, not a broken request.
+            if (url.includes("_rsc=") && error === "net::ERR_ABORTED") return;
+            failedRequests.push(`${url} — ${error}`);
           });
 
           let status = 0;
           try {
             const res = await page.goto(url, {
-              waitUntil: "networkidle",
+              waitUntil: "domcontentloaded",
               timeout: 45_000,
             });
             status = res?.status() ?? 0;
+            // App-router link prefetching keeps the network busy indefinitely,
+            // so settle on fonts plus a short beat instead of waiting for idle.
+            await page.evaluate(() => document.fonts.ready);
+            await page.waitForTimeout(400);
           } catch (err) {
             findings.push({
               url,
@@ -196,10 +205,16 @@ async function main() {
           });
 
           const name = `${viewport.name}__${locale}__${slug(route)}.png`;
-          await page.screenshot({
-            path: path.join(OUT_DIR, name),
-            fullPage: viewport.name === "desktop" && locale === LOCALES[0],
-          });
+          const shotPath = path.join(OUT_DIR, name);
+          const wantsFullPage =
+            viewport.name === "desktop" && locale === LOCALES[0];
+          try {
+            await page.screenshot({ path: shotPath, fullPage: wantsFullPage });
+          } catch {
+            // Very tall pages exceed Chromium's capture limit; the viewport
+            // shot is still enough to eyeball the layout.
+            await page.screenshot({ path: shotPath });
+          }
 
           const expected404 = pathname === "/no-such-page";
           if (!expected404 && status >= 400) {
@@ -214,6 +229,8 @@ async function main() {
             });
           }
           for (const detail of consoleErrors) {
+            // The 404 route is meant to 404; its own status message isn't a bug.
+            if (expected404 && detail.includes("status of 404")) continue;
             findings.push({ url, viewport: viewport.name, kind: "console", detail });
           }
           for (const detail of failedRequests) {

@@ -5,9 +5,9 @@ import { Pagination } from "@/components/Pagination";
 import { ProductCard } from "@/components/ProductCard";
 import { PageBody } from "@/components/shell/AppShell";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { categoryIcon } from "@/lib/categories";
 import { getCategories, getProducts, getVotedProductIds } from "@/lib/data";
 import { categoryName } from "@/lib/types";
+import { CategoryIcon } from "@/components/ui/CategoryIcon";
 
 const PER_PAGE = 20;
 
@@ -47,7 +47,6 @@ export default async function CategoryPage({
     perPage: PER_PAGE,
   });
   const voted = await getVotedProductIds(products.map((p) => p.id));
-  const Icon = categoryIcon(slug);
 
   return (
     <PageBody>
@@ -56,7 +55,7 @@ export default async function CategoryPage({
           aria-hidden
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand"
         >
-          <Icon size={20} strokeWidth={1.75} />
+          <CategoryIcon slug={slug} size={20} strokeWidth={1.75} />
         </span>
         <div className="min-w-0">
           <h1 className="text-[22px] font-semibold tracking-tight text-ink sm:text-[26px]">

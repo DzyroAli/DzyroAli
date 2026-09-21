@@ -33,6 +33,8 @@
   --color-positive-soft: var(--yr-positive-soft);
   --color-critical: var(--yr-critical);
   --color-critical-soft: var(--yr-critical-soft);
+  --color-on-critical: var(--yr-on-critical);
+  --color-overlay: var(--yr-overlay);
 
   --radius-card: 0.875rem;
 }
@@ -61,6 +63,8 @@
   --yr-positive-soft: #e7f6ee;
   --yr-critical: #b42318;
   --yr-critical-soft: #fdeceb;
+  --yr-on-critical: #ffffff;
+  --yr-overlay: rgb(19 32 51 / 0.45);
 
   color-scheme: light;
 }
@@ -91,6 +95,8 @@
   --yr-positive-soft: #10281f;
   --yr-critical: #f27a70;
   --yr-critical-soft: #2a1515;
+  --yr-on-critical: #250d0a;
+  --yr-overlay: rgb(3 8 15 / 0.65);
 
   color-scheme: dark;
 }

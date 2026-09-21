@@ -19,13 +19,13 @@ export default async function ResetPasswordPage() {
 
   return (
     <div className="mx-auto max-w-md px-4 py-16">
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+      <div className="rounded-card border border-line bg-surface p-8 shadow-sm">
         <div className="mb-6 text-center">
-          <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-600 text-white">
+          <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand">
             <KeyRound size={22} />
           </span>
-          <h1 className="text-xl font-bold text-slate-900">{t("resetTitle")}</h1>
-          <p className="mt-1.5 text-sm text-slate-500">{t("resetSubtitle")}</p>
+          <h1 className="text-xl font-semibold text-ink">{t("resetTitle")}</h1>
+          <p className="mt-1.5 text-sm text-ink-muted">{t("resetSubtitle")}</p>
         </div>
         <NewPasswordForm />
       </div>

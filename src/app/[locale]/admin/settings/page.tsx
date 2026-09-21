@@ -30,22 +30,22 @@ export default async function AdminSettingsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900">{t("navSettings")}</h1>
-      <p className="mt-1 text-sm text-slate-500">{t("settingsSubtitle")}</p>
+      <h1 className="text-2xl font-semibold text-ink">{t("navSettings")}</h1>
+      <p className="mt-1 text-sm text-ink-muted">{t("settingsSubtitle")}</p>
 
       <div className="mt-6 space-y-2">
         {checks.map((c) => (
           <div
             key={c.label}
-            className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3.5"
+            className="flex items-center justify-between rounded-card border border-line bg-surface px-4 py-3.5"
           >
-            <span className="text-sm font-medium text-slate-700">{c.label}</span>
+            <span className="text-sm font-medium text-ink">{c.label}</span>
             {c.ok ? (
-              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal-700">
+              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-ink">
                 <CheckCircle2 size={16} /> {t("settingOk")}
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-400">
+              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink-muted">
                 <XCircle size={16} /> {t("settingMissing")}
               </span>
             )}
@@ -53,15 +53,15 @@ export default async function AdminSettingsPage() {
         ))}
       </div>
 
-      <p className="mt-6 rounded-2xl bg-slate-100 px-4 py-3 text-xs leading-relaxed text-slate-500">
+      <p className="mt-6 rounded-card bg-surface-muted px-4 py-3 text-xs leading-relaxed text-ink-muted">
         {t("settingsNote")}
       </p>
 
       <div className="mt-10">
-        <h2 className="text-lg font-bold text-slate-900">
+        <h2 className="text-lg font-semibold text-ink">
           {t("categoriesTitle")}
         </h2>
-        <p className="mb-4 mt-1 text-sm text-slate-500">
+        <p className="mb-4 mt-1 text-sm text-ink-muted">
           {t("categoriesHint")}
         </p>
         <CategoryEditor categories={categories} />

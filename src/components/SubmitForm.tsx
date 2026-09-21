@@ -5,11 +5,11 @@ import { useLocale, useTranslations } from "next-intl";
 import { CheckCircle2 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { submitProduct, type SubmitState } from "@/lib/actions";
-import { CATEGORIES, CATEGORY_EMOJI } from "@/lib/categories";
+import { CATEGORIES } from "@/lib/categories";
 import { categoryName } from "@/lib/types";
-
-const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition-colors focus:border-teal-500";
+import { Button, buttonClass } from "./ui/Button";
+import { Card } from "./ui/Card";
+import { FormMessage, Input, Label, Select, Textarea } from "./ui/Field";
 
 export function SubmitForm() {
   const t = useTranslations("submit");
@@ -23,133 +23,101 @@ export function SubmitForm() {
 
   if (state.ok) {
     return (
-      <div className="rounded-2xl border border-teal-200 bg-teal-50 p-8 text-center">
-        <CheckCircle2 className="mx-auto mb-3 text-teal-600" size={40} />
-        <p className="font-medium text-teal-800">{t("success")}</p>
-        <Link
-          href="/"
-          className="mt-4 inline-block rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
-        >
+      <Card className="p-8 text-center">
+        <CheckCircle2 className="mx-auto mb-3 text-positive" size={36} aria-hidden />
+        <p className="text-sm font-medium text-ink">{t("success")}</p>
+        <Link href="/" className={buttonClass("primary", "md", "mt-5")}>
           {tc("goHome")}
         </Link>
-      </div>
+      </Card>
     );
   }
+
+  const errorText =
+    state.error === "demoMode"
+      ? tErr("demoMode")
+      : state.error === "loginRequired"
+        ? tErr("loginRequired")
+        : state.error === "banned"
+          ? tErr("banned")
+          : tErr("generic");
 
   return (
     <form action={formAction} className="space-y-5">
       <div>
-        <label className="mb-1.5 block text-sm font-semibold text-slate-700">
-          {t("name")} *
-        </label>
-        <input
+        <Label htmlFor="name">{t("name")} *</Label>
+        <Input
+          id="name"
           name="name"
           required
           maxLength={60}
           placeholder={t("namePlaceholder")}
-          className={inputClass}
         />
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-semibold text-slate-700">
-          {t("tagline")} *
-        </label>
-        <input
+        <Label htmlFor="tagline">{t("tagline")} *</Label>
+        <Input
+          id="tagline"
           name="tagline"
           required
           maxLength={140}
           placeholder={t("taglinePlaceholder")}
-          className={inputClass}
         />
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-semibold text-slate-700">
-          {t("category")} *
-        </label>
-        <select name="category" required className={inputClass} defaultValue="">
+        <Label htmlFor="category">{t("category")} *</Label>
+        <Select id="category" name="category" required defaultValue="">
           <option value="" disabled />
           {CATEGORIES.map((c) => (
             <option key={c.slug} value={c.slug}>
-              {CATEGORY_EMOJI[c.slug]} {categoryName(c, locale)}
+              {categoryName(c, locale)}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-semibold text-slate-700">
-          {t("description")}
-        </label>
-        <textarea
+        <Label htmlFor="description">{t("description")}</Label>
+        <Textarea
+          id="description"
           name="description"
           rows={6}
           maxLength={5000}
           placeholder={t("descriptionPlaceholder")}
-          className={inputClass}
         />
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label className="mb-1.5 block text-sm font-semibold text-slate-700">
-            {t("website")}
-          </label>
-          <input
-            name="website"
-            type="url"
-            placeholder="https://"
-            className={inputClass}
-          />
+          <Label htmlFor="website">{t("website")}</Label>
+          <Input id="website" name="website" type="url" placeholder="https://" />
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-semibold text-slate-700">
-            {t("telegram")}
-          </label>
-          <input
+          <Label htmlFor="telegram">{t("telegram")}</Label>
+          <Input
+            id="telegram"
             name="telegram"
             type="url"
             placeholder="https://t.me/"
-            className={inputClass}
           />
         </div>
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-semibold text-slate-700">
-          {t("logo")}
-        </label>
-        <input
-          name="logo"
-          type="url"
-          placeholder="https://"
-          className={inputClass}
-        />
-        <p className="mt-1 text-xs text-slate-400">{t("logoHint")}</p>
+        <Label htmlFor="logo">{t("logo")}</Label>
+        <Input id="logo" name="logo" type="url" placeholder="https://" />
+        <p className="mt-1 text-xs text-ink-muted">{t("logoHint")}</p>
       </div>
 
-      {state.error && (
-        <p className="rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-700">
-          {state.error === "demoMode"
-            ? tErr("demoMode")
-            : state.error === "loginRequired"
-              ? tErr("loginRequired")
-              : state.error === "banned"
-                ? tErr("banned")
-                : tErr("generic")}
-        </p>
-      )}
+      {state.error && <FormMessage tone="error">{errorText}</FormMessage>}
 
-      <div className="flex flex-col gap-3">
-        <button
-          type="submit"
-          disabled={pending}
-          className="rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-60"
-        >
+      <div className="flex flex-col items-start gap-3">
+        <Button type="submit" size="lg" loading={pending}>
           {pending ? t("submitting") : t("submit")}
-        </button>
-        <p className="text-xs text-slate-400">{t("moderationNote")}</p>
+        </Button>
+        <p className="text-xs text-ink-muted">{t("moderationNote")}</p>
       </div>
     </form>
   );

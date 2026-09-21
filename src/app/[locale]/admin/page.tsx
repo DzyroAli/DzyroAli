@@ -33,83 +33,83 @@ export default async function AdminOverviewPage() {
       label: t("approvedToday"),
       value: launch.productsToday,
       icon: Rocket,
-      tone: "text-teal-600 bg-teal-50",
+      tone: "text-brand bg-brand-soft",
     },
     {
       label: t("signupsToday"),
       value: launch.signupsToday,
       icon: UserPlus,
-      tone: "text-cyan-600 bg-cyan-50",
+      tone: "text-brand bg-brand-soft",
     },
     {
       label: t("votesToday"),
       value: launch.votesToday,
       icon: ThumbsUp,
-      tone: "text-violet-600 bg-violet-50",
+      tone: "text-brand bg-brand-soft",
     },
     {
       label: t("totalVotes"),
       value: stats.totalVotes,
       icon: ThumbsUp,
-      tone: "text-amber-600 bg-amber-50",
+      tone: "text-brand bg-brand-soft",
     },
     {
       label: t("pendingProducts"),
       value: stats.pendingProducts,
       icon: Inbox,
-      tone: "text-rose-600 bg-rose-50",
+      tone: "text-critical bg-critical-soft",
     },
     {
       label: t("subscribers"),
       value: stats.subscribers,
       icon: Mail,
-      tone: "text-slate-600 bg-slate-100",
+      tone: "text-ink-muted bg-surface-muted",
     },
   ];
 
   return (
     <div>
       <div className="flex items-center gap-2">
-        <PartyPopper size={22} className="text-teal-600" />
-        <h1 className="text-2xl font-bold text-slate-900">
+        <PartyPopper size={22} className="text-brand" />
+        <h1 className="text-2xl font-semibold text-ink">
           {t("launchDayTitle")}
         </h1>
       </div>
-      <p className="mt-1 text-sm text-slate-500">{t("launchDaySubtitle")}</p>
+      <p className="mt-1 text-sm text-ink-muted">{t("launchDaySubtitle")}</p>
 
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
         {launchCards.map((c) => (
           <div
             key={c.label}
-            className="rounded-2xl border border-slate-200 bg-white p-4"
+            className="rounded-card border border-line bg-surface p-4"
           >
             <span
               className={`inline-flex h-8 w-8 items-center justify-center rounded-lg ${c.tone}`}
             >
               <c.icon size={16} />
             </span>
-            <p className="mt-2 text-2xl font-extrabold text-slate-900">
+            <p className="mt-2 text-2xl font-semibold text-ink">
               {c.value}
             </p>
-            <p className="text-xs text-slate-500">{c.label}</p>
+            <p className="text-xs text-ink-muted">{c.label}</p>
           </div>
         ))}
       </div>
 
       <div className="mb-4 mt-10 flex items-center justify-between">
-        <h2 className="text-lg font-bold text-slate-900">
+        <h2 className="text-lg font-semibold text-ink">
           {t("moderationQueue")}
         </h2>
         <Link
           href="/admin/moderation"
-          className="text-sm font-semibold text-teal-700 hover:underline"
+          className="text-sm font-semibold text-brand-ink hover:underline"
         >
           {t("openModeration")} →
         </Link>
       </div>
 
       {pending.length === 0 ? (
-        <p className="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-slate-500">
+        <p className="rounded-card border border-dashed border-line-strong p-8 text-center text-ink-muted">
           {t("emptyQueue")}
         </p>
       ) : (
@@ -117,22 +117,22 @@ export default async function AdminOverviewPage() {
           {pending.slice(0, 5).map((p) => (
             <div
               key={p.id}
-              className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 sm:flex-row sm:items-center"
+              className="flex flex-col gap-4 rounded-card border border-line bg-surface p-4 sm:flex-row sm:items-center"
             >
               <ProductLogo name={p.name} logoUrl={p.logo_url} size={48} />
               <div className="min-w-0 flex-1">
                 <Link
                   href={`/products/${p.slug}`}
-                  className="font-semibold text-slate-900 hover:text-teal-700"
+                  className="font-semibold text-ink hover:text-brand-ink"
                 >
                   {p.name}
                 </Link>
-                <p className="line-clamp-2 text-sm text-slate-600">
+                <p className="line-clamp-2 text-sm text-ink-muted">
                   {p.tagline}
                 </p>
-                <p className="mt-1 text-xs text-slate-400">
+                <p className="mt-1 text-xs text-ink-muted">
                   {p.category ? categoryName(p.category, locale) : "—"}
-                  {p.maker ? ` · @${p.maker.username}` : ""} ·{" "}
+                  {p.maker ? ` · @${p.maker.username}` : ""} ·{""}
                   {formatDate(p.created_at, locale)}
                 </p>
               </div>

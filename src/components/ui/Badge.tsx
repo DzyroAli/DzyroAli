@@ -1,4 +1,3 @@
-import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -13,12 +12,13 @@ const tones: Record<BadgeTone, string> = {
 
 export function Badge({
   tone = "neutral",
-  icon: Icon,
+  icon,
   children,
   className,
 }: {
   tone?: BadgeTone;
-  icon?: LucideIcon;
+  /** Rendered as-is; pass an already-sized icon element. */
+  icon?: ReactNode;
   children: ReactNode;
   className?: string;
 }) {
@@ -30,7 +30,7 @@ export function Badge({
         className
       )}
     >
-      {Icon ? <Icon size={12} className="shrink-0" aria-hidden /> : null}
+      {icon ? <span className="flex shrink-0 items-center">{icon}</span> : null}
       <span className="truncate">{children}</span>
     </span>
   );

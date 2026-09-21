@@ -3,11 +3,11 @@ import { Avatar } from "@/components/ui/Avatar";
 import { focusRing } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Link } from "@/i18n/navigation";
-import { categoryIcon } from "@/lib/categories";
 import { cityName, findCity } from "@/lib/cities";
 import type { EcosystemStats, MakerRank } from "@/lib/data";
 import { categoryName, type Category } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { CategoryIcon } from "@/components/ui/CategoryIcon";
 
 function RailCard({
   title,
@@ -69,7 +69,6 @@ export async function SideRail({
             {topCategories.map((entry) => {
               const category = byId.get(entry.slug);
               if (!category) return null;
-              const Icon = categoryIcon(entry.slug);
               return (
                 <li key={entry.slug}>
                   <Link
@@ -80,7 +79,7 @@ export async function SideRail({
                     )}
                   >
                     <span className="flex min-w-0 flex-1 items-center gap-2 text-ink">
-                      <Icon size={14} className="shrink-0 text-brand" aria-hidden />
+                      <CategoryIcon slug={entry.slug} className="shrink-0 text-brand" />
                       <span className="truncate">{categoryName(category, locale)}</span>
                     </span>
                     <Meter value={entry.count} max={maxCategory} />

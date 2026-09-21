@@ -11,7 +11,6 @@ import {
   getCategories,
   getEcosystemStats,
   getLeaderboard,
-  getNewest,
   getRanking,
   getVotedProductIds,
 } from "@/lib/data";

@@ -43,7 +43,6 @@ export default function OgImage() {
             letterSpacing: -2,
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={mark} width={120} height={120} alt="" />
           <div style={{ display: "flex" }}>YaRato</div>
         </div>

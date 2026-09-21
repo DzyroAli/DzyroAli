@@ -4,8 +4,8 @@ import { Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { updateCategory } from "@/lib/actions";
-import { CATEGORY_EMOJI } from "@/lib/categories";
 import type { Category } from "@/lib/types";
+import { CategoryIcon } from "@/components/ui/CategoryIcon";
 
 function CategoryRow({ category }: { category: Category }) {
   const t = useTranslations("admin");
@@ -34,17 +34,17 @@ function CategoryRow({ category }: { category: Category }) {
     });
 
   const inputCls =
-    "w-full rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-sm outline-none focus:border-teal-500";
+    "w-full rounded-lg border border-line bg-surface px-2.5 py-1.5 text-sm outline-none focus:border-brand";
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4">
-      <div className="mb-2.5 flex items-center gap-2 text-sm font-semibold text-slate-700">
-        <span aria-hidden>{CATEGORY_EMOJI[category.slug] ?? "✨"}</span>
-        <code className="text-xs text-slate-400">{category.slug}</code>
+    <div className="rounded-card border border-line bg-surface p-4">
+      <div className="mb-2.5 flex items-center gap-2 text-sm font-semibold text-ink">
+        <CategoryIcon slug={category.slug} size={15} className="text-brand" />
+        <code className="text-xs text-ink-muted">{category.slug}</code>
       </div>
       <div className="grid gap-2 sm:grid-cols-3">
         <label className="block">
-          <span className="mb-1 block text-[11px] font-medium uppercase text-slate-400">
+          <span className="mb-1 block text-[11px] font-medium uppercase text-ink-muted">
             UZ
           </span>
           <input
@@ -55,7 +55,7 @@ function CategoryRow({ category }: { category: Category }) {
           />
         </label>
         <label className="block">
-          <span className="mb-1 block text-[11px] font-medium uppercase text-slate-400">
+          <span className="mb-1 block text-[11px] font-medium uppercase text-ink-muted">
             RU
           </span>
           <input
@@ -66,7 +66,7 @@ function CategoryRow({ category }: { category: Category }) {
           />
         </label>
         <label className="block">
-          <span className="mb-1 block text-[11px] font-medium uppercase text-slate-400">
+          <span className="mb-1 block text-[11px] font-medium uppercase text-ink-muted">
             EN
           </span>
           <input
@@ -79,7 +79,7 @@ function CategoryRow({ category }: { category: Category }) {
       </div>
       <div className="mt-3 flex items-center justify-end gap-3">
         {saved && (
-          <span className="inline-flex items-center gap-1 text-xs font-medium text-teal-600">
+          <span className="inline-flex items-center gap-1 text-xs font-medium text-brand">
             <Check size={14} /> {t("saved")}
           </span>
         )}
@@ -87,7 +87,7 @@ function CategoryRow({ category }: { category: Category }) {
           type="button"
           onClick={save}
           disabled={!dirty || pending}
-          className="rounded-lg bg-slate-900 px-3.5 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-40"
+          className="rounded-lg bg-brand px-3.5 py-1.5 text-xs font-semibold text-on-brand transition-opacity hover:opacity-90 disabled:opacity-40"
         >
           {t("save")}
         </button>

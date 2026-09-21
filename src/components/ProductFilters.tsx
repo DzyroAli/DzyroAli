@@ -4,10 +4,10 @@ import { SlidersHorizontal, X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { Link } from "@/i18n/navigation";
-import { categoryIcon } from "@/lib/categories";
 import { categoryName, type Category } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { focusRing } from "./ui/Button";
+import { CategoryIcon } from "./ui/CategoryIcon";
 
 const pill =
   "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[13px] font-medium transition-colors";
@@ -78,7 +78,6 @@ function FilterGroups({
             {t("allCategories")}
           </Link>
           {categories.map((c) => {
-            const Icon = categoryIcon(c.slug);
             const active = currentCategory === c.slug;
             return (
               <Link
@@ -93,7 +92,7 @@ function FilterGroups({
                     : "border-line bg-surface text-ink-muted hover:border-line-strong hover:text-ink"
                 )}
               >
-                <Icon size={13} className="shrink-0" aria-hidden />
+                <CategoryIcon slug={c.slug} size={13} className="shrink-0" />
                 {categoryName(c, locale)}
               </Link>
             );

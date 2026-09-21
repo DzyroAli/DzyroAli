@@ -16,12 +16,12 @@ export function NewPasswordForm() {
   if (state.ok) {
     return (
       <div className="space-y-3 text-center">
-        <p className="rounded-xl bg-teal-50 px-4 py-3 text-sm font-medium text-teal-700">
+        <p className="rounded-xl bg-brand-soft px-4 py-3 text-sm font-medium text-brand-ink">
           {t("passwordUpdated")}
         </p>
         <Link
           href="/"
-          className="inline-block rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white"
+          className="inline-block rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand"
         >
           {t("goHome")}
         </Link>
@@ -38,17 +38,17 @@ export function NewPasswordForm() {
         minLength={8}
         autoComplete="new-password"
         placeholder={t("newPasswordPlaceholder")}
-        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-teal-500"
+        className="w-full rounded-xl border border-line bg-surface px-3 py-2.5 text-sm outline-none focus:border-brand"
       />
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-2.5 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+        className="w-full rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand transition-opacity hover:opacity-90 disabled:opacity-60"
       >
         {t("savePassword")}
       </button>
       {state.error && (
-        <p className="text-xs text-rose-600">
+        <p className="text-xs text-critical">
           {state.error === "validation"
             ? t("passwordTooShort")
             : t("genericError")}

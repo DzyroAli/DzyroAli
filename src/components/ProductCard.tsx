@@ -1,12 +1,12 @@
 import { MapPin, MessageCircle, Star } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { categoryIcon } from "@/lib/categories";
 import { cityLabel } from "@/lib/cities";
 import { categoryName, type Product } from "@/lib/types";
 import { ProductLogo } from "./ProductLogo";
 import { Badge } from "./ui/Badge";
 import { VoteButton } from "./VoteButton";
+import { CategoryIcon } from "./ui/CategoryIcon";
 
 /**
  * Feed card. Shows only fields the schema actually carries — no invented
@@ -27,7 +27,6 @@ export async function ProductCard({
 }) {
   const locale = await getLocale();
   const t = await getTranslations("common");
-  const CategoryIcon = categoryIcon(product.category?.slug);
   const city = cityLabel(product.maker?.city, locale);
   const ratingCount = product.rating_count ?? 0;
   const rating =
@@ -64,7 +63,9 @@ export async function ProductCard({
 
         <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
           {product.category && (
-            <Badge icon={CategoryIcon}>{categoryName(product.category, locale)}</Badge>
+            <Badge icon={<CategoryIcon slug={product.category.slug} size={12} />}>
+              {categoryName(product.category, locale)}
+            </Badge>
           )}
 
           <span className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-ink-muted">

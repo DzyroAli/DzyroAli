@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { categoryIcon } from "@/lib/categories";
 import { cn } from "@/lib/utils";
+import { CategoryIcon } from "./ui/CategoryIcon";
 
 /**
  * Product mark: the uploaded logo when present, otherwise the product's
@@ -35,8 +35,6 @@ export function ProductLogo({
     );
   }
 
-  const Icon = categoryIcon(categorySlug);
-
   return (
     <span
       style={{ width: size, height: size }}
@@ -46,7 +44,7 @@ export function ProductLogo({
       )}
       aria-hidden
     >
-      <Icon size={Math.round(size * 0.42)} strokeWidth={1.75} />
+      <CategoryIcon slug={categorySlug} size={Math.round(size * 0.42)} strokeWidth={1.75} />
     </span>
   );
 }

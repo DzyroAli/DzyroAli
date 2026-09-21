@@ -15,7 +15,7 @@ export function MagicLinkForm() {
 
   if (state.ok) {
     return (
-      <p className="rounded-xl bg-teal-50 px-4 py-3 text-sm font-medium text-teal-700">
+      <p className="rounded-xl bg-brand-soft px-4 py-3 text-sm font-medium text-brand-ink">
         {t("emailSent")}
       </p>
     );
@@ -30,18 +30,18 @@ export function MagicLinkForm() {
           name="email"
           required
           placeholder={t("emailPlaceholder")}
-          className="w-full min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-teal-500"
+          className="w-full min-w-0 flex-1 rounded-xl border border-line bg-surface px-3 py-2.5 text-sm outline-none focus:border-brand"
         />
         <button
           type="submit"
           disabled={pending}
-          className="shrink-0 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+          className="shrink-0 rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand transition-opacity hover:opacity-90 disabled:opacity-60"
         >
           {t("emailSubmit")}
         </button>
       </div>
       {state.error && (
-        <p className="text-xs text-rose-600">
+        <p className="text-xs text-critical">
           {state.error === "demoMode" ? tErr("demoMode") : tErr("generic")}
         </p>
       )}

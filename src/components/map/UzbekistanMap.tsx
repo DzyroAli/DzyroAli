@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { LayoutList, MapIcon, Users, Package, X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { CITIES, cityName, type City } from "@/lib/cities";
+import { CITIES, cityName } from "@/lib/cities";
 import { MAP_HEIGHT, MAP_WIDTH, project, UZ_OUTLINE_PATH } from "@/lib/uz-outline";
 import { cn } from "@/lib/utils";
 import { Avatar } from "@/components/ui/Avatar";
