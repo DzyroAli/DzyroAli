@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { DemoBanner } from "@/components/DemoBanner";
+import { StatusBanner } from "@/components/StatusBanner";
 import { Footer } from "@/components/Footer";
 import { MobileNav, SideNav } from "./SideNav";
 import { TopBar } from "./TopBar";
@@ -11,7 +11,7 @@ import { TopBar } from "./TopBar";
 export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col">
-      <DemoBanner />
+      <StatusBanner />
       <TopBar />
       <MobileNav />
       {/* The rail sits flush against the viewport edge; only the reading

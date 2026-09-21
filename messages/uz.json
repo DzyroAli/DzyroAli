@@ -28,7 +28,8 @@
     "themeLight": "Yorug' mavzu",
     "pagination": "Sahifalash",
     "previousPage": "Oldingi sahifa",
-    "nextPage": "Keyingi sahifa"
+    "nextPage": "Keyingi sahifa",
+    "backendUnreachable": "Ma'lumotlar bazasiga ulanib bo'lmadi. Supabase loyihasi to'xtatilgan bo'lishi mumkin — saytdagi amallar vaqtincha ishlamaydi."
   },
   "home": {
     "heroBadge": "O'zbekiston texnologik mahsulotlar radari",
@@ -97,7 +98,8 @@
     "ratingNone": "Hali baholanmagan",
     "yourRating": "Sizning bahoyingiz",
     "rateHint": "Mahsulotni baholang",
-    "delete": "O'chirish"
+    "delete": "O'chirish",
+    "copyFailed": "Nusxalab bo'lmadi"
   },
   "bookmarks": {
     "title": "Saqlanganlar",

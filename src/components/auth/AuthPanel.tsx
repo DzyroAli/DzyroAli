@@ -1,7 +1,7 @@
 "use client";
 
 import { Eye, EyeOff, Lock, User } from "lucide-react";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import {
@@ -64,7 +64,23 @@ export function AuthPanel({
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [oauthError, setOauthError] = useState(false);
 
+  const [consentError, setConsentError] = useState(false);
+  const consentRef = useRef<HTMLDivElement>(null);
+
   const consented = agreePrivacy && agreeTerms;
+
+  /**
+   * Gate the sign-in actions on consent without disabling the buttons.
+   * A greyed-out primary button with no response to a click reads as broken;
+   * this lets the click land and says what is missing.
+   */
+  function blockedByConsent(event?: { preventDefault: () => void }): boolean {
+    if (consented) return false;
+    event?.preventDefault();
+    setConsentError(true);
+    consentRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    return true;
+  }
   // Google показываем только если провайдер включён в Supabase и задан флаг —
   // иначе клик падал бы с «provider is not enabled».
   const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_ENABLED === "true";
@@ -108,7 +124,7 @@ export function AuthPanel({
   }, [signUpState.ok, signUpState.needsConfirm, onSuccess]);
 
   async function signInGoogle() {
-    if (!consented) return;
+    if (blockedByConsent()) return;
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -127,12 +143,23 @@ export function AuthPanel({
   return (
     <div className="space-y-4">
       {/* Согласия — обязательные пункты помечены красной звёздочкой */}
-      <div className="space-y-2 rounded-xl bg-surface-muted p-3.5 text-xs leading-relaxed text-ink-muted">
+      <div
+        ref={consentRef}
+        className={cn(
+          "space-y-2 rounded-xl p-3.5 text-xs leading-relaxed text-ink-muted transition-colors",
+          consentError
+            ? "bg-critical-soft ring-1 ring-critical/40"
+            : "bg-surface-muted"
+        )}
+      >
         <label className="flex cursor-pointer items-start gap-2">
           <input
             type="checkbox"
             checked={agreePrivacy}
-            onChange={(e) => setAgreePrivacy(e.target.checked)}
+            onChange={(e) => {
+              setAgreePrivacy(e.target.checked);
+              if (e.target.checked && agreeTerms) setConsentError(false);
+            }}
             className={checkboxCls}
           />
           <span>
@@ -154,7 +181,10 @@ export function AuthPanel({
           <input
             type="checkbox"
             checked={agreeTerms}
-            onChange={(e) => setAgreeTerms(e.target.checked)}
+            onChange={(e) => {
+              setAgreeTerms(e.target.checked);
+              if (e.target.checked && agreePrivacy) setConsentError(false);
+            }}
             className={checkboxCls}
           />
           <span>
@@ -182,7 +212,15 @@ export function AuthPanel({
           <span>{t("consentDigest")}</span>
         </label>
         {!consented && (
-          <p className="pt-0.5 text-[11px] text-ink-muted">{t("consentHint")}</p>
+          <p
+            role={consentError ? "alert" : undefined}
+            className={cn(
+              "pt-0.5 text-[11px]",
+              consentError ? "font-medium text-critical" : "text-ink-muted"
+            )}
+          >
+            {t("consentHint")}
+          </p>
         )}
       </div>
 
@@ -194,8 +232,7 @@ export function AuthPanel({
               <button
                 type="button"
                 onClick={signInGoogle}
-                disabled={!consented}
-                className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-line bg-surface px-4 py-2.5 text-sm font-semibold text-ink transition-all hover:border-line-strong hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-line bg-surface px-4 py-2.5 text-sm font-semibold text-ink transition-all hover:border-line-strong hover:bg-surface-muted"
               >
                 <GoogleIcon />
                 {t("googleButton")}
@@ -206,9 +243,11 @@ export function AuthPanel({
               <div className="relative">
                 <TelegramLogin botUsername={telegramBot} />
                 {!consented && (
-                  <div
-                    className="absolute inset-0 z-10 cursor-not-allowed rounded-xl bg-surface/60"
-                    title={t("consentHint")}
+                  <button
+                    type="button"
+                    onClick={() => blockedByConsent()}
+                    aria-label={t("consentHint")}
+                    className="absolute inset-0 z-10 rounded-xl bg-surface/60"
                   />
                 )}
               </div>
@@ -353,8 +392,9 @@ export function AuthPanel({
               </div>
               <button
                 type="submit"
-                disabled={!consented || loginPending}
-                className="w-full rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+                onClick={blockedByConsent}
+                disabled={loginPending}
+                className="w-full rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loginPending ? t("loggingIn") : t("loginButton")}
               </button>
@@ -421,8 +461,9 @@ export function AuthPanel({
               {digest && <input type="hidden" name="digest" value="on" />}
               <button
                 type="submit"
-                disabled={!consented || signUpPending}
-                className="w-full rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+                onClick={blockedByConsent}
+                disabled={signUpPending}
+                className="w-full rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {signUpPending ? t("registering") : t("registerButton")}
               </button>

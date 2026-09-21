@@ -28,7 +28,8 @@
     "themeLight": "Light theme",
     "pagination": "Pagination",
     "previousPage": "Previous page",
-    "nextPage": "Next page"
+    "nextPage": "Next page",
+    "backendUnreachable": "Can't reach the database. The Supabase project may be paused — actions on the site won't work until it's back."
   },
   "home": {
     "heroBadge": "Uzbekistan's tech product radar",
@@ -97,7 +98,8 @@
     "ratingNone": "No ratings yet",
     "yourRating": "Your rating",
     "rateHint": "Rate this product",
-    "delete": "Delete"
+    "delete": "Delete",
+    "copyFailed": "Couldn't copy"
   },
   "bookmarks": {
     "title": "Bookmarks",
