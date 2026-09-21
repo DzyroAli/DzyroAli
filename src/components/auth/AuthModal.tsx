@@ -1,9 +1,10 @@
 "use client";
 
-import { Radar, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { AuthPanel } from "./AuthPanel";
+import { RadarLogo } from "../ui/RadarLogo";
 
 /** Модальное окно «Вход в аккаунт» с плавным появлением. */
 export function AuthModal({
@@ -49,9 +50,7 @@ export function AuthModal({
         </button>
 
         <div className="mb-5 text-center">
-          <span className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-brand text-on-brand">
-            <Radar size={22} />
-          </span>
+          <RadarLogo size={36} className="mx-auto mb-3 text-brand" />
           <h2 className="text-lg font-semibold text-ink">{t("title")}</h2>
           <p className="mt-1 text-xs text-ink-muted">{t("subtitle")}</p>
         </div>

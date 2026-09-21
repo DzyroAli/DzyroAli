@@ -140,7 +140,7 @@
     "moderationNote": "All products are reviewed before publication (usually within 24 hours)."
   },
   "login": {
-    "title": "Sign in to TechRadar.uz",
+    "title": "Sign in to YaRato",
     "subtitle": "Sign in to upvote, comment and submit products",
     "telegramHint": "Instant sign-in via Telegram — no password needed",
     "emailDivider": "or with email",
@@ -150,7 +150,7 @@
     "telegramUnavailable": "Telegram sign-in is not configured (TELEGRAM_BOT env variable missing).",
     "consentPrivacy": "I <link>consent</link> to the processing of my personal data",
     "consentTerms": "I accept the <link>terms of service</link>",
-    "consentDigest": "Receive the TechRadar digest — best products of the week by email",
+    "consentDigest": "Receive the YaRato digest — best products of the week by email",
     "consentHint": "Check the required boxes (*) to continue",
     "googleButton": "Sign in with Google",
     "telegramButton": "Sign in with Telegram",
@@ -304,7 +304,7 @@
     "terms": "Terms"
   },
   "meta": {
-    "homeTitle": "TechRadar.uz — the launchpad for Uzbekistan's startups",
+    "homeTitle": "YaRato — the launchpad for Uzbekistan's startups",
     "homeDescription": "The best startups, AI assistants, Telegram bots and Mini Apps of Uzbekistan. Launch your project, collect upvotes, find investors and a team.",
     "productsTitle": "Product catalog",
     "productsDescription": "Catalog of all startups, bots and services of the Uzbekistan ecosystem.",
@@ -341,7 +341,7 @@
     "metaTitle": "About — we launched today!",
     "badge": "Day 1",
     "title": "We launched today!",
-    "subtitle": "TechRadar.uz is the open stage of Uzbekistan's tech ecosystem. Today is day one. Everything you see is being built by the community right now.",
+    "subtitle": "YaRato is the open stage of Uzbekistan's tech ecosystem. Today is day one. Everything you see is being built by the community right now.",
     "counterProducts": "products in the catalog",
     "counterMakers": "makers with us",
     "counterVotes": "votes cast",
@@ -350,7 +350,7 @@
     "counterSignups": "new members today",
     "manifestoTitle": "Community Manifesto",
     "manifesto1": "We believe world-class products are born in Uzbekistan — startups, AI services, Telegram bots and Mini Apps. They need a stage where first users, investors and future teammates can see them.",
-    "manifesto2": "TechRadar.uz is that stage. Founders launch in public here, collect honest feedback and community votes, find teams and partners. Building in public is faster and fairer.",
+    "manifesto2": "YaRato is that stage. Founders launch in public here, collect honest feedback and community votes, find teams and partners. Building in public is faster and fairer.",
     "manifesto3": "The platform is open to everyone: a developer from Tashkent or Nukus, a student with their first bot, a team raising a round. The more of us there are, the stronger the ecosystem.",
     "manifestoCta": "Welcome home, makers. Go launch!",
     "ctaSubmit": "Launch your product",
@@ -384,7 +384,7 @@
   },
   "guide": {
     "badge": "Launch Guide",
-    "title": "How to launch on TechRadar.uz",
+    "title": "How to launch on YaRato",
     "subtitle": "Five steps from submission to the top of the ranking",
     "step1Title": "Prepare your product",
     "step1Text": "A clear name, a precise one-sentence tagline and a square logo of at least 256×256. A good description answers “what problem do you solve and for whom”.",
@@ -415,7 +415,7 @@
     "privacy5Text": "You can edit your profile, unsubscribe from the digest, or delete your account by contacting us. Consent can be withdrawn at any time.",
     "termsTitle": "Terms of Service",
     "terms1Title": "About the service",
-    "terms1Text": "TechRadar.uz is a platform for publishing and discussing Uzbekistan's tech products. By using the site you accept these terms.",
+    "terms1Text": "YaRato is a platform for publishing and discussing Uzbekistan's tech products. By using the site you accept these terms.",
     "terms2Title": "Account",
     "terms2Text": "Sign-in is via Google, Telegram or existing credentials. You are responsible for actions performed under your account.",
     "terms3Title": "Content",

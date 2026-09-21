@@ -30,7 +30,7 @@ export async function GET() {
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>${locale === "uz" ? "TechRadar.uz - Yangi mahsulotlar" : locale === "ru" ? "TechRadar.uz - Новые продукты" : "TechRadar.uz - New Products"}</title>
+    <title>${locale === "uz" ? "YaRato - Yangi mahsulotlar" : locale === "ru" ? "YaRato - Новые продукты" : "YaRato - New Products"}</title>
     <link>${siteUrl}</link>
     <description>${locale === "uz" ? "O'zbekiston startup ekotizimidagi yangi mahsulotlar" : locale === "ru" ? "Новые продукты экосистемы стартапов Узбекистана" : "New products from Uzbekistan's startup ecosystem"}</description>
     <language>${locale}</language>

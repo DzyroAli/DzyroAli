@@ -21,8 +21,8 @@ export default async function ResetPasswordPage() {
     <div className="mx-auto max-w-md px-4 py-16">
       <div className="rounded-card border border-line bg-surface p-8 shadow-sm">
         <div className="mb-6 text-center">
-          <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand">
-            <KeyRound size={22} />
+          <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-soft text-brand">
+            <KeyRound size={22} aria-hidden />
           </span>
           <h1 className="text-xl font-semibold text-ink">{t("resetTitle")}</h1>
           <p className="mt-1.5 text-sm text-ink-muted">{t("resetSubtitle")}</p>

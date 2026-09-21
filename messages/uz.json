@@ -140,7 +140,7 @@
     "moderationNote": "Barcha loyihalar e'lon qilinishidan oldin moderatsiyadan o'tadi (odatda 24 soat ichida)."
   },
   "login": {
-    "title": "TechRadar.uz ga kirish",
+    "title": "YaRato ga kirish",
     "subtitle": "Ovoz berish, izoh qoldirish va loyiha joylash uchun tizimga kiring",
     "telegramHint": "Telegram orqali bir zumda kiring — parol kerak emas",
     "emailDivider": "yoki email orqali",
@@ -150,7 +150,7 @@
     "telegramUnavailable": "Telegram orqali kirish sozlanmagan (TELEGRAM_BOT muhit o'zgaruvchisi yo'q).",
     "consentPrivacy": "Shaxsiy ma'lumotlarni qayta ishlashga <link>rozilik</link> beraman",
     "consentTerms": "<link>Foydalanuvchi shartnomasi</link>ni qabul qilaman",
-    "consentDigest": "TechRadar dayjestini olish — haftaning eng yaxshi mahsulotlari",
+    "consentDigest": "YaRato dayjestini olish — haftaning eng yaxshi mahsulotlari",
     "consentHint": "Davom etish uchun majburiy bandlarni (*) belgilang",
     "googleButton": "Google orqali kirish",
     "telegramButton": "Telegram orqali kirish",
@@ -304,7 +304,7 @@
     "terms": "Shartnoma"
   },
   "meta": {
-    "homeTitle": "TechRadar.uz — O'zbekiston startaplari maydonchasi",
+    "homeTitle": "YaRato — O'zbekiston startaplari maydonchasi",
     "homeDescription": "O'zbekistonning eng yaxshi startaplari, AI-assistentlari, Telegram-botlari va Mini Apps. Loyihangizni e'lon qiling, ovoz to'plang, investor va jamoa toping.",
     "productsTitle": "Mahsulotlar katalogi",
     "productsDescription": "O'zbekiston ekotizimidagi barcha startaplar, botlar va xizmatlar katalogi.",
@@ -341,7 +341,7 @@
     "metaTitle": "Biz haqimizda — bugun ishga tushdik!",
     "badge": "1-kun",
     "title": "Biz bugun ishga tushdik!",
-    "subtitle": "TechRadar.uz — O'zbekiston texnologik ekotizimining ochiq maydonchasi. Bugun — birinchi kun. Ko'rayotganingizning barchasi hamjamiyat tomonidan hozir yaratilmoqda.",
+    "subtitle": "YaRato — O'zbekiston texnologik ekotizimining ochiq maydonchasi. Bugun — birinchi kun. Ko'rayotganingizning barchasi hamjamiyat tomonidan hozir yaratilmoqda.",
     "counterProducts": "katalogdagi mahsulotlar",
     "counterMakers": "biz bilan meykerlar",
     "counterVotes": "berilgan ovozlar",
@@ -350,7 +350,7 @@
     "counterSignups": "bugungi yangi a'zolar",
     "manifestoTitle": "Hamjamiyat manifesti",
     "manifesto1": "Biz O'zbekistonda jahon darajasidagi mahsulotlar — startaplar, AI-servislar, Telegram-botlar va Mini Apps tug'ilishiga ishonamiz. Ularga birinchi foydalanuvchilar, investorlar va bo'lajak hamkasblar ko'radigan sahna kerak.",
-    "manifesto2": "TechRadar.uz — ana shu sahna. Bu yerda asoschilar ochiq launch qiladi, halol fikr-mulohaza va hamjamiyat ovozlarini yig'adi, jamoa va hamkorlar topadi. Ochiq qurish — tezroq va halolroq.",
+    "manifesto2": "YaRato — ana shu sahna. Bu yerda asoschilar ochiq launch qiladi, halol fikr-mulohaza va hamjamiyat ovozlarini yig'adi, jamoa va hamkorlar topadi. Ochiq qurish — tezroq va halolroq.",
     "manifesto3": "Maydoncha hammaga ochiq: Toshkent va Nukusdagi dasturchiga, birinchi botini yozgan talabaga, investitsiya raundidagi jamoaga. Qancha ko'p bo'lsak — ekotizim shuncha kuchli.",
     "manifestoCta": "Uyga xush kelibsiz, meykerlar. Launch qiling!",
     "ctaSubmit": "Mahsulotni launch qilish",
@@ -384,7 +384,7 @@
   },
   "guide": {
     "badge": "Launch qo'llanmasi",
-    "title": "TechRadar.uz da qanday launch qilinadi",
+    "title": "YaRato da qanday launch qilinadi",
     "subtitle": "Arizadan reyting cho'qqisigacha besh qadam",
     "step1Title": "Mahsulotni tayyorlang",
     "step1Text": "Tushunarli nom, bir jumlalik aniq tagline va 256×256 dan kichik bo'lmagan kvadrat logotip. Yaxshi tavsif «qaysi muammoni kim uchun hal qilyapsiz» savoliga javob beradi.",
@@ -415,7 +415,7 @@
     "privacy5Text": "Profil ma'lumotlarini o'zgartirishingiz, dayjestdan voz kechishingiz yoki bizga yozib akkauntni o'chirishingiz mumkin. Rozilikni istalgan vaqtda qaytarib olish mumkin.",
     "termsTitle": "Foydalanuvchi shartnomasi",
     "terms1Title": "Servis haqida",
-    "terms1Text": "TechRadar.uz — O'zbekiston texnologik mahsulotlarini joylashtirish va muhokama qilish maydonchasi. Saytdan foydalanish orqali siz ushbu shartnoma shartlarini qabul qilasiz.",
+    "terms1Text": "YaRato — O'zbekiston texnologik mahsulotlarini joylashtirish va muhokama qilish maydonchasi. Saytdan foydalanish orqali siz ushbu shartnoma shartlarini qabul qilasiz.",
     "terms2Title": "Akkaunt",
     "terms2Text": "Kirish Google, Telegram orqali yoki mavjud hisob ma'lumotlari bilan amalga oshiriladi. Akkauntingiz orqali qilingan harakatlar uchun siz javobgarsiz.",
     "terms3Title": "Kontent",

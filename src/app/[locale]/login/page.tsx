@@ -1,9 +1,9 @@
-import { Radar } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "@/i18n/navigation";
 import { AuthPanel } from "@/components/auth/AuthPanel";
 import { getCurrentUser } from "@/lib/data";
+import { RadarLogo } from "@/components/ui/RadarLogo";
 
 export async function generateMetadata({
   params,
@@ -32,9 +32,7 @@ export default async function LoginPage({
     <div className="mx-auto max-w-md px-4 py-12">
       <div className="rounded-card border border-line bg-surface p-6 shadow-sm sm:p-8">
         <div className="mb-5 text-center">
-          <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand">
-            <Radar size={24} />
-          </span>
+          <RadarLogo size={40} className="mx-auto mb-4 text-brand" />
           <h1 className="text-xl font-semibold text-ink">{t("title")}</h1>
           <p className="mt-1.5 text-sm text-ink-muted">{t("subtitle")}</p>
         </div>
