@@ -8,7 +8,6 @@ import { CITIES, cityName } from "@/lib/cities";
 import { MAP_HEIGHT, MAP_WIDTH, project, UZ_OUTLINE_PATH } from "@/lib/uz-outline";
 import { cn } from "@/lib/utils";
 import { Avatar } from "@/components/ui/Avatar";
-import { focusRing } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Segmented } from "@/components/ui/Segmented";
@@ -189,7 +188,6 @@ export function UzbekistanMap({
                 aria-expanded={selected === city.slug}
                 className={cn(
                   "flex w-full items-center justify-between gap-3 rounded-card border bg-surface p-4 text-left transition-colors",
-                  focusRing,
                   selected === city.slug
                     ? "border-brand"
                     : "border-line hover:border-line-strong"
@@ -232,10 +230,7 @@ export function UzbekistanMap({
               type="button"
               onClick={() => setSelected(null)}
               aria-label={t("close")}
-              className={cn(
-                "shrink-0 rounded-lg p-1 text-ink-muted hover:bg-surface-muted hover:text-ink",
-                focusRing
-              )}
+              className="shrink-0 rounded-lg p-1 text-ink-muted hover:bg-surface-muted hover:text-ink"
             >
               <X size={16} aria-hidden />
             </button>
@@ -254,10 +249,7 @@ export function UzbekistanMap({
                     <li key={p.id}>
                       <Link
                         href={`/products/${p.slug}`}
-                        className={cn(
-                          "flex items-baseline justify-between gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-surface-muted",
-                          focusRing
-                        )}
+                        className="flex items-baseline justify-between gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-surface-muted"
                       >
                         <span className="min-w-0 truncate text-sm text-ink">
                           {p.name}
@@ -284,10 +276,7 @@ export function UzbekistanMap({
                     <li key={m.id}>
                       <Link
                         href={`/makers/${m.username}`}
-                        className={cn(
-                          "flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-surface-muted",
-                          focusRing
-                        )}
+                        className="flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-surface-muted"
                       >
                         <Avatar
                           name={m.name}

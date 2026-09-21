@@ -7,7 +7,7 @@ import type {
 import { cn } from "@/lib/utils";
 
 export const controlClass =
-  "w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm text-ink transition-colors placeholder:text-ink-subtle hover:border-line-strong focus:border-brand focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-60 aria-[invalid=true]:border-critical";
+  "w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm text-ink transition-colors placeholder:text-ink-subtle hover:border-line-strong focus:border-brand disabled:cursor-not-allowed disabled:opacity-60 aria-[invalid=true]:border-critical";
 
 export function Input({
   className,

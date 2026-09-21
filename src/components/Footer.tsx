@@ -1,7 +1,5 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { cn } from "@/lib/utils";
-import { focusRing } from "./ui/Button";
 import { RadarLogo } from "./ui/RadarLogo";
 import { SubscribeForm } from "./SubscribeForm";
 import { ThemeSwitcher } from "./ThemeSwitcher";
@@ -22,7 +20,7 @@ export async function Footer() {
         <div className="max-w-sm">
           <Link
             href="/"
-            className={cn("flex w-fit items-center gap-2 rounded-lg", focusRing)}
+            className="flex w-fit items-center gap-2 rounded-lg"
           >
             <RadarLogo size={22} className="text-brand" />
             <span className="font-semibold tracking-tight text-ink">YaRato</span>

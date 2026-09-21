@@ -5,7 +5,7 @@ import { HeaderSearch } from "@/components/HeaderSearch";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { Avatar } from "@/components/ui/Avatar";
-import { buttonClass, focusRing } from "@/components/ui/Button";
+import { buttonClass } from "@/components/ui/Button";
 import { RadarLogo } from "@/components/ui/RadarLogo";
 import { Link } from "@/i18n/navigation";
 import { signOut } from "@/lib/actions";
@@ -27,7 +27,7 @@ export async function TopBar() {
       <div className="flex h-16 items-center gap-3 px-4 lg:px-5">
         <Link
           href="/"
-          className={cn("flex shrink-0 items-center gap-2 rounded-lg", focusRing)}
+          className="flex shrink-0 items-center gap-2 rounded-lg"
         >
           <RadarLogo size={26} className="text-brand" />
           <span className="text-[17px] font-semibold tracking-tight text-ink">
@@ -61,7 +61,7 @@ export async function TopBar() {
           {profile ? (
             <details className="dropdown relative">
               <summary
-                className={cn("flex items-center rounded-full", focusRing)}
+                className="flex items-center rounded-full"
                 aria-label={t("menu")}
               >
                 <Avatar

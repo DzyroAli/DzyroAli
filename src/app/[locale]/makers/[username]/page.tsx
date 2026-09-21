@@ -5,7 +5,6 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { ProductCard } from "@/components/ProductCard";
 import { PageBody } from "@/components/shell/AppShell";
 import { Avatar } from "@/components/ui/Avatar";
-import { focusRing } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { TabStrip } from "@/components/ui/Tabs";
@@ -13,7 +12,7 @@ import { Link } from "@/i18n/navigation";
 import { cityLabel, COUNTRY_NAME, findCity } from "@/lib/cities";
 import { getMaker, getMakerComments, getVotedProductIds } from "@/lib/data";
 import type { Locale } from "@/lib/types";
-import { cn, formatDate, timeAgo } from "@/lib/utils";
+import { formatDate, timeAgo } from "@/lib/utils";
 
 const TABS = ["projects", "launches", "activity", "about"] as const;
 type Tab = (typeof TABS)[number];
@@ -119,10 +118,7 @@ export default async function MakerPage({
                   href={profile.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={cn(
-                    "inline-flex items-center gap-1.5 rounded text-brand-ink hover:underline",
-                    focusRing
-                  )}
+                  className="inline-flex items-center gap-1.5 rounded text-brand-ink hover:underline"
                 >
                   <Globe size={14} aria-hidden />
                   {profile.website.replace(/^https?:\/\//, "")}
@@ -133,10 +129,7 @@ export default async function MakerPage({
                   href={`https://t.me/${profile.telegram_username}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={cn(
-                    "inline-flex items-center gap-1.5 rounded text-brand-ink hover:underline",
-                    focusRing
-                  )}
+                  className="inline-flex items-center gap-1.5 rounded text-brand-ink hover:underline"
                 >
                   <Send size={14} aria-hidden />@{profile.telegram_username}
                 </a>
@@ -178,10 +171,7 @@ export default async function MakerPage({
                   <Card className="flex flex-wrap items-center justify-between gap-2 p-4">
                     <Link
                       href={`/products/${p.slug}`}
-                      className={cn(
-                        "min-w-0 rounded text-sm font-medium text-ink hover:text-brand-ink",
-                        focusRing
-                      )}
+                      className="min-w-0 rounded text-sm font-medium text-ink hover:text-brand-ink"
                     >
                       {p.name}
                     </Link>
@@ -209,10 +199,7 @@ export default async function MakerPage({
                       {product ? (
                         <Link
                           href={`/products/${product.slug}`}
-                          className={cn(
-                            "rounded font-medium text-brand-ink hover:underline",
-                            focusRing
-                          )}
+                          className="rounded font-medium text-brand-ink hover:underline"
                         >
                           {product.name}
                         </Link>

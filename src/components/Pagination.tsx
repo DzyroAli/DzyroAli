@@ -2,7 +2,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import { focusRing } from "./ui/Button";
 
 export async function Pagination({
   page,
@@ -31,7 +30,6 @@ export async function Pagination({
   const linkClass = (disabled: boolean) =>
     cn(
       "inline-flex h-9 w-9 items-center justify-center rounded-xl border border-line bg-surface text-ink-muted transition-colors",
-      focusRing,
       disabled
         ? "pointer-events-none opacity-40"
         : "hover:border-brand hover:text-brand"

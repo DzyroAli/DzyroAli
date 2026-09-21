@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { toggleVote } from "@/lib/actions";
 import { cn } from "@/lib/utils";
 import { useAuthModal } from "./auth/AuthModalContext";
-import { focusRing } from "./ui/Button";
 
 export function VoteButton({
   productId,
@@ -59,8 +58,6 @@ export function VoteButton({
           aria-pressed={voted}
           className={cn(
             "inline-flex h-11 items-center gap-2 rounded-xl border px-4 text-sm font-semibold transition-colors disabled:cursor-progress",
-            focusRing,
-            "focus-visible:outline-on-brand",
             voted
               ? "border-transparent bg-on-brand text-brand"
               : "border-on-brand/40 text-on-brand hover:bg-on-brand/10",
@@ -96,7 +93,6 @@ export function VoteButton({
         aria-label={`${tp("upvote")} — ${votes}`}
         className={cn(
           "flex flex-col items-center justify-center gap-0.5 rounded-xl border font-semibold transition-colors disabled:cursor-progress",
-          focusRing,
           // min-w rather than a fixed width so four-digit counts still fit.
           size === "lg"
             ? "h-16 min-w-16 px-2 text-base"

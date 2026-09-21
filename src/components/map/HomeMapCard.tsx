@@ -1,12 +1,10 @@
 import { ArrowRight } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
-import { focusRing } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Link } from "@/i18n/navigation";
 import { CITIES, cityName, findCity } from "@/lib/cities";
 import type { EcosystemStats } from "@/lib/data";
 import { MAP_HEIGHT, MAP_WIDTH, project, UZ_OUTLINE_PATH } from "@/lib/uz-outline";
-import { cn } from "@/lib/utils";
 
 /**
  * Small supporting block on the home page — a static, non-interactive preview
@@ -28,10 +26,7 @@ export async function HomeMapCard({ stats }: { stats: EcosystemStats }) {
         <h2 className="text-[15px] font-semibold text-ink">{t("homeTitle")}</h2>
         <Link
           href="/map"
-          className={cn(
-            "inline-flex items-center gap-1 rounded text-[13px] font-medium text-brand-ink hover:underline",
-            focusRing
-          )}
+          className="inline-flex items-center gap-1 rounded text-[13px] font-medium text-brand-ink hover:underline"
         >
           {t("openMap")}
           <ArrowRight size={13} aria-hidden />
@@ -67,7 +62,7 @@ export async function HomeMapCard({ stats }: { stats: EcosystemStats }) {
             <li key={entry.slug}>
               <Link
                 href={`/map?city=${entry.slug}`}
-                className={cn("rounded hover:text-ink", focusRing)}
+                className="rounded hover:text-ink"
               >
                 {cityName(city, locale)}{" "}
                 <span className="tabular-nums text-ink-subtle">{entry.count}</span>

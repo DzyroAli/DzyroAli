@@ -34,7 +34,7 @@ function CategoryRow({ category }: { category: Category }) {
     });
 
   const inputCls =
-    "w-full rounded-lg border border-line bg-surface px-2.5 py-1.5 text-sm outline-none focus:border-brand";
+    "w-full rounded-lg border border-line bg-surface px-2.5 py-1.5 text-sm focus:border-brand";
 
   return (
     <div className="rounded-card border border-line bg-surface p-4">

@@ -4,7 +4,6 @@ import { Check, Link2, Send } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { focusRing } from "./ui/Button";
 
 const chip =
   "inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-1.5 text-[13px] font-medium text-ink-muted transition-colors hover:border-line-strong hover:text-ink";
@@ -50,7 +49,7 @@ export function ShareButtons({ url, title }: { url: string; title: string }) {
       <button
         type="button"
         onClick={copyLink}
-        className={cn(chip, focusRing, copied && "border-positive text-positive")}
+        className={cn(chip, copied && "border-positive text-positive")}
       >
         {copied ? (
           <>
@@ -70,7 +69,7 @@ export function ShareButtons({ url, title }: { url: string; title: string }) {
           href={target.href}
           target="_blank"
           rel="noopener noreferrer"
-          className={cn(chip, focusRing)}
+          className={cn(chip)}
         >
           <Send size={14} aria-hidden />
           {target.label}

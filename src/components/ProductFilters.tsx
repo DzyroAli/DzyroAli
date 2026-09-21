@@ -6,7 +6,6 @@ import { useSearchParams } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import { categoryName, type Category } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { focusRing } from "./ui/Button";
 import { CategoryIcon } from "./ui/CategoryIcon";
 
 const pill =
@@ -47,7 +46,6 @@ function FilterGroups({
               aria-current={currentSort === s.key ? "true" : undefined}
               className={cn(
                 pill,
-                focusRing,
                 currentSort === s.key
                   ? "border-transparent bg-brand-soft text-brand-ink"
                   : "border-line bg-surface text-ink-muted hover:border-line-strong hover:text-ink"
@@ -69,7 +67,6 @@ function FilterGroups({
             aria-current={!currentCategory ? "true" : undefined}
             className={cn(
               pill,
-              focusRing,
               !currentCategory
                 ? "border-transparent bg-brand-soft text-brand-ink"
                 : "border-line bg-surface text-ink-muted hover:border-line-strong hover:text-ink"
@@ -86,7 +83,6 @@ function FilterGroups({
                 aria-current={active ? "true" : undefined}
                 className={cn(
                   pill,
-                  focusRing,
                   active
                     ? "border-transparent bg-brand-soft text-brand-ink"
                     : "border-line bg-surface text-ink-muted hover:border-line-strong hover:text-ink"
@@ -108,10 +104,7 @@ function FilterGroups({
           <Link
             href={hrefFor({ q: undefined })}
             aria-label={t("clear")}
-            className={cn(
-              "shrink-0 rounded text-brand-ink hover:opacity-80",
-              focusRing
-            )}
+            className="shrink-0 rounded text-brand-ink hover:opacity-80"
           >
             <X size={16} aria-hidden />
           </Link>
@@ -169,10 +162,7 @@ export function ProductFilters({
       {/* Collapsed by default on small screens, where there is no sidebar. */}
       <details className="rounded-card border border-line bg-surface lg:hidden">
         <summary
-          className={cn(
-            "flex cursor-pointer list-none items-center gap-2 px-4 py-3 text-sm font-medium text-ink",
-            focusRing
-          )}
+          className="flex cursor-pointer list-none items-center gap-2 px-4 py-3 text-sm font-medium text-ink"
         >
           <SlidersHorizontal size={16} className="text-brand" aria-hidden />
           {t("filters")}

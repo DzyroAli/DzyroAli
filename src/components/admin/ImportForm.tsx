@@ -29,7 +29,7 @@ export function ImportForm() {
         rows={14}
         required
         placeholder={EXAMPLE}
-        className="w-full rounded-card border border-line bg-surface p-4 font-mono text-xs outline-none focus:border-brand"
+        className="w-full rounded-card border border-line bg-surface p-4 font-mono text-xs focus:border-brand"
       />
       <button
         type="submit"

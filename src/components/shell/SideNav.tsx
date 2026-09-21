@@ -4,7 +4,6 @@ import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { isNavItemActive, NAV_ITEMS } from "@/lib/nav";
 import { cn } from "@/lib/utils";
-import { focusRing } from "@/components/ui/Button";
 
 /** Icon-only rail shown from `lg` up. */
 export function SideNav() {
@@ -27,7 +26,6 @@ export function SideNav() {
             aria-current={active ? "page" : undefined}
             className={cn(
               "group flex h-11 w-11 items-center justify-center rounded-xl transition-colors",
-              focusRing,
               active
                 ? "bg-brand-soft text-brand"
                 : "text-ink-subtle hover:bg-surface-muted hover:text-ink"
@@ -62,7 +60,6 @@ export function MobileNav() {
               aria-current={active ? "page" : undefined}
               className={cn(
                 "inline-flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[13px] font-medium whitespace-nowrap transition-colors",
-                focusRing,
                 active
                   ? "bg-brand-soft text-ink"
                   : "text-ink-muted hover:bg-surface-muted hover:text-ink"

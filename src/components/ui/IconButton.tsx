@@ -1,6 +1,5 @@
 import type { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { focusRing } from "./Button";
 
 type IconButtonProps<T extends ElementType> = {
   as?: T;
@@ -29,7 +28,6 @@ export function IconButton<T extends ElementType = "button">({
       title={label}
       className={cn(
         "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors disabled:pointer-events-none disabled:opacity-50",
-        focusRing,
         variant === "outline"
           ? "border border-line bg-surface text-ink-muted hover:bg-surface-muted hover:text-ink"
           : "text-ink-muted hover:bg-surface-muted hover:text-ink",

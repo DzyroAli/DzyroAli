@@ -1,9 +1,7 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { categoryName, type Product } from "@/lib/types";
-import { cn } from "@/lib/utils";
 import { Avatar } from "./ui/Avatar";
-import { focusRing } from "./ui/Button";
 import { VoteButton } from "./VoteButton";
 
 /** Faint concentric arcs — the radar motif, as background texture only. */
@@ -39,7 +37,7 @@ export async function RadarFeaturedCard({
   const t = await getTranslations("home");
 
   return (
-    <section className="group relative overflow-hidden rounded-2xl bg-brand p-5 text-on-brand sm:p-7">
+    <section className="on-brand group relative overflow-hidden rounded-2xl bg-brand p-5 text-on-brand sm:p-7">
       <RadarBackdrop />
 
       <div className="relative">
@@ -57,7 +55,7 @@ export async function RadarFeaturedCard({
         <h2 className="mt-3 max-w-2xl text-[22px] font-semibold leading-tight tracking-tight sm:text-[28px]">
           <Link
             href={`/products/${product.slug}`}
-            className={cn("rounded", focusRing, "focus-visible:outline-on-brand")}
+            className="rounded"
           >
             {product.name}
           </Link>
@@ -71,11 +69,7 @@ export async function RadarFeaturedCard({
           {product.maker ? (
             <Link
               href={`/makers/${product.maker.username}`}
-              className={cn(
-                "flex min-w-0 items-center gap-2.5 rounded-lg text-sm text-on-brand/90 transition-colors hover:text-on-brand",
-                focusRing,
-                "focus-visible:outline-on-brand"
-              )}
+              className="flex min-w-0 items-center gap-2.5 rounded-lg text-sm text-on-brand/90 transition-colors hover:text-on-brand"
             >
               <Avatar
                 name={product.maker.full_name ?? product.maker.username}

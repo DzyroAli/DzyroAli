@@ -3,9 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { cityLabel } from "@/lib/cities";
 import type { Profile } from "@/lib/types";
-import { cn } from "@/lib/utils";
 import { Avatar } from "./ui/Avatar";
-import { focusRing } from "./ui/Button";
 
 /** Maker card for the community index and other people listings. */
 export async function CreatorCard({
@@ -25,10 +23,7 @@ export async function CreatorCard({
   return (
     <Link
       href={`/makers/${profile.username}`}
-      className={cn(
-        "flex h-full flex-col rounded-card border border-line bg-surface p-4 transition-colors hover:border-line-strong",
-        focusRing
-      )}
+      className="flex h-full flex-col rounded-card border border-line bg-surface p-4 transition-colors hover:border-line-strong"
     >
       <div className="flex items-center gap-3">
         <Avatar

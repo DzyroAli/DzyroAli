@@ -113,7 +113,7 @@ export function HeaderSearch({
           onFocus={() => items.length > 0 && setOpen(true)}
           placeholder={placeholder}
           autoComplete="off"
-          className="w-full rounded-xl border border-line bg-surface-muted py-2 pl-9 pr-14 text-sm text-ink transition-colors outline-none placeholder:text-ink-subtle hover:border-line-strong focus:border-brand focus:bg-surface focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-brand"
+          className="w-full rounded-xl border border-line bg-surface-muted py-2 pl-9 pr-14 text-sm text-ink transition-colors placeholder:text-ink-subtle hover:border-line-strong focus:border-brand focus:bg-surface "
         />
         {hotkey && (
           <kbd className="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-md border border-line bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-ink-subtle lg:block">

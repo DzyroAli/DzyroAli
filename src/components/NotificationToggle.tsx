@@ -4,7 +4,6 @@ import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { updateCommentNotifications } from "@/lib/actions";
 import { cn } from "@/lib/utils";
-import { focusRing } from "./ui/Button";
 
 export function NotificationToggle({
   initialEnabled,
@@ -43,7 +42,6 @@ export function NotificationToggle({
         onClick={toggle}
         className={cn(
           "relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-60",
-          focusRing,
           enabled ? "bg-brand" : "bg-line-strong"
         )}
       >

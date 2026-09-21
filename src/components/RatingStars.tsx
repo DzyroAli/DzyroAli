@@ -4,9 +4,7 @@ import { Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { rateProduct } from "@/lib/actions";
-import { cn } from "@/lib/utils";
 import { useAuthModal } from "./auth/AuthModalContext";
-import { focusRing } from "./ui/Button";
 
 export function RatingStars({
   productId,
@@ -66,10 +64,7 @@ export function RatingStars({
               onMouseEnter={() => setHover(star)}
               onMouseLeave={() => setHover(0)}
               onClick={() => rate(star)}
-              className={cn(
-                "rounded p-0.5 transition-transform hover:scale-110 disabled:opacity-60",
-                focusRing
-              )}
+              className="rounded p-0.5 transition-transform hover:scale-110 disabled:opacity-60"
             >
               <Star
                 size={22}

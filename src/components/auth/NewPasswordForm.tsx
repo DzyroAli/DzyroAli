@@ -38,7 +38,7 @@ export function NewPasswordForm() {
         minLength={8}
         autoComplete="new-password"
         placeholder={t("newPasswordPlaceholder")}
-        className="w-full rounded-xl border border-line bg-surface px-3 py-2.5 text-sm outline-none focus:border-brand"
+        className="w-full rounded-xl border border-line bg-surface px-3 py-2.5 text-sm focus:border-brand"
       />
       <button
         type="submit"

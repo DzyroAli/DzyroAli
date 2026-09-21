@@ -11,7 +11,7 @@ import { ShareButtons } from "@/components/ShareButtons";
 import { VoteButton } from "@/components/VoteButton";
 import { PageBody } from "@/components/shell/AppShell";
 import { Avatar } from "@/components/ui/Avatar";
-import { buttonClass, focusRing } from "@/components/ui/Button";
+import { buttonClass } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import {
@@ -25,7 +25,7 @@ import {
 } from "@/lib/data";
 import { categoryName } from "@/lib/types";
 import { cityLabel } from "@/lib/cities";
-import { cn, formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import { CategoryIcon } from "@/components/ui/CategoryIcon";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://techradar.uz";
@@ -172,7 +172,7 @@ export default async function ProductPage({
                 {product.category && (
                   <Link
                     href={`/category/${product.category.slug}`}
-                    className={cn("rounded-md", focusRing)}
+                    className="rounded-md"
                   >
                     <Badge
                       tone="brand"
@@ -266,10 +266,7 @@ export default async function ProductPage({
               </h2>
               <Link
                 href={`/makers/${product.maker.username}`}
-                className={cn(
-                  "flex items-center gap-3 rounded-card border border-line bg-surface p-4 transition-colors hover:border-line-strong",
-                  focusRing
-                )}
+                className="flex items-center gap-3 rounded-card border border-line bg-surface p-4 transition-colors hover:border-line-strong"
               >
                 <Avatar
                   name={product.maker.full_name ?? product.maker.username}
@@ -300,10 +297,7 @@ export default async function ProductPage({
                   <li key={p.id}>
                     <Link
                       href={`/products/${p.slug}`}
-                      className={cn(
-                        "flex items-center gap-2.5 rounded-lg p-2 transition-colors hover:bg-surface-muted",
-                        focusRing
-                      )}
+                      className="flex items-center gap-2.5 rounded-lg p-2 transition-colors hover:bg-surface-muted"
                     >
                       <ProductLogo
                         name={p.name}

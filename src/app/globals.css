@@ -105,6 +105,36 @@ html {
   scroll-behavior: smooth;
 }
 
+/* One keyboard-focus ring for the whole app. Declared here rather than as a
+   utility because Tailwind emits no `outline-<color>` utility for the token
+   colours, which left the ring painting in currentColor. Element selectors
+   (not :where) so the colour isn't overridden by zero-specificity rules. */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  /* Longhands, not the `outline` shorthand: with a var() colour the shorthand
+     resolved width and style but dropped the colour back to currentColor. */
+  outline-width: 2px;
+  outline-style: solid;
+  outline-color: var(--yr-brand);
+  outline-offset: 2px;
+}
+/* Inputs sit flush inside their own border, so no offset. */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline-offset: 0;
+}
+/* On a brand-filled surface the ring has to read against blue. */
+.on-brand a:focus-visible,
+.on-brand button:focus-visible {
+  outline-color: var(--yr-on-brand);
+}
+
 body {
   background-color: var(--yr-canvas);
   color: var(--yr-ink);

@@ -103,7 +103,7 @@ export function ModerationButtons({ productId }: { productId: string }) {
               rows={3}
               maxLength={500}
               placeholder={t("rejectPlaceholder")}
-              className="mt-3 w-full rounded-xl border border-line px-3 py-2 text-sm outline-none focus:border-critical"
+              className="mt-3 w-full rounded-xl border border-line px-3 py-2 text-sm focus:border-critical"
             />
 
             <div className="mt-3 flex justify-end gap-2">

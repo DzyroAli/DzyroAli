@@ -5,7 +5,6 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
-import { focusRing } from "./ui/Button";
 
 const LOCALE_NAMES: Record<string, string> = {
   uz: "O‘zbekcha",
@@ -21,10 +20,7 @@ export function LocaleSwitcher() {
   return (
     <details className="dropdown relative">
       <summary
-        className={cn(
-          "flex h-9 items-center gap-1 rounded-lg border border-line bg-surface px-2.5 text-[13px] font-semibold text-ink-muted transition-colors hover:text-ink",
-          focusRing
-        )}
+        className="flex h-9 items-center gap-1 rounded-lg border border-line bg-surface px-2.5 text-[13px] font-semibold text-ink-muted transition-colors hover:text-ink"
         aria-label={t("language")}
       >
         {active.toUpperCase()}

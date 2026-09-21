@@ -2,7 +2,6 @@
 
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { focusRing } from "./Button";
 
 export interface SegmentedOption<T extends string> {
   value: T;
@@ -43,7 +42,6 @@ export function Segmented<T extends string>({
             onClick={() => onChange(option.value)}
             className={cn(
               "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[13px] font-medium whitespace-nowrap transition-colors",
-              focusRing,
               isActive ? "bg-brand-soft text-ink" : "text-ink-muted hover:text-ink"
             )}
           >

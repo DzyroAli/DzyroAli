@@ -4,10 +4,6 @@ import { cn } from "@/lib/utils";
 export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
 export type ButtonSize = "sm" | "md" | "lg";
 
-/** Shared focus treatment — one visible ring on every interactive element. */
-export const focusRing =
-  "outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand";
-
 const base =
   "inline-flex items-center justify-center gap-2 rounded-xl font-semibold whitespace-nowrap transition-colors disabled:pointer-events-none disabled:opacity-50";
 
@@ -31,7 +27,7 @@ export function buttonClass(
   size: ButtonSize = "md",
   className?: string
 ) {
-  return cn(base, focusRing, variants[variant], sizes[size], className);
+  return cn(base, variants[variant], sizes[size], className);
 }
 
 function Spinner() {

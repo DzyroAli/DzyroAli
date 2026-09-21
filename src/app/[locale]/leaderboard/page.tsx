@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { PageBody } from "@/components/shell/AppShell";
 import { Avatar } from "@/components/ui/Avatar";
-import { focusRing } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Link } from "@/i18n/navigation";
 import { getLeaderboard } from "@/lib/data";
@@ -43,10 +42,7 @@ export default async function LeaderboardPage() {
             <li key={m.profile.id}>
               <Link
                 href={`/makers/${m.profile.username}`}
-                className={cn(
-                  "flex items-center gap-3 rounded-card border border-line bg-surface p-3.5 transition-colors hover:border-line-strong",
-                  focusRing
-                )}
+                className="flex items-center gap-3 rounded-card border border-line bg-surface p-3.5 transition-colors hover:border-line-strong"
               >
                 {/* Rank weight carries the ordering; no medal colours. */}
                 <span

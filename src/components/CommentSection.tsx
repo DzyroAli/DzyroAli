@@ -6,9 +6,9 @@ import { useRouter as useNextRouter } from "next/navigation";
 import { addComment, deleteComment } from "@/lib/actions";
 import { Link } from "@/i18n/navigation";
 import type { Comment } from "@/lib/types";
-import { cn, timeAgo } from "@/lib/utils";
+import { timeAgo } from "@/lib/utils";
 import { Avatar } from "./ui/Avatar";
-import { Button, focusRing } from "./ui/Button";
+import { Button } from "./ui/Button";
 import { Textarea } from "./ui/Field";
 
 function CommentForm({
@@ -114,10 +114,7 @@ function CommentItem({
           {comment.author ? (
             <Link
               href={`/makers/${comment.author.username}`}
-              className={cn(
-                "rounded text-sm font-medium text-ink hover:text-brand-ink",
-                focusRing
-              )}
+              className="rounded text-sm font-medium text-ink hover:text-brand-ink"
             >
               {name}
             </Link>
@@ -142,10 +139,7 @@ function CommentItem({
             <button
               type="button"
               onClick={() => setReplying((v) => !v)}
-              className={cn(
-                "rounded text-xs font-medium text-ink-muted hover:text-brand",
-                focusRing
-              )}
+              className="rounded text-xs font-medium text-ink-muted hover:text-brand"
             >
               {t("reply")}
             </button>
@@ -155,10 +149,7 @@ function CommentItem({
               type="button"
               onClick={remove}
               disabled={deletePending}
-              className={cn(
-                "rounded text-xs font-medium text-ink-muted hover:text-critical disabled:opacity-50",
-                focusRing
-              )}
+              className="rounded text-xs font-medium text-ink-muted hover:text-critical disabled:opacity-50"
             >
               {t("delete")}
             </button>
@@ -221,7 +212,7 @@ export function CommentSection({
         <p className="rounded-xl bg-surface-muted px-4 py-3 text-sm text-ink-muted">
           <Link
             href="/login"
-            className={cn("rounded font-medium text-brand-ink underline", focusRing)}
+            className="rounded font-medium text-brand-ink underline"
           >
             {t("commentLoginRequired")}
           </Link>

@@ -122,7 +122,7 @@ export function AuthPanel({
   const checkboxCls =
     "mt-0.5 h-4 w-4 shrink-0 rounded border-line-strong accent-brand";
   const inputCls =
-    "w-full rounded-xl border border-line bg-surface py-2.5 pl-9 pr-3 text-sm outline-none transition-colors focus:border-brand";
+    "w-full rounded-xl border border-line bg-surface py-2.5 pl-9 pr-3 text-sm transition-colors focus:border-brand";
 
   return (
     <div className="space-y-4">
@@ -239,7 +239,7 @@ export function AuthPanel({
               name="email"
               required
               placeholder={t("emailPlaceholder")}
-              className="w-full rounded-xl border border-line bg-surface px-3 py-2.5 text-sm outline-none focus:border-brand"
+              className="w-full rounded-xl border border-line bg-surface px-3 py-2.5 text-sm focus:border-brand"
             />
             <div className="flex gap-2">
               <button
@@ -391,7 +391,7 @@ export function AuthPanel({
                 required
                 autoComplete="email"
                 placeholder={t("emailPlaceholder")}
-                className="w-full rounded-xl border border-line bg-surface px-3 py-2.5 text-sm outline-none focus:border-brand"
+                className="w-full rounded-xl border border-line bg-surface px-3 py-2.5 text-sm focus:border-brand"
               />
               <div className="relative">
                 <Lock

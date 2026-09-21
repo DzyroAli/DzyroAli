@@ -1,12 +1,10 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Avatar } from "@/components/ui/Avatar";
-import { focusRing } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Link } from "@/i18n/navigation";
 import { cityName, findCity } from "@/lib/cities";
 import type { EcosystemStats, MakerRank } from "@/lib/data";
 import { categoryName, type Category } from "@/lib/types";
-import { cn } from "@/lib/utils";
 import { CategoryIcon } from "@/components/ui/CategoryIcon";
 
 function RailCard({
@@ -73,10 +71,7 @@ export async function SideRail({
                 <li key={entry.slug}>
                   <Link
                     href={`/category/${entry.slug}`}
-                    className={cn(
-                      "flex items-center gap-2 rounded-lg text-sm",
-                      focusRing
-                    )}
+                    className="flex items-center gap-2 rounded-lg text-sm"
                   >
                     <span className="flex min-w-0 flex-1 items-center gap-2 text-ink">
                       <CategoryIcon slug={entry.slug} className="shrink-0 text-brand" />
@@ -104,10 +99,7 @@ export async function SideRail({
                 <li key={entry.slug}>
                   <Link
                     href={`/map?city=${entry.slug}`}
-                    className={cn(
-                      "flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-sm text-ink transition-colors hover:bg-surface-muted",
-                      focusRing
-                    )}
+                    className="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-sm text-ink transition-colors hover:bg-surface-muted"
                   >
                     <span className="truncate">{cityName(city, locale)}</span>
                     <span className="shrink-0 tabular-nums text-ink-muted">
@@ -128,10 +120,7 @@ export async function SideRail({
               <li key={profile.id}>
                 <Link
                   href={`/makers/${profile.username}`}
-                  className={cn(
-                    "flex items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-surface-muted",
-                    focusRing
-                  )}
+                  className="flex items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-surface-muted"
                 >
                   <Avatar
                     name={profile.full_name ?? profile.username}
