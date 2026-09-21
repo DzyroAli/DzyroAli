@@ -3,6 +3,8 @@
 import { useActionState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { subscribe, type SubscribeState } from "@/lib/actions";
+import { Button } from "./ui/Button";
+import { FormMessage, Input } from "./ui/Field";
 
 export function SubscribeForm({ compact = false }: { compact?: boolean }) {
   const t = useTranslations("footer");
@@ -14,34 +16,27 @@ export function SubscribeForm({ compact = false }: { compact?: boolean }) {
   );
 
   if (state.ok) {
-    return (
-      <p className="rounded-xl bg-teal-50 px-4 py-3 text-sm font-medium text-teal-700">
-        {t("subscribeSuccess")}
-      </p>
-    );
+    return <FormMessage tone="success">{t("subscribeSuccess")}</FormMessage>;
   }
 
   return (
     <form action={formAction} className="space-y-2">
       <div className={compact ? "flex flex-col gap-2" : "flex gap-2"}>
-        <input
+        <Input
           type="email"
           name="email"
           required
           placeholder={t("subscribePlaceholder")}
-          className="w-full min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-teal-500"
+          aria-invalid={state.error ? true : undefined}
+          className="min-w-0 flex-1 py-2"
         />
         <input type="hidden" name="locale" value={locale} />
-        <button
-          type="submit"
-          disabled={pending}
-          className="shrink-0 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
-        >
+        <Button type="submit" loading={pending} className="shrink-0">
           {t("subscribeButton")}
-        </button>
+        </Button>
       </div>
       {state.error && (
-        <p className="text-xs text-rose-600">
+        <p role="alert" className="text-xs text-critical">
           {state.error === "demoMode" ? tErr("demoMode") : t("subscribeError")}
         </p>
       )}

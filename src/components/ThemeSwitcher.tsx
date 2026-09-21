@@ -1,7 +1,9 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useSyncExternalStore } from "react";
+import { IconButton } from "./ui/IconButton";
 
 type Theme = "light" | "dark";
 
@@ -20,6 +22,7 @@ function getServerSnapshot(): Theme {
 
 export function ThemeSwitcher() {
   const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const t = useTranslations("common");
 
   function toggle() {
     const next: Theme = theme === "dark" ? "light" : "dark";
@@ -31,12 +34,12 @@ export function ThemeSwitcher() {
   }
 
   return (
-    <button
+    <IconButton
       onClick={toggle}
-      className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition-colors hover:text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:text-slate-300"
-      aria-label="Toggle theme"
+      label={theme === "dark" ? t("themeLight") : t("themeDark")}
+      aria-pressed={theme === "dark"}
     >
-      {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-    </button>
+      {theme === "dark" ? <Sun size={18} aria-hidden /> : <Moon size={18} aria-hidden />}
+    </IconButton>
   );
 }

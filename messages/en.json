@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "TechRadar.uz",
+    "appName": "YaRato",
     "tagline": "The launchpad for Uzbekistan's startups",
     "products": "Products",
     "categories": "Categories",
@@ -22,7 +22,10 @@
     "notFound": "Page not found",
     "notFoundText": "The page you are looking for does not exist or has been moved.",
     "goHome": "Go home",
-    "searchAll": "Search everywhere"
+    "searchAll": "Search everywhere",
+    "language": "Language",
+    "themeDark": "Dark theme",
+    "themeLight": "Light theme"
   },
   "home": {
     "heroBadge": "Uzbekistan's tech product radar",
@@ -36,11 +39,19 @@
     "topDay": "Top of the day",
     "topWeek": "Top of the week",
     "topMonth": "Top of the month",
-    "newest": "Recently added",
+    "newest": "New products",
     "empty": "No products yet. Be the first!",
     "subscribeTitle": "Subscribe to updates",
     "subscribeText": "The best products of the week — every Monday in your inbox.",
-    "launchedBadge": "We launched today! 🎉"
+    "launchedBadge": "We launched today! 🎉",
+    "title": "Today's launches",
+    "subtitle": "Discover new products being built in Uzbekistan.",
+    "periodLabel": "Period",
+    "featuredLabel": "Radar pick",
+    "featuredBy": "Built by {name}",
+    "rankingTitle": "Ranking",
+    "launchCount": "{count} launches",
+    "emptyHint": "Be the first to submit a product."
   },
   "products": {
     "title": "Product catalog",
@@ -147,7 +158,7 @@
     "registering": "Creating...",
     "registerConfirm": "Check your email to confirm your registration.",
     "namePlaceholder": "Your name (optional)",
-    "newPasswordPlaceholder": "Password (min 8 characters)",
+    "newPasswordPlaceholder": "New password (8+ characters)",
     "passwordHint": "Password must be at least 8 characters.",
     "emailExists": "This email is already registered.",
     "credentialsError": "Invalid username or password",
@@ -160,7 +171,6 @@
     "resetSent": "Password reset link sent. Check your inbox!",
     "resetTitle": "New password",
     "resetSubtitle": "Create a new password for your account",
-    "newPasswordPlaceholder": "New password (8+ characters)",
     "savePassword": "Save password",
     "passwordUpdated": "Password updated! You are signed in.",
     "passwordTooShort": "Password must be at least 8 characters",
@@ -296,9 +306,16 @@
     "launchArchive": "Launch archive",
     "launchGuide": "Launch Guide",
     "community": "Community",
-    "leaderboard": "Makers Leaderboard",
+    "leaderboard": "Leaderboard",
     "ecosystemMap": "Ecosystem Map",
-    "about": "About"
+    "about": "About",
+    "primary": "Primary navigation",
+    "today": "Today",
+    "catalog": "Catalog",
+    "map": "Map",
+    "telegram": "Telegram",
+    "investment": "Seeking investment",
+    "partners": "Seeking partners"
   },
   "about": {
     "metaTitle": "About — we launched today!",
@@ -377,5 +394,10 @@
     "terms4Text": "All products pass moderation. Administration may reject or unpublish content stating a reason, and restrict account access in case of violations.",
     "terms5Title": "Liability",
     "terms5Text": "The platform is provided “as is”. We are not responsible for the operation of third-party products listed in the catalog or the actions of their creators."
+  },
+  "rail": {
+    "categories": "Categories",
+    "cities": "Active cities",
+    "makers": "Active makers"
   }
 }

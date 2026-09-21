@@ -1,15 +1,20 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { AuthModalProvider } from "@/components/auth/AuthModalContext";
-import { DemoBanner } from "@/components/DemoBanner";
-import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
+import { AppShell } from "@/components/shell/AppShell";
 import { routing } from "@/i18n/routing";
 import "../globals.css";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://techradar.uz";
+
+const inter = Inter({
+  subsets: ["latin", "cyrillic"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -27,7 +32,7 @@ export async function generateMetadata({
     metadataBase: new URL(SITE_URL),
     title: {
       default: t("homeTitle"),
-      template: "%s | TechRadar.uz",
+      template: "%s | YaRato",
     },
     description: t("homeDescription"),
     alternates: {
@@ -44,7 +49,7 @@ export async function generateMetadata({
     },
     openGraph: {
       type: "website",
-      siteName: "TechRadar.uz",
+      siteName: "YaRato",
       title: t("homeTitle"),
       description: t("homeDescription"),
       locale,
@@ -53,7 +58,7 @@ export async function generateMetadata({
           url: "/opengraph-image.png",
           width: 1200,
           height: 630,
-          alt: "TechRadar.uz - Узбекистан стартапларининг радари",
+          alt: "YaRato - Узбекистан стартапларининг радари",
           type: "image/png",
         },
       ],
@@ -81,7 +86,7 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} className={inter.variable} suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -89,15 +94,12 @@ export default async function LocaleLayout({
           }}
         />
       </head>
-      <body className="flex min-h-screen flex-col">
+      <body>
         <NextIntlClientProvider messages={messages}>
           <AuthModalProvider
             telegramBot={process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME}
           >
-            <DemoBanner />
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
+            <AppShell>{children}</AppShell>
           </AuthModalProvider>
         </NextIntlClientProvider>
       </body>

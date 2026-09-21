@@ -1,4 +1,4 @@
-import { CATEGORIES, findCategory } from "./categories";
+import { CATEGORIES, findCategory, findCategoryById } from "./categories";
 import { DEMO_COMMENTS, DEMO_MAKERS, DEMO_PRODUCTS } from "./demo-data";
 import { isSupabaseConfigured } from "./supabase/config";
 import { createClient } from "./supabase/server";
@@ -238,6 +238,27 @@ export async function hasVoted(productId: string): Promise<boolean> {
     .eq("user_id", user.id)
     .maybeSingle();
   return Boolean(data);
+}
+
+/**
+ * Which of these products the signed-in user has already voted for.
+ * Batched so a feed can render voted state without one query per card.
+ */
+export async function getVotedProductIds(
+  productIds: string[]
+): Promise<Set<string>> {
+  if (!isSupabaseConfigured() || productIds.length === 0) return new Set();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return new Set();
+  const { data } = await supabase
+    .from("votes")
+    .select("product_id")
+    .eq("user_id", user.id)
+    .in("product_id", productIds);
+  return new Set((data ?? []).map((row) => row.product_id as string));
 }
 
 export async function isBookmarked(productId: string): Promise<boolean> {
@@ -515,6 +536,66 @@ export async function getLeaderboard(limit = 20): Promise<MakerRank[]> {
   return [...byMaker.values()]
     .sort((a, b) => b.votes - a.votes || b.products - a.products)
     .slice(0, limit);
+}
+
+export interface EcosystemStats {
+  /** Approved products per category slug, busiest first. */
+  categories: Array<{ slug: string; count: number }>;
+  /** Approved products per maker city slug, busiest first. */
+  cities: Array<{ slug: string; count: number }>;
+  total: number;
+}
+
+/**
+ * Counts backing the supporting rail and the map. Aggregated in JS over the
+ * approved set, mirroring `getLeaderboard`.
+ */
+export async function getEcosystemStats(): Promise<EcosystemStats> {
+  const tally = (rows: Array<{ category?: string; city?: string | null }>) => {
+    const byCategory = new Map<string, number>();
+    const byCity = new Map<string, number>();
+    for (const row of rows) {
+      if (row.category) {
+        byCategory.set(row.category, (byCategory.get(row.category) ?? 0) + 1);
+      }
+      if (row.city) byCity.set(row.city, (byCity.get(row.city) ?? 0) + 1);
+    }
+    const sort = (map: Map<string, number>) =>
+      [...map.entries()]
+        .map(([slug, count]) => ({ slug, count }))
+        .sort((a, b) => b.count - a.count || a.slug.localeCompare(b.slug));
+    return {
+      categories: sort(byCategory),
+      cities: sort(byCity),
+      total: rows.length,
+    };
+  };
+
+  if (!isSupabaseConfigured()) {
+    return tally(
+      DEMO_PRODUCTS.map((p) => ({
+        category: findCategoryById(p.category_id)?.slug,
+        city: DEMO_MAKERS.find((m) => m.id === p.created_by)?.city ?? null,
+      }))
+    );
+  }
+
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("products")
+    .select("category:categories(slug), maker:profiles!products_created_by_fkey(city)")
+    .eq("status", "approved")
+    .limit(1000);
+
+  return tally(
+    ((data ?? []) as unknown as Array<{
+      category: { slug: string } | null;
+      maker: { city: string | null } | null;
+    }>).map((row) => ({
+      category: row.category?.slug,
+      city: row.maker?.city ?? null,
+    }))
+  );
 }
 
 export async function getAllApprovedSlugs(): Promise<

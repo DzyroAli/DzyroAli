@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "TechRadar.uz",
+    "appName": "YaRato",
     "tagline": "O'zbekiston startaplari maydonchasi",
     "products": "Mahsulotlar",
     "categories": "Kategoriyalar",
@@ -22,7 +22,10 @@
     "notFound": "Sahifa topilmadi",
     "notFoundText": "Siz qidirgan sahifa mavjud emas yoki ko'chirilgan.",
     "goHome": "Bosh sahifaga",
-    "searchAll": "Hammasidan qidirish"
+    "searchAll": "Hammasidan qidirish",
+    "language": "Til",
+    "themeDark": "Qorong'i mavzu",
+    "themeLight": "Yorug' mavzu"
   },
   "home": {
     "heroBadge": "O'zbekiston texnologik mahsulotlar radari",
@@ -36,11 +39,19 @@
     "topDay": "Kun reytingi",
     "topWeek": "Hafta reytingi",
     "topMonth": "Oy reytingi",
-    "newest": "Yangi qo'shilganlar",
+    "newest": "Yangi mahsulotlar",
     "empty": "Hozircha mahsulotlar yo'q. Birinchi bo'ling!",
     "subscribeTitle": "Yangiliklarga obuna bo'ling",
     "subscribeText": "Haftaning eng yaxshi mahsulotlari — har dushanba pochtangizda.",
-    "launchedBadge": "Biz bugun ishga tushdik! 🎉"
+    "launchedBadge": "Biz bugun ishga tushdik! 🎉",
+    "title": "Bugungi startlar",
+    "subtitle": "O‘zbekistonda yaratilayotgan yangi mahsulotlarni kashf eting.",
+    "periodLabel": "Davr",
+    "featuredLabel": "Radar tanlovi",
+    "featuredBy": "{name} tomonidan yaratildi",
+    "rankingTitle": "Reyting",
+    "launchCount": "{count} ta start",
+    "emptyHint": "Birinchi bo‘lib mahsulotingizni joylang."
   },
   "products": {
     "title": "Mahsulotlar katalogi",
@@ -147,7 +158,7 @@
     "registering": "Yuborilmoqda...",
     "registerConfirm": "Ro'yxatdan o'tishni tasdiqlash uchun emailingizni tekshiring.",
     "namePlaceholder": "Ismingiz (ixtiyoriy)",
-    "newPasswordPlaceholder": "Parol (kamida 8 belgi)",
+    "newPasswordPlaceholder": "Yangi parol (kamida 8 belgi)",
     "passwordHint": "Parol kamida 8 belgidan iborat bo'lishi kerak.",
     "emailExists": "Bu email allaqachon ro'yxatdan o'tgan.",
     "credentialsError": "Login yoki parol noto'g'ri",
@@ -160,7 +171,6 @@
     "resetSent": "Parolni almashtirish havolasi yuborildi. Pochtani tekshiring!",
     "resetTitle": "Yangi parol",
     "resetSubtitle": "Akkauntingiz uchun yangi parol o'ylab toping",
-    "newPasswordPlaceholder": "Yangi parol (kamida 8 belgi)",
     "savePassword": "Parolni saqlash",
     "passwordUpdated": "Parol yangilandi! Akkauntga kirdingiz.",
     "passwordTooShort": "Parol kamida 8 belgidan iborat bo'lishi kerak",
@@ -296,9 +306,16 @@
     "launchArchive": "Launchlar arxivi",
     "launchGuide": "Launch bo'yicha qo'llanma",
     "community": "Hamjamiyat",
-    "leaderboard": "Meykerlar reytingi",
+    "leaderboard": "Reyting",
     "ecosystemMap": "Ekotizim xaritasi",
-    "about": "Biz haqimizda"
+    "about": "Biz haqimizda",
+    "primary": "Asosiy navigatsiya",
+    "today": "Bugun",
+    "catalog": "Katalog",
+    "map": "Xarita",
+    "telegram": "Telegram",
+    "investment": "Investitsiya izlaydi",
+    "partners": "Hamkor izlaydi"
   },
   "about": {
     "metaTitle": "Biz haqimizda — bugun ishga tushdik!",
@@ -377,5 +394,10 @@
     "terms4Text": "Barcha mahsulotlar moderatsiyadan o'tadi. Administratsiya sabab ko'rsatib rad etishi yoki nashrdan olishi, qoidabuzarliklarda esa akkauntga kirishni cheklashi mumkin.",
     "terms5Title": "Mas'uliyat",
     "terms5Text": "Maydoncha «boricha» taqdim etiladi. Katalogga joylashtirilgan uchinchi tomon mahsulotlari ishi va ularning yaratuvchilari harakatlari uchun javobgar emasmiz."
+  },
+  "rail": {
+    "categories": "Yo‘nalishlar",
+    "cities": "Faol shaharlar",
+    "makers": "Faol ishlab chiquvchilar"
   }
 }

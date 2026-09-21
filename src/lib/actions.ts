@@ -484,13 +484,13 @@ async function notifyProductOwner(
 
   await sendEmail({
     to: email,
-    subject: `Новый комментарий к «${p.name}» — TechRadar.uz`,
-    html: `<div style="font-family:system-ui,sans-serif;max-width:520px">
+    subject: `Новый комментарий к «${p.name}» — YaRato`,
+    html: `<div style="font-family:system-ui,sans-serif;max-width:520px;color:#132033">
   <p><strong>${who}</strong> оставил(а) комментарий к вашему продукту <strong>${productName}</strong>:</p>
-  <blockquote style="border-left:3px solid #14b8a6;margin:12px 0;padding:8px 14px;color:#334155">${snippet}</blockquote>
-  <p><a href="${url}" style="color:#0d9488;font-weight:600">Открыть продукт →</a></p>
-  <hr style="border:none;border-top:1px solid #e2e8f0;margin:18px 0">
-  <p style="font-size:12px;color:#94a3b8">Отключить эти письма можно в настройках профиля на TechRadar.uz</p>
+  <blockquote style="border-left:3px solid #1769e0;margin:12px 0;padding:8px 14px;color:#667085">${snippet}</blockquote>
+  <p><a href="${url}" style="color:#0f56be;font-weight:600">Открыть продукт →</a></p>
+  <hr style="border:none;border-top:1px solid #e3e8ef;margin:18px 0">
+  <p style="font-size:12px;color:#667085">Отключить эти письма можно в настройках профиля на YaRato</p>
 </div>`,
   });
 }
