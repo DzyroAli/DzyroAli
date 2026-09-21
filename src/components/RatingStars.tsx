@@ -6,6 +6,7 @@ import { useState, useTransition } from "react";
 import { rateProduct } from "@/lib/actions";
 import { cn } from "@/lib/utils";
 import { useAuthModal } from "./auth/AuthModalContext";
+import { focusRing } from "./ui/Button";
 
 export function RatingStars({
   productId,
@@ -65,23 +66,27 @@ export function RatingStars({
               onMouseEnter={() => setHover(star)}
               onMouseLeave={() => setHover(0)}
               onClick={() => rate(star)}
-              className="p-0.5 transition-transform hover:scale-110 disabled:opacity-60"
+              className={cn(
+                "rounded p-0.5 transition-transform hover:scale-110 disabled:opacity-60",
+                focusRing
+              )}
             >
               <Star
                 size={22}
-                className={cn(
+                aria-hidden
+                className={
                   star <= display
-                    ? "fill-amber-400 text-amber-400"
-                    : "text-slate-300 dark:text-slate-600"
-                )}
+                    ? "fill-brand text-brand"
+                    : "text-line-strong"
+                }
               />
             </button>
           ))}
         </div>
-        <span className="text-sm text-slate-600 dark:text-slate-300">
+        <span className="text-sm text-ink-muted">
           {count > 0 ? (
             <>
-              <strong className="text-slate-900 dark:text-slate-100">
+              <strong className="text-ink">
                 {avg.toFixed(1)}
               </strong>{" "}
               · {count} {t("ratings")}
@@ -92,14 +97,17 @@ export function RatingStars({
         </span>
       </div>
       {userRating ? (
-        <span className="text-xs text-slate-400">
+        <span className="text-xs text-ink-muted">
           {t("yourRating")}: {userRating}/5
         </span>
       ) : (
-        <span className="text-xs text-slate-400">{t("rateHint")}</span>
+        <span className="text-xs text-ink-muted">{t("rateHint")}</span>
       )}
       {message && (
-        <div className="absolute left-0 top-full z-50 mt-2 w-56 rounded-lg bg-slate-900 px-3 py-2 text-xs text-white shadow-lg">
+        <div
+          role="status"
+          className="absolute left-0 top-full z-50 mt-2 w-56 rounded-lg border border-line bg-surface px-3 py-2 text-xs text-ink shadow-lg"
+        >
           {message}
         </div>
       )}

@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { HomeMapCard } from "@/components/map/HomeMapCard";
 import { ProductCard } from "@/components/ProductCard";
 import { RadarFeaturedCard } from "@/components/RadarFeaturedCard";
 import { PageWithRail } from "@/components/shell/AppShell";
@@ -46,7 +47,12 @@ export default async function HomePage({
 
   return (
     <PageWithRail
-      rail={<SideRail stats={stats} categories={categories} makers={makers} />}
+      rail={
+        <>
+          <SideRail stats={stats} categories={categories} makers={makers} />
+          <HomeMapCard stats={stats} />
+        </>
+      }
     >
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">

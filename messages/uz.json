@@ -25,7 +25,10 @@
     "searchAll": "Hammasidan qidirish",
     "language": "Til",
     "themeDark": "Qorong'i mavzu",
-    "themeLight": "Yorug' mavzu"
+    "themeLight": "Yorug' mavzu",
+    "pagination": "Sahifalash",
+    "previousPage": "Oldingi sahifa",
+    "nextPage": "Keyingi sahifa"
   },
   "home": {
     "heroBadge": "O'zbekiston texnologik mahsulotlar radari",
@@ -64,7 +67,9 @@
     "allCategories": "Barcha kategoriyalar",
     "empty": "Hech narsa topilmadi. Qidiruv so'rovini o'zgartirib ko'ring.",
     "found": "ta mahsulot topildi",
-    "clear": "Tozalash"
+    "clear": "Tozalash",
+    "filters": "Filtrlar",
+    "emptyHint": "Filtrlarni o‘zgartirib ko‘ring."
   },
   "product": {
     "visit": "Saytga o'tish",
@@ -107,7 +112,12 @@
     "loginRequired": "Sozlamalarni ko'rish uchun tizimga kiring.",
     "notifications": "Bildirishnomalar",
     "commentNotifications": "Izohlar haqida email",
-    "commentNotificationsDesc": "Mahsulotingizga yangi izoh qoldirilganda email keladi."
+    "commentNotificationsDesc": "Mahsulotingizga yangi izoh qoldirilganda email keladi.",
+    "profile": "Profil",
+    "city": "Shahar",
+    "cityNone": "Ko‘rsatilmagan",
+    "cityHint": "Shahar xaritada va profilingizda ko‘rinadi.",
+    "citySaved": "Saqlandi"
   },
   "submit": {
     "title": "Loyihani joylash",
@@ -180,7 +190,17 @@
   "maker": {
     "products": "Mahsulotlar",
     "joined": "Ro'yxatdan o'tgan",
-    "noProducts": "Hozircha mahsulotlar yo'q"
+    "noProducts": "Hozircha mahsulotlar yo'q",
+    "tabsLabel": "Profil bo‘limlari",
+    "tab_projects": "Loyihalar",
+    "tab_launches": "Startlar",
+    "tab_activity": "Faollik",
+    "tab_about": "Ishlab chiquvchi haqida",
+    "statProducts": "mahsulot",
+    "statVotes": "ovoz",
+    "statComments": "izoh",
+    "noActivity": "Hozircha faollik yo‘q.",
+    "noBio": "Ishlab chiquvchi hali o‘zi haqida yozmagan."
   },
   "admin": {
     "title": "Admin-panel",
@@ -345,12 +365,22 @@
     "joined": "{date} dan beri biz bilan"
   },
   "map": {
-    "title": "Ekotizim xaritasi",
+    "title": "Mahsulotlar qayerda yaratilyapti",
     "backHome": "Bosh sahifa",
     "entityProducts": "Mahsulotlar",
     "entityPeople": "Odamlar",
     "viewMap": "Xarita",
-    "viewList": "Ro'yxat"
+    "viewList": "Ro'yxat",
+    "subtitle": "O‘zbekiston shaharlari bo‘yicha mahsulotlar va ishlab chiquvchilar.",
+    "homeTitle": "Mahsulotlar qayerda yaratiladi",
+    "openMap": "Xaritani ochish",
+    "viewLabel": "Ko‘rinish",
+    "summary": "{cities} ta shaharda {products} ta mahsulot",
+    "cityCounts": "{products} ta mahsulot · {makers} ta ishlab chiquvchi",
+    "noneHere": "Hozircha yo‘q",
+    "close": "Yopish",
+    "emptyTitle": "Xarita hali bo‘sh",
+    "emptyHint": "Ishlab chiquvchilar profilida shaharni ko‘rsatganda belgilar paydo bo‘ladi."
   },
   "guide": {
     "badge": "Launch qo'llanmasi",
@@ -399,5 +429,10 @@
     "categories": "Yo‘nalishlar",
     "cities": "Faol shaharlar",
     "makers": "Faol ishlab chiquvchilar"
+  },
+  "community": {
+    "title": "Hamjamiyat",
+    "subtitle": "O‘zbekistonda mahsulot yaratayotgan ishlab chiquvchilar.",
+    "empty": "Hozircha ishlab chiquvchilar yo‘q."
   }
 }

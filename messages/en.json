@@ -25,7 +25,10 @@
     "searchAll": "Search everywhere",
     "language": "Language",
     "themeDark": "Dark theme",
-    "themeLight": "Light theme"
+    "themeLight": "Light theme",
+    "pagination": "Pagination",
+    "previousPage": "Previous page",
+    "nextPage": "Next page"
   },
   "home": {
     "heroBadge": "Uzbekistan's tech product radar",
@@ -64,7 +67,9 @@
     "allCategories": "All categories",
     "empty": "Nothing found. Try a different query.",
     "found": "products found",
-    "clear": "Clear"
+    "clear": "Clear",
+    "filters": "Filters",
+    "emptyHint": "Try adjusting the filters."
   },
   "product": {
     "visit": "Visit website",
@@ -107,7 +112,12 @@
     "loginRequired": "Sign in to open settings.",
     "notifications": "Notifications",
     "commentNotifications": "Comment emails",
-    "commentNotificationsDesc": "Get an email when someone comments on your product."
+    "commentNotificationsDesc": "Get an email when someone comments on your product.",
+    "profile": "Profile",
+    "city": "City",
+    "cityNone": "Not set",
+    "cityHint": "Your city appears on the map and on your profile.",
+    "citySaved": "Saved"
   },
   "submit": {
     "title": "Submit a product",
@@ -180,7 +190,17 @@
   "maker": {
     "products": "Products",
     "joined": "Joined",
-    "noProducts": "No products yet"
+    "noProducts": "No products yet",
+    "tabsLabel": "Profile sections",
+    "tab_projects": "Projects",
+    "tab_launches": "Launches",
+    "tab_activity": "Activity",
+    "tab_about": "About",
+    "statProducts": "products",
+    "statVotes": "votes",
+    "statComments": "comments",
+    "noActivity": "No activity yet.",
+    "noBio": "This maker hasn't written a bio yet."
   },
   "admin": {
     "title": "Admin panel",
@@ -345,12 +365,22 @@
     "joined": "with us since {date}"
   },
   "map": {
-    "title": "Ecosystem Map",
+    "title": "Where products are built",
     "backHome": "Home",
     "entityProducts": "Products",
     "entityPeople": "People",
     "viewMap": "Map",
-    "viewList": "List"
+    "viewList": "List",
+    "subtitle": "Products and makers across the cities of Uzbekistan.",
+    "homeTitle": "Where products are built",
+    "openMap": "Open map",
+    "viewLabel": "View",
+    "summary": "{products} products across {cities} cities",
+    "cityCounts": "{products} products · {makers} makers",
+    "noneHere": "None yet",
+    "close": "Close",
+    "emptyTitle": "The map is empty",
+    "emptyHint": "Markers appear once makers set a city on their profile."
   },
   "guide": {
     "badge": "Launch Guide",
@@ -399,5 +429,10 @@
     "categories": "Categories",
     "cities": "Active cities",
     "makers": "Active makers"
+  },
+  "community": {
+    "title": "Community",
+    "subtitle": "The makers building products in Uzbekistan.",
+    "empty": "No makers yet."
   }
 }

@@ -358,6 +358,40 @@ export async function getMaker(
   };
 }
 
+export interface MakerComment {
+  comment: Comment;
+  product: Pick<Product, "slug" | "name"> | null;
+}
+
+/** A maker's recent comments, for the Activity tab on their profile. */
+export async function getMakerComments(
+  userId: string,
+  limit = 20
+): Promise<MakerComment[]> {
+  if (!isSupabaseConfigured()) {
+    return DEMO_COMMENTS.filter((c) => c.user_id === userId)
+      .slice(0, limit)
+      .map((comment) => {
+        const p = DEMO_PRODUCTS.find((d) => d.id === comment.product_id);
+        return {
+          comment,
+          product: p ? { slug: p.slug, name: p.name } : null,
+        };
+      });
+  }
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("comments")
+    .select("*, product:products(slug, name)")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  return ((data ?? []) as unknown as Array<
+    Comment & { product: { slug: string; name: string } | null }
+  >).map(({ product, ...comment }) => ({ comment, product }));
+}
+
 export async function getSimilar(product: Product, limit = 4): Promise<Product[]> {
   if (!isSupabaseConfigured()) {
     return DEMO_PRODUCTS.filter(

@@ -4,6 +4,7 @@ import { createServerClient } from "@supabase/ssr";
 import { revalidatePath } from "next/cache";
 import { cookies, headers } from "next/headers";
 import { findCategory } from "./categories";
+import { CITIES } from "./cities";
 import { isEmailConfigured, sendEmail } from "./email";
 import { createAdminClient } from "./supabase/admin";
 import {
@@ -349,6 +350,31 @@ export async function updateCommentNotifications(
   if (error) return { error: "generic" };
 
   revalidatePath("/settings");
+  return { ok: true };
+}
+
+/**
+ * Set the maker's city. Values are slugs from `src/lib/cities.ts`; an empty
+ * string clears it. This is what the ecosystem map projects markers from.
+ */
+export async function updateProfileCity(
+  citySlug: string | null
+): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) return { error: "demoMode" };
+  const { supabase, user } = await requireUser();
+  if (!user) return { error: "loginRequired" };
+
+  const city = citySlug ? citySlug.trim() : null;
+  if (city && !CITIES.some((c) => c.slug === city)) return { error: "validation" };
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({ city })
+    .eq("id", user.id);
+  if (error) return { error: "generic" };
+
+  revalidatePath("/settings");
+  revalidatePath("/map");
   return { ok: true };
 }
 
