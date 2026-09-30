@@ -18,6 +18,8 @@ export interface Profile {
   avatar_url: string | null;
   bio: string | null;
   website: string | null;
+  /** Slug from `src/lib/cities.ts`; null until the maker sets it. */
+  city: string | null;
   telegram_username: string | null;
   role: "user" | "admin";
   digest_opt_in?: boolean;

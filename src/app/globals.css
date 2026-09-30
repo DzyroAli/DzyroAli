@@ -1,27 +1,148 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+/* Tailwind v4 resolves `dark:` against prefers-color-scheme by default, but the
+   app toggles a `.dark` class on <html>. Without this the switcher does nothing. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Semantic tokens. Components only ever reference these — never a raw palette
+   value — so a re-theme is a change to the two blocks below and nothing else. */
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+
+  --color-canvas: var(--yr-canvas);
+  --color-surface: var(--yr-surface);
+  --color-surface-muted: var(--yr-surface-muted);
+  --color-surface-raised: var(--yr-surface-raised);
+
+  --color-ink: var(--yr-ink);
+  --color-ink-muted: var(--yr-ink-muted);
+  --color-ink-subtle: var(--yr-ink-subtle);
+
+  --color-line: var(--yr-line);
+  --color-line-strong: var(--yr-line-strong);
+
+  --color-brand: var(--yr-brand);
+  --color-brand-hover: var(--yr-brand-hover);
+  --color-brand-soft: var(--yr-brand-soft);
+  --color-brand-softer: var(--yr-brand-softer);
+  --color-brand-ink: var(--yr-brand-ink);
+  --color-on-brand: var(--yr-on-brand);
+
+  --color-positive: var(--yr-positive);
+  --color-positive-soft: var(--yr-positive-soft);
+  --color-critical: var(--yr-critical);
+  --color-critical-soft: var(--yr-critical-soft);
+  --color-on-critical: var(--yr-on-critical);
+  --color-overlay: var(--yr-overlay);
+
+  --radius-card: 0.875rem;
 }
 
-html {
-  color-scheme: light dark;
+:root {
+  --yr-canvas: #f6f8fb;
+  --yr-surface: #ffffff;
+  --yr-surface-muted: #f1f4f9;
+  --yr-surface-raised: #ffffff;
+
+  --yr-ink: #132033;
+  --yr-ink-muted: #667085;
+  --yr-ink-subtle: #8a94a6;
+
+  --yr-line: #e3e8ef;
+  --yr-line-strong: #cdd5e0;
+
+  --yr-brand: #1769e0;
+  --yr-brand-hover: #0f56be;
+  --yr-brand-soft: #e8f1ff;
+  --yr-brand-softer: #f3f8ff;
+  --yr-brand-ink: #0f56be;
+  --yr-on-brand: #ffffff;
+
+  --yr-positive: #067647;
+  --yr-positive-soft: #e7f6ee;
+  --yr-critical: #b42318;
+  --yr-critical-soft: #fdeceb;
+  --yr-on-critical: #ffffff;
+  --yr-overlay: rgb(19 32 51 / 0.45);
+
+  color-scheme: light;
 }
 
-html.dark {
+/* Dark values are derived from the light palette: surfaces drop to deep navy,
+   the accent lightens so it keeps AA contrast on a dark surface. */
+.dark {
+  --yr-canvas: #0b1220;
+  --yr-surface: #131c2b;
+  --yr-surface-muted: #1a2434;
+  --yr-surface-raised: #1a2434;
+
+  --yr-ink: #e7ecf3;
+  --yr-ink-muted: #93a1b5;
+  --yr-ink-subtle: #77849a;
+
+  --yr-line: #263449;
+  --yr-line-strong: #35465f;
+
+  --yr-brand: #4d93f0;
+  --yr-brand-hover: #6ba6f5;
+  --yr-brand-soft: #16273f;
+  --yr-brand-softer: #121e30;
+  --yr-brand-ink: #a8c8f5;
+  --yr-on-brand: #06121f;
+
+  --yr-positive: #3baf7a;
+  --yr-positive-soft: #10281f;
+  --yr-critical: #f27a70;
+  --yr-critical-soft: #2a1515;
+  --yr-on-critical: #250d0a;
+  --yr-overlay: rgb(3 8 15 / 0.65);
+
   color-scheme: dark;
-}
-
-body {
-  @apply bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-/* CSS-only dropdowns (<details>) used in the header */
+/* One keyboard-focus ring for the whole app. Declared here rather than as a
+   utility because Tailwind emits no `outline-<color>` utility for the token
+   colours, which left the ring painting in currentColor. Element selectors
+   (not :where) so the colour isn't overridden by zero-specificity rules. */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  /* Longhands, not the `outline` shorthand: with a var() colour the shorthand
+     resolved width and style but dropped the colour back to currentColor. */
+  outline-width: 2px;
+  outline-style: solid;
+  outline-color: var(--yr-brand);
+  outline-offset: 2px;
+}
+/* Inputs sit flush inside their own border, so no offset. */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline-offset: 0;
+}
+/* On a brand-filled surface the ring has to read against blue. */
+.on-brand a:focus-visible,
+.on-brand button:focus-visible {
+  outline-color: var(--yr-on-brand);
+}
+
+body {
+  background-color: var(--yr-canvas);
+  color: var(--yr-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* CSS-only dropdowns (<details>) used in the top bar */
 details.dropdown > summary {
   list-style: none;
   cursor: pointer;
@@ -39,8 +160,7 @@ details.dropdown > .dropdown-panel {
   z-index: 40;
 }
 
-/* Плавные появления модалок и выпадающих панелей */
-@keyframes tr-fade-in {
+@keyframes yr-fade-in {
   from {
     opacity: 0;
   }
@@ -48,7 +168,7 @@ details.dropdown > .dropdown-panel {
     opacity: 1;
   }
 }
-@keyframes tr-scale-in {
+@keyframes yr-scale-in {
   from {
     opacity: 0;
     transform: translateY(8px) scale(0.97);
@@ -58,9 +178,71 @@ details.dropdown > .dropdown-panel {
     transform: translateY(0) scale(1);
   }
 }
+/* Radar sweep: one slow, quiet rotation. */
+@keyframes yr-sweep {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes yr-ping {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+@keyframes yr-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
 .anim-fade-in {
-  animation: tr-fade-in 0.15s ease-out;
+  animation: yr-fade-in 0.15s ease-out;
 }
 .anim-scale-in {
-  animation: tr-scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: yr-scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.anim-sweep {
+  transform-origin: center;
+  animation: yr-sweep 8s linear infinite;
+}
+.anim-ping {
+  transform-origin: center;
+  animation: yr-ping 3.2s cubic-bezier(0.2, 0, 0.3, 1) infinite;
+}
+.anim-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    var(--yr-surface-muted) 0%,
+    var(--yr-line) 50%,
+    var(--yr-surface-muted) 100%
+  );
+  background-size: 200% 100%;
+  animation: yr-shimmer 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .anim-fade-in,
+  .anim-scale-in,
+  .anim-sweep,
+  .anim-ping,
+  .anim-shimmer {
+    animation: none;
+  }
+  .anim-shimmer {
+    background-image: none;
+  }
 }

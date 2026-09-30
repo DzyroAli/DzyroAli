@@ -32,54 +32,54 @@ export default async function AdminAnalyticsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900">{t("navAnalytics")}</h1>
-      <p className="mt-1 text-sm text-slate-500">{t("analyticsSubtitle")}</p>
+      <h1 className="text-2xl font-semibold text-ink">{t("navAnalytics")}</h1>
+      <p className="mt-1 text-sm text-ink-muted">{t("analyticsSubtitle")}</p>
 
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
         {cards.map((c) => (
           <div
             key={c.label}
-            className="rounded-2xl border border-slate-200 bg-white p-4"
+            className="rounded-card border border-line bg-surface p-4"
           >
-            <c.icon size={18} className="text-teal-600" />
-            <p className="mt-2 text-2xl font-extrabold text-slate-900">
+            <c.icon size={18} className="text-brand" />
+            <p className="mt-2 text-2xl font-semibold text-ink">
               {c.value}
             </p>
-            <p className="text-xs text-slate-500">{c.label}</p>
+            <p className="text-xs text-ink-muted">{c.label}</p>
           </div>
         ))}
       </div>
 
       <div className="mb-4 mt-10 flex items-center gap-2">
-        <Trophy size={18} className="text-amber-500" />
-        <h2 className="text-lg font-bold text-slate-900">{t("topProducts")}</h2>
+        <Trophy size={18} className="text-brand" />
+        <h2 className="text-lg font-semibold text-ink">{t("topProducts")}</h2>
       </div>
 
-      <div className="space-y-2 rounded-2xl border border-slate-200 bg-white p-4">
+      <div className="space-y-2 rounded-card border border-line bg-surface p-4">
         {top.length === 0 && (
-          <p className="py-6 text-center text-sm text-slate-500">
+          <p className="py-6 text-center text-sm text-ink-muted">
             {t("emptyQueue")}
           </p>
         )}
         {top.map((p, i) => (
           <div key={p.id} className="flex items-center gap-3">
-            <span className="w-5 text-right text-xs font-bold text-slate-400">
+            <span className="w-5 text-right text-xs font-semibold text-ink-muted">
               {i + 1}
             </span>
             <ProductLogo name={p.name} logoUrl={p.logo_url} size={28} />
             <Link
               href={`/products/${p.slug}`}
-              className="w-40 truncate text-sm font-semibold text-slate-900 hover:text-teal-700 sm:w-56"
+              className="w-40 truncate text-sm font-semibold text-ink hover:text-brand-ink sm:w-56"
             >
               {p.name}
             </Link>
-            <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-slate-100">
+            <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-surface-muted">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-teal-500 to-cyan-500"
+                className="h-full rounded-full bg-brand"
                 style={{ width: `${(p.votes_count / maxVotes) * 100}%` }}
               />
             </div>
-            <span className="w-10 text-right text-sm font-bold text-slate-700">
+            <span className="w-10 text-right text-sm font-semibold text-ink">
               {p.votes_count}
             </span>
           </div>

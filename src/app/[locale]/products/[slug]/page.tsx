@@ -5,12 +5,15 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { BookmarkButton } from "@/components/BookmarkButton";
 import { CommentSection } from "@/components/CommentSection";
-import { ProductCard } from "@/components/ProductCard";
 import { ProductLogo } from "@/components/ProductLogo";
 import { RatingStars } from "@/components/RatingStars";
 import { ShareButtons } from "@/components/ShareButtons";
 import { VoteButton } from "@/components/VoteButton";
-import { CATEGORY_EMOJI } from "@/lib/categories";
+import { PageBody } from "@/components/shell/AppShell";
+import { Avatar } from "@/components/ui/Avatar";
+import { buttonClass } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
+import { Card } from "@/components/ui/Card";
 import {
   getComments,
   getCurrentUser,
@@ -21,7 +24,9 @@ import {
   isBookmarked,
 } from "@/lib/data";
 import { categoryName } from "@/lib/types";
-import { formatDate, gradientFor, initials } from "@/lib/utils";
+import { cityLabel } from "@/lib/cities";
+import { formatDate } from "@/lib/utils";
+import { CategoryIcon } from "@/components/ui/CategoryIcon";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://techradar.uz";
 
@@ -61,7 +66,7 @@ export async function generateMetadata({
             },
           ]
         : undefined,
-      siteName: "TechRadar.uz",
+      siteName: "YaRato",
     },
     twitter: {
       card: "summary_large_image",
@@ -121,21 +126,23 @@ export default async function ProductPage({
       : undefined,
   };
 
+  const makerCity = cityLabel(product.maker?.city, locale);
+
   return (
-    <div className="mx-auto max-w-4xl px-4 py-10">
+    <PageBody>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
       {product.status === "pending" && (
-        <p className="mb-6 rounded-xl bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
+        <p className="mb-5 rounded-xl bg-brand-soft px-4 py-3 text-sm font-medium text-brand-ink">
           {t("pendingNotice")}
         </p>
       )}
       {/* Уведомление автору об отклонении с причиной от модератора */}
       {product.status === "rejected" && (
-        <div className="mb-6 rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-700">
+        <div className="mb-5 rounded-xl bg-critical-soft px-4 py-3 text-sm text-critical">
           <p className="font-semibold">{t("rejectedNotice")}</p>
           {product.rejection_reason && (
             <p className="mt-1">
@@ -145,139 +152,175 @@ export default async function ProductPage({
         </div>
       )}
 
-      {/* Hero */}
-      <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
-        <ProductLogo name={product.name} logoUrl={product.logo_url} size={88} />
-        <div className="min-w-0 flex-1">
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
-            {product.name}
-          </h1>
-          <p className="mt-1.5 text-lg text-slate-600">{product.tagline}</p>
-          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-500">
-            {product.category && (
-              <Link
-                href={`/category/${product.category.slug}`}
-                className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-700 hover:bg-slate-200"
-              >
-                <span aria-hidden>{CATEGORY_EMOJI[product.category.slug]}</span>
-                {categoryName(product.category, locale)}
-              </Link>
-            )}
-            <span>
-              {t("launched")}: {formatDate(product.launched_at, locale)}
-            </span>
-          </div>
-        </div>
-        <VoteButton
-          productId={product.id}
-          initialVotes={product.votes_count}
-          initialVoted={voted}
-          size="lg"
-        />
-      </div>
-
-      {/* Action links */}
-      <div className="mt-6 flex flex-wrap gap-3">
-        {product.website_url && (
-          <a
-            href={product.website_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-          >
-            <ExternalLink size={15} />
-            {t("visit")}
-          </a>
-        )}
-        {product.telegram_url && (
-          <a
-            href={product.telegram_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl border border-sky-200 bg-sky-50 px-5 py-2.5 text-sm font-semibold text-sky-700 transition-colors hover:bg-sky-100"
-          >
-            <Send size={15} />
-            {t("openTelegram")}
-          </a>
-        )}
-        <BookmarkButton productId={product.id} initialBookmarked={bookmarked} />
-      </div>
-
-      {/* Рейтинг */}
-      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
-        <RatingStars
-          productId={product.id}
-          initialAvg={ratingAvg}
-          initialCount={ratingCount}
-          initialUserRating={userRating}
-        />
-      </div>
-
-      {/* Поделиться */}
-      <div className="mt-5">
-        <ShareButtons
-          url={`${SITE_URL}${locale === "uz" ? "" : `/${locale}`}/products/${product.slug}`}
-          title={`${product.name} — ${product.tagline}`}
-        />
-      </div>
-
-      <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_280px]">
-        <div className="min-w-0 space-y-10">
-          {product.description && (
-            <div className="whitespace-pre-line rounded-2xl border border-slate-200 bg-white p-6 text-[15px] leading-relaxed text-slate-700">
-              {product.description}
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_288px]">
+        <div className="min-w-0">
+          <header className="flex flex-col gap-4 sm:flex-row sm:items-start">
+            <ProductLogo
+              name={product.name}
+              logoUrl={product.logo_url}
+              categorySlug={product.category?.slug}
+              size={72}
+            />
+            <div className="min-w-0 flex-1">
+              <h1 className="text-[26px] font-semibold tracking-tight text-ink sm:text-[30px]">
+                {product.name}
+              </h1>
+              <p className="mt-1 text-[15px] leading-relaxed text-ink-muted sm:text-base">
+                {product.tagline}
+              </p>
+              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-ink-muted">
+                {product.category && (
+                  <Link
+                    href={`/category/${product.category.slug}`}
+                    className="rounded-md"
+                  >
+                    <Badge
+                      tone="brand"
+                      icon={<CategoryIcon slug={product.category.slug} size={12} />}
+                    >
+                      {categoryName(product.category, locale)}
+                    </Badge>
+                  </Link>
+                )}
+                <span>
+                  {t("launched")}: {formatDate(product.launched_at, locale)}
+                </span>
+              </div>
             </div>
+            <div className="shrink-0">
+              <VoteButton
+                productId={product.id}
+                initialVotes={product.votes_count}
+                initialVoted={voted}
+                size="lg"
+              />
+            </div>
+          </header>
+
+          <div className="mt-5 flex flex-wrap gap-2.5">
+            {product.website_url && (
+              <a
+                href={product.website_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={buttonClass("primary")}
+              >
+                <ExternalLink size={15} aria-hidden />
+                {t("visit")}
+              </a>
+            )}
+            {product.telegram_url && (
+              <a
+                href={product.telegram_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={buttonClass("secondary")}
+              >
+                <Send size={15} aria-hidden />
+                {t("openTelegram")}
+              </a>
+            )}
+            <BookmarkButton
+              productId={product.id}
+              initialBookmarked={bookmarked}
+            />
+          </div>
+
+          <Card className="mt-5 p-4">
+            <RatingStars
+              productId={product.id}
+              initialAvg={ratingAvg}
+              initialCount={ratingCount}
+              initialUserRating={userRating}
+            />
+          </Card>
+
+          <div className="mt-4">
+            <ShareButtons
+              url={`${SITE_URL}${locale === "uz" ? "" : `/${locale}`}/products/${product.slug}`}
+              title={`${product.name} — ${product.tagline}`}
+            />
+          </div>
+
+          {product.description && (
+            <Card className="mt-6 whitespace-pre-line p-5 text-[15px] leading-relaxed text-ink">
+              {product.description}
+            </Card>
           )}
 
-          <CommentSection
-            productId={product.id}
-            comments={comments}
-            canComment={Boolean(userId)}
-            canModerate={profile?.role === "admin"}
-          />
+          <div className="mt-8">
+            <CommentSection
+              productId={product.id}
+              comments={comments}
+              canComment={Boolean(userId)}
+              canModerate={profile?.role === "admin"}
+            />
+          </div>
         </div>
 
-        <aside className="space-y-8">
+        <aside className="min-w-0 space-y-5">
           {product.maker && (
             <section>
-              <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-slate-400">
+              <h2 className="mb-2.5 text-[13px] font-semibold uppercase tracking-[0.04em] text-ink-muted">
                 {t("maker")}
-              </h3>
+              </h2>
               <Link
                 href={`/makers/${product.maker.username}`}
-                className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 transition-shadow hover:shadow-md"
+                className="flex items-center gap-3 rounded-card border border-line bg-surface p-4 transition-colors hover:border-line-strong"
               >
-                <span
-                  className={`flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br text-sm font-bold text-white ${gradientFor(product.maker.username)}`}
-                >
-                  {initials(product.maker.full_name ?? product.maker.username)}
-                </span>
+                <Avatar
+                  name={product.maker.full_name ?? product.maker.username}
+                  username={product.maker.username}
+                  src={product.maker.avatar_url}
+                  size={44}
+                />
                 <span className="min-w-0">
-                  <span className="block truncate font-semibold text-slate-900">
+                  <span className="block truncate font-medium text-ink">
                     {product.maker.full_name ?? product.maker.username}
                   </span>
-                  <span className="block truncate text-sm text-slate-500">
+                  <span className="block truncate text-sm text-ink-muted">
                     @{product.maker.username}
+                    {makerCity ? ` · ${makerCity}` : ""}
                   </span>
                 </span>
               </Link>
             </section>
           )}
+
+          {similar.length > 0 && (
+            <section>
+              <h2 className="mb-2.5 text-[13px] font-semibold uppercase tracking-[0.04em] text-ink-muted">
+                {t("similar")}
+              </h2>
+              <ul className="space-y-1">
+                {similar.map((p) => (
+                  <li key={p.id}>
+                    <Link
+                      href={`/products/${p.slug}`}
+                      className="flex items-center gap-2.5 rounded-lg p-2 transition-colors hover:bg-surface-muted"
+                    >
+                      <ProductLogo
+                        name={p.name}
+                        logoUrl={p.logo_url}
+                        categorySlug={p.category?.slug}
+                        size={36}
+                      />
+                      <span className="min-w-0">
+                        <span className="block truncate text-sm font-medium text-ink">
+                          {p.name}
+                        </span>
+                        <span className="block truncate text-xs text-ink-muted">
+                          {p.tagline}
+                        </span>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </aside>
       </div>
-
-      {similar.length > 0 && (
-        <section className="mt-12">
-          <h2 className="mb-4 text-lg font-bold text-slate-900">
-            {t("similar")}
-          </h2>
-          <div className="space-y-3">
-            {similar.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        </section>
-      )}
-    </div>
+    </PageBody>
   );
 }

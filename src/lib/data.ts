@@ -1,7 +1,7 @@
-import { CATEGORIES, findCategory } from "./categories";
+import { CATEGORIES, findCategory, findCategoryById } from "./categories";
 import { DEMO_COMMENTS, DEMO_MAKERS, DEMO_PRODUCTS } from "./demo-data";
 import { isSupabaseConfigured } from "./supabase/config";
-import { createClient } from "./supabase/server";
+import { createClient, getUserOrNull } from "./supabase/server";
 import type {
   AdminStats,
   Category,
@@ -38,9 +38,7 @@ export async function getCurrentUser(): Promise<{
 }> {
   if (!isSupabaseConfigured()) return { userId: null, profile: null };
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUserOrNull(supabase);
   if (!user) return { userId: null, profile: null };
   const { data: profile } = await supabase
     .from("profiles")
@@ -227,9 +225,7 @@ export async function getComments(productId: string): Promise<Comment[]> {
 export async function hasVoted(productId: string): Promise<boolean> {
   if (!isSupabaseConfigured()) return false;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUserOrNull(supabase);
   if (!user) return false;
   const { data } = await supabase
     .from("votes")
@@ -240,12 +236,29 @@ export async function hasVoted(productId: string): Promise<boolean> {
   return Boolean(data);
 }
 
+/**
+ * Which of these products the signed-in user has already voted for.
+ * Batched so a feed can render voted state without one query per card.
+ */
+export async function getVotedProductIds(
+  productIds: string[]
+): Promise<Set<string>> {
+  if (!isSupabaseConfigured() || productIds.length === 0) return new Set();
+  const supabase = await createClient();
+  const user = await getUserOrNull(supabase);
+  if (!user) return new Set();
+  const { data } = await supabase
+    .from("votes")
+    .select("product_id")
+    .eq("user_id", user.id)
+    .in("product_id", productIds);
+  return new Set((data ?? []).map((row) => row.product_id as string));
+}
+
 export async function isBookmarked(productId: string): Promise<boolean> {
   if (!isSupabaseConfigured()) return false;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUserOrNull(supabase);
   if (!user) return false;
   const { data } = await supabase
     .from("bookmarks")
@@ -260,9 +273,7 @@ export async function isBookmarked(productId: string): Promise<boolean> {
 export async function getBookmarkedProducts(): Promise<Product[]> {
   if (!isSupabaseConfigured()) return [];
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUserOrNull(supabase);
   if (!user) return [];
 
   const { data: rows } = await supabase
@@ -294,9 +305,7 @@ export async function getBookmarkedProducts(): Promise<Product[]> {
 export async function getUserRating(productId: string): Promise<number | null> {
   if (!isSupabaseConfigured()) return null;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUserOrNull(supabase);
   if (!user) return null;
   const { data } = await supabase
     .from("ratings")
@@ -335,6 +344,40 @@ export async function getMaker(
     profile: profile as Profile,
     products: ((products ?? []) as unknown as Product[]),
   };
+}
+
+export interface MakerComment {
+  comment: Comment;
+  product: Pick<Product, "slug" | "name"> | null;
+}
+
+/** A maker's recent comments, for the Activity tab on their profile. */
+export async function getMakerComments(
+  userId: string,
+  limit = 20
+): Promise<MakerComment[]> {
+  if (!isSupabaseConfigured()) {
+    return DEMO_COMMENTS.filter((c) => c.user_id === userId)
+      .slice(0, limit)
+      .map((comment) => {
+        const p = DEMO_PRODUCTS.find((d) => d.id === comment.product_id);
+        return {
+          comment,
+          product: p ? { slug: p.slug, name: p.name } : null,
+        };
+      });
+  }
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("comments")
+    .select("*, product:products(slug, name)")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  return ((data ?? []) as unknown as Array<
+    Comment & { product: { slug: string; name: string } | null }
+  >).map(({ product, ...comment }) => ({ comment, product }));
 }
 
 export async function getSimilar(product: Product, limit = 4): Promise<Product[]> {
@@ -515,6 +558,66 @@ export async function getLeaderboard(limit = 20): Promise<MakerRank[]> {
   return [...byMaker.values()]
     .sort((a, b) => b.votes - a.votes || b.products - a.products)
     .slice(0, limit);
+}
+
+export interface EcosystemStats {
+  /** Approved products per category slug, busiest first. */
+  categories: Array<{ slug: string; count: number }>;
+  /** Approved products per maker city slug, busiest first. */
+  cities: Array<{ slug: string; count: number }>;
+  total: number;
+}
+
+/**
+ * Counts backing the supporting rail and the map. Aggregated in JS over the
+ * approved set, mirroring `getLeaderboard`.
+ */
+export async function getEcosystemStats(): Promise<EcosystemStats> {
+  const tally = (rows: Array<{ category?: string; city?: string | null }>) => {
+    const byCategory = new Map<string, number>();
+    const byCity = new Map<string, number>();
+    for (const row of rows) {
+      if (row.category) {
+        byCategory.set(row.category, (byCategory.get(row.category) ?? 0) + 1);
+      }
+      if (row.city) byCity.set(row.city, (byCity.get(row.city) ?? 0) + 1);
+    }
+    const sort = (map: Map<string, number>) =>
+      [...map.entries()]
+        .map(([slug, count]) => ({ slug, count }))
+        .sort((a, b) => b.count - a.count || a.slug.localeCompare(b.slug));
+    return {
+      categories: sort(byCategory),
+      cities: sort(byCity),
+      total: rows.length,
+    };
+  };
+
+  if (!isSupabaseConfigured()) {
+    return tally(
+      DEMO_PRODUCTS.map((p) => ({
+        category: findCategoryById(p.category_id)?.slug,
+        city: DEMO_MAKERS.find((m) => m.id === p.created_by)?.city ?? null,
+      }))
+    );
+  }
+
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("products")
+    .select("category:categories(slug), maker:profiles!products_created_by_fkey(city)")
+    .eq("status", "approved")
+    .limit(1000);
+
+  return tally(
+    ((data ?? []) as unknown as Array<{
+      category: { slug: string } | null;
+      maker: { city: string | null } | null;
+    }>).map((row) => ({
+      category: row.category?.slug,
+      city: row.maker?.city ?? null,
+    }))
+  );
 }
 
 export async function getAllApprovedSlugs(): Promise<

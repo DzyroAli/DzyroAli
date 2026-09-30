@@ -6,6 +6,7 @@ import { useState, useTransition } from "react";
 import { toggleBookmark } from "@/lib/actions";
 import { cn } from "@/lib/utils";
 import { useAuthModal } from "./auth/AuthModalContext";
+import { buttonClass } from "./ui/Button";
 
 export function BookmarkButton({
   productId,
@@ -47,18 +48,23 @@ export function BookmarkButton({
         disabled={pending}
         aria-pressed={bookmarked}
         className={cn(
-          "inline-flex items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-semibold transition-colors",
-          bookmarked
-            ? "border-amber-300 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-300"
-            : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200",
+          buttonClass("secondary"),
+          bookmarked && "border-brand bg-brand-soft text-brand-ink",
           pending && "opacity-60"
         )}
       >
-        <Bookmark size={15} className={bookmarked ? "fill-current" : ""} />
+        <Bookmark
+          size={15}
+          aria-hidden
+          className={bookmarked ? "fill-current" : ""}
+        />
         {bookmarked ? t("bookmarked") : t("bookmark")}
       </button>
       {message && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-56 rounded-lg bg-slate-900 px-3 py-2 text-xs text-white shadow-lg">
+        <div
+          role="status"
+          className="absolute right-0 top-full z-50 mt-2 w-56 rounded-lg border border-line bg-surface px-3 py-2 text-xs text-ink shadow-lg"
+        >
           {message}
         </div>
       )}

@@ -1,3 +1,16 @@
+import {
+  Bot,
+  Building2,
+  Coins,
+  Globe,
+  Handshake,
+  MessageCircle,
+  Rocket,
+  Send,
+  Sparkles,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import type { Category } from "./types";
 
 /**
@@ -16,17 +29,22 @@ export const CATEGORIES: Category[] = [
   { id: 9, slug: "other", name_uz: "Boshqa", name_ru: "Прочее", name_en: "Other", position: 9 },
 ];
 
-export const CATEGORY_EMOJI: Record<string, string> = {
-  startups: "🚀",
-  "ai-assistants": "🤖",
-  "telegram-bots": "✈️",
-  "for-websites": "🌐",
-  "for-telegram": "💬",
-  "seeking-investment": "💰",
-  "seeking-team": "👥",
-  "seeking-partners": "🤝",
-  other: "✨",
+/** One Lucide icon per category — replaces the previous emoji map. */
+export const CATEGORY_ICON: Record<string, LucideIcon> = {
+  startups: Rocket,
+  "ai-assistants": Bot,
+  "telegram-bots": Send,
+  "for-websites": Globe,
+  "for-telegram": MessageCircle,
+  "seeking-investment": Coins,
+  "seeking-team": Users,
+  "seeking-partners": Handshake,
+  other: Sparkles,
 };
+
+export function categoryIcon(slug: string | undefined): LucideIcon {
+  return (slug && CATEGORY_ICON[slug]) || Building2;
+}
 
 export function findCategory(slug: string): Category | undefined {
   return CATEGORIES.find((c) => c.slug === slug);

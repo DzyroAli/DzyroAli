@@ -1,8 +1,9 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
-export function Pagination({
+export async function Pagination({
   page,
   totalPages,
   basePath,
@@ -14,6 +15,7 @@ export function Pagination({
   params: Record<string, string | undefined>;
 }) {
   if (totalPages <= 1) return null;
+  const t = await getTranslations("common");
 
   const href = (p: number) => {
     const search = new URLSearchParams();
@@ -27,26 +29,35 @@ export function Pagination({
 
   const linkClass = (disabled: boolean) =>
     cn(
-      "inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition-colors",
+      "inline-flex h-9 w-9 items-center justify-center rounded-xl border border-line bg-surface text-ink-muted transition-colors",
       disabled
         ? "pointer-events-none opacity-40"
-        : "hover:border-teal-400 hover:text-teal-600"
+        : "hover:border-brand hover:text-brand"
     );
 
   return (
-    <nav className="mt-8 flex items-center justify-center gap-3 text-sm font-semibold">
-      <Link href={href(page - 1)} className={linkClass(page <= 1)} aria-label="Previous">
-        <ChevronLeft size={16} />
+    <nav
+      aria-label={t("pagination")}
+      className="flex items-center justify-center gap-3 text-sm font-medium"
+    >
+      <Link
+        href={href(page - 1)}
+        className={linkClass(page <= 1)}
+        aria-disabled={page <= 1}
+        aria-label={t("previousPage")}
+      >
+        <ChevronLeft size={16} aria-hidden />
       </Link>
-      <span className="text-slate-500">
+      <span className="tabular-nums text-ink-muted">
         {page} / {totalPages}
       </span>
       <Link
         href={href(page + 1)}
         className={linkClass(page >= totalPages)}
-        aria-label="Next"
+        aria-disabled={page >= totalPages}
+        aria-label={t("nextPage")}
       >
-        <ChevronRight size={16} />
+        <ChevronRight size={16} aria-hidden />
       </Link>
     </nav>
   );

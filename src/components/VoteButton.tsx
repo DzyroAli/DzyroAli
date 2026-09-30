@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronUp } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { toggleVote } from "@/lib/actions";
@@ -12,13 +12,17 @@ export function VoteButton({
   initialVotes,
   initialVoted = false,
   size = "md",
+  tone = "default",
 }: {
   productId: string;
   initialVotes: number;
   initialVoted?: boolean;
   size?: "md" | "lg";
+  /** `onBrand` renders the inline pill used on the blue featured card. */
+  tone?: "default" | "onBrand";
 }) {
   const t = useTranslations("errors");
+  const tp = useTranslations("product");
   const { openAuthModal } = useAuthModal();
   const [votes, setVotes] = useState(initialVotes);
   const [voted, setVoted] = useState(initialVoted);
@@ -44,6 +48,41 @@ export function VoteButton({
     });
   }
 
+  if (tone === "onBrand") {
+    return (
+      <div className="relative shrink-0">
+        <button
+          type="button"
+          onClick={onClick}
+          disabled={pending}
+          aria-pressed={voted}
+          className={cn(
+            "inline-flex h-11 items-center gap-2 rounded-xl border px-4 text-sm font-semibold transition-colors disabled:cursor-progress",
+            voted
+              ? "border-transparent bg-on-brand text-brand"
+              : "border-on-brand/40 text-on-brand hover:bg-on-brand/10",
+            pending && "opacity-60"
+          )}
+        >
+          <ArrowUp size={16} strokeWidth={2.5} aria-hidden />
+          {tp("upvote")}
+          <span aria-hidden className="opacity-60">
+            ·
+          </span>
+          <span className="tabular-nums">{votes}</span>
+        </button>
+        {message && (
+          <div
+            role="status"
+            className="absolute right-0 top-full z-50 mt-2 w-56 rounded-lg border border-line bg-surface px-3 py-2 text-xs text-ink shadow-lg"
+          >
+            {message}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="relative shrink-0">
       <button
@@ -51,20 +90,27 @@ export function VoteButton({
         onClick={onClick}
         disabled={pending}
         aria-pressed={voted}
+        aria-label={`${tp("upvote")} — ${votes}`}
         className={cn(
-          "flex flex-col items-center justify-center rounded-xl border font-semibold transition-all",
-          size === "lg" ? "h-16 w-16 text-base" : "h-12 w-12 text-sm",
+          "flex flex-col items-center justify-center gap-0.5 rounded-xl border font-semibold transition-colors disabled:cursor-progress",
+          // min-w rather than a fixed width so four-digit counts still fit.
+          size === "lg"
+            ? "h-16 min-w-16 px-2 text-base"
+            : "h-[52px] min-w-12 px-2 text-[13px]",
           voted
-            ? "border-teal-600 bg-teal-600 text-white shadow-md shadow-teal-600/30"
-            : "border-slate-200 bg-white text-slate-700 hover:border-teal-400 hover:text-teal-600 hover:shadow-sm",
+            ? "border-brand bg-brand text-on-brand hover:bg-brand-hover"
+            : "border-line bg-surface text-ink hover:border-brand hover:text-brand",
           pending && "opacity-60"
         )}
       >
-        <ChevronUp size={size === "lg" ? 20 : 16} strokeWidth={3} />
-        <span className="leading-none">{votes}</span>
+        <ArrowUp size={size === "lg" ? 20 : 15} strokeWidth={2.5} aria-hidden />
+        <span className="leading-none tabular-nums">{votes}</span>
       </button>
       {message && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-56 rounded-lg bg-slate-900 px-3 py-2 text-xs text-white shadow-lg">
+        <div
+          role="status"
+          className="absolute right-0 top-full z-50 mt-2 w-56 rounded-lg border border-line bg-surface px-3 py-2 text-xs text-ink shadow-lg"
+        >
           {message}
         </div>
       )}

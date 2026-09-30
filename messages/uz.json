@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "TechRadar.uz",
+    "appName": "YaRato",
     "tagline": "O'zbekiston startaplari maydonchasi",
     "products": "Mahsulotlar",
     "categories": "Kategoriyalar",
@@ -22,7 +22,14 @@
     "notFound": "Sahifa topilmadi",
     "notFoundText": "Siz qidirgan sahifa mavjud emas yoki ko'chirilgan.",
     "goHome": "Bosh sahifaga",
-    "searchAll": "Hammasidan qidirish"
+    "searchAll": "Hammasidan qidirish",
+    "language": "Til",
+    "themeDark": "Qorong'i mavzu",
+    "themeLight": "Yorug' mavzu",
+    "pagination": "Sahifalash",
+    "previousPage": "Oldingi sahifa",
+    "nextPage": "Keyingi sahifa",
+    "backendUnreachable": "Ma'lumotlar bazasiga ulanib bo'lmadi. Supabase loyihasi to'xtatilgan bo'lishi mumkin — saytdagi amallar vaqtincha ishlamaydi."
   },
   "home": {
     "heroBadge": "O'zbekiston texnologik mahsulotlar radari",
@@ -36,11 +43,19 @@
     "topDay": "Kun reytingi",
     "topWeek": "Hafta reytingi",
     "topMonth": "Oy reytingi",
-    "newest": "Yangi qo'shilganlar",
+    "newest": "Yangi mahsulotlar",
     "empty": "Hozircha mahsulotlar yo'q. Birinchi bo'ling!",
     "subscribeTitle": "Yangiliklarga obuna bo'ling",
     "subscribeText": "Haftaning eng yaxshi mahsulotlari — har dushanba pochtangizda.",
-    "launchedBadge": "Biz bugun ishga tushdik! 🎉"
+    "launchedBadge": "Biz bugun ishga tushdik!",
+    "title": "Bugungi startlar",
+    "subtitle": "O‘zbekistonda yaratilayotgan yangi mahsulotlarni kashf eting.",
+    "periodLabel": "Davr",
+    "featuredLabel": "Radar tanlovi",
+    "featuredBy": "{name} tomonidan yaratildi",
+    "rankingTitle": "Reyting",
+    "launchCount": "{count} ta start",
+    "emptyHint": "Birinchi bo‘lib mahsulotingizni joylang."
   },
   "products": {
     "title": "Mahsulotlar katalogi",
@@ -53,7 +68,9 @@
     "allCategories": "Barcha kategoriyalar",
     "empty": "Hech narsa topilmadi. Qidiruv so'rovini o'zgartirib ko'ring.",
     "found": "ta mahsulot topildi",
-    "clear": "Tozalash"
+    "clear": "Tozalash",
+    "filters": "Filtrlar",
+    "emptyHint": "Filtrlarni o‘zgartirib ko‘ring."
   },
   "product": {
     "visit": "Saytga o'tish",
@@ -81,7 +98,8 @@
     "ratingNone": "Hali baholanmagan",
     "yourRating": "Sizning bahoyingiz",
     "rateHint": "Mahsulotni baholang",
-    "delete": "O'chirish"
+    "delete": "O'chirish",
+    "copyFailed": "Nusxalab bo'lmadi"
   },
   "bookmarks": {
     "title": "Saqlanganlar",
@@ -96,7 +114,12 @@
     "loginRequired": "Sozlamalarni ko'rish uchun tizimga kiring.",
     "notifications": "Bildirishnomalar",
     "commentNotifications": "Izohlar haqida email",
-    "commentNotificationsDesc": "Mahsulotingizga yangi izoh qoldirilganda email keladi."
+    "commentNotificationsDesc": "Mahsulotingizga yangi izoh qoldirilganda email keladi.",
+    "profile": "Profil",
+    "city": "Shahar",
+    "cityNone": "Ko‘rsatilmagan",
+    "cityHint": "Shahar xaritada va profilingizda ko‘rinadi.",
+    "citySaved": "Saqlandi"
   },
   "submit": {
     "title": "Loyihani joylash",
@@ -119,7 +142,7 @@
     "moderationNote": "Barcha loyihalar e'lon qilinishidan oldin moderatsiyadan o'tadi (odatda 24 soat ichida)."
   },
   "login": {
-    "title": "TechRadar.uz ga kirish",
+    "title": "YaRato ga kirish",
     "subtitle": "Ovoz berish, izoh qoldirish va loyiha joylash uchun tizimga kiring",
     "telegramHint": "Telegram orqali bir zumda kiring — parol kerak emas",
     "emailDivider": "yoki email orqali",
@@ -129,7 +152,7 @@
     "telegramUnavailable": "Telegram orqali kirish sozlanmagan (TELEGRAM_BOT muhit o'zgaruvchisi yo'q).",
     "consentPrivacy": "Shaxsiy ma'lumotlarni qayta ishlashga <link>rozilik</link> beraman",
     "consentTerms": "<link>Foydalanuvchi shartnomasi</link>ni qabul qilaman",
-    "consentDigest": "TechRadar dayjestini olish — haftaning eng yaxshi mahsulotlari",
+    "consentDigest": "YaRato dayjestini olish — haftaning eng yaxshi mahsulotlari",
     "consentHint": "Davom etish uchun majburiy bandlarni (*) belgilang",
     "googleButton": "Google orqali kirish",
     "telegramButton": "Telegram orqali kirish",
@@ -147,7 +170,7 @@
     "registering": "Yuborilmoqda...",
     "registerConfirm": "Ro'yxatdan o'tishni tasdiqlash uchun emailingizni tekshiring.",
     "namePlaceholder": "Ismingiz (ixtiyoriy)",
-    "newPasswordPlaceholder": "Parol (kamida 8 belgi)",
+    "newPasswordPlaceholder": "Yangi parol (kamida 8 belgi)",
     "passwordHint": "Parol kamida 8 belgidan iborat bo'lishi kerak.",
     "emailExists": "Bu email allaqachon ro'yxatdan o'tgan.",
     "credentialsError": "Login yoki parol noto'g'ri",
@@ -160,7 +183,6 @@
     "resetSent": "Parolni almashtirish havolasi yuborildi. Pochtani tekshiring!",
     "resetTitle": "Yangi parol",
     "resetSubtitle": "Akkauntingiz uchun yangi parol o'ylab toping",
-    "newPasswordPlaceholder": "Yangi parol (kamida 8 belgi)",
     "savePassword": "Parolni saqlash",
     "passwordUpdated": "Parol yangilandi! Akkauntga kirdingiz.",
     "passwordTooShort": "Parol kamida 8 belgidan iborat bo'lishi kerak",
@@ -170,7 +192,17 @@
   "maker": {
     "products": "Mahsulotlar",
     "joined": "Ro'yxatdan o'tgan",
-    "noProducts": "Hozircha mahsulotlar yo'q"
+    "noProducts": "Hozircha mahsulotlar yo'q",
+    "tabsLabel": "Profil bo‘limlari",
+    "tab_projects": "Loyihalar",
+    "tab_launches": "Startlar",
+    "tab_activity": "Faollik",
+    "tab_about": "Ishlab chiquvchi haqida",
+    "statProducts": "mahsulot",
+    "statVotes": "ovoz",
+    "statComments": "izoh",
+    "noActivity": "Hozircha faollik yo‘q.",
+    "noBio": "Ishlab chiquvchi hali o‘zi haqida yozmagan."
   },
   "admin": {
     "title": "Admin-panel",
@@ -184,7 +216,7 @@
     "moderationQueue": "Moderatsiya navbati",
     "approve": "Tasdiqlash",
     "reject": "Rad etish",
-    "emptyQueue": "Moderatsiya navbati bo'sh 🎉",
+    "emptyQueue": "Moderatsiya navbati bo'sh",
     "recentUsers": "So'nggi foydalanuvchilar",
     "accessDenied": "Kirish taqiqlangan. Bu sahifa faqat administratorlar uchun.",
     "navOverview": "Umumiy ko'rinish",
@@ -264,7 +296,7 @@
     "subscribeText": "Eng yaxshi yangi mahsulotlar haftalik xatda",
     "subscribePlaceholder": "Email manzilingiz",
     "subscribeButton": "Obuna bo'lish",
-    "subscribeSuccess": "Obuna uchun rahmat! Har payshanba O'zbekistonning eng yaxshi startaplarini kuting 🚀",
+    "subscribeSuccess": "Obuna uchun rahmat! Har payshanba O'zbekistonning eng yaxshi startaplarini kuting",
     "subscribeError": "Xatolik yuz berdi. Qaytadan urinib ko'ring.",
     "rights": "Barcha huquqlar himoyalangan.",
     "leaderboard": "Reyting",
@@ -274,7 +306,7 @@
     "terms": "Shartnoma"
   },
   "meta": {
-    "homeTitle": "TechRadar.uz — O'zbekiston startaplari maydonchasi",
+    "homeTitle": "YaRato — O'zbekiston startaplari maydonchasi",
     "homeDescription": "O'zbekistonning eng yaxshi startaplari, AI-assistentlari, Telegram-botlari va Mini Apps. Loyihangizni e'lon qiling, ovoz to'plang, investor va jamoa toping.",
     "productsTitle": "Mahsulotlar katalogi",
     "productsDescription": "O'zbekiston ekotizimidagi barcha startaplar, botlar va xizmatlar katalogi.",
@@ -296,15 +328,22 @@
     "launchArchive": "Launchlar arxivi",
     "launchGuide": "Launch bo'yicha qo'llanma",
     "community": "Hamjamiyat",
-    "leaderboard": "Meykerlar reytingi",
+    "leaderboard": "Reyting",
     "ecosystemMap": "Ekotizim xaritasi",
-    "about": "Biz haqimizda"
+    "about": "Biz haqimizda",
+    "primary": "Asosiy navigatsiya",
+    "today": "Bugun",
+    "catalog": "Katalog",
+    "map": "Xarita",
+    "telegram": "Telegram",
+    "investment": "Investitsiya izlaydi",
+    "partners": "Hamkor izlaydi"
   },
   "about": {
     "metaTitle": "Biz haqimizda — bugun ishga tushdik!",
     "badge": "1-kun",
-    "title": "Biz bugun ishga tushdik! 🎉",
-    "subtitle": "TechRadar.uz — O'zbekiston texnologik ekotizimining ochiq maydonchasi. Bugun — birinchi kun. Ko'rayotganingizning barchasi hamjamiyat tomonidan hozir yaratilmoqda.",
+    "title": "Biz bugun ishga tushdik!",
+    "subtitle": "YaRato — O'zbekiston texnologik ekotizimining ochiq maydonchasi. Bugun — birinchi kun. Ko'rayotganingizning barchasi hamjamiyat tomonidan hozir yaratilmoqda.",
     "counterProducts": "katalogdagi mahsulotlar",
     "counterMakers": "biz bilan meykerlar",
     "counterVotes": "berilgan ovozlar",
@@ -313,7 +352,7 @@
     "counterSignups": "bugungi yangi a'zolar",
     "manifestoTitle": "Hamjamiyat manifesti",
     "manifesto1": "Biz O'zbekistonda jahon darajasidagi mahsulotlar — startaplar, AI-servislar, Telegram-botlar va Mini Apps tug'ilishiga ishonamiz. Ularga birinchi foydalanuvchilar, investorlar va bo'lajak hamkasblar ko'radigan sahna kerak.",
-    "manifesto2": "TechRadar.uz — ana shu sahna. Bu yerda asoschilar ochiq launch qiladi, halol fikr-mulohaza va hamjamiyat ovozlarini yig'adi, jamoa va hamkorlar topadi. Ochiq qurish — tezroq va halolroq.",
+    "manifesto2": "YaRato — ana shu sahna. Bu yerda asoschilar ochiq launch qiladi, halol fikr-mulohaza va hamjamiyat ovozlarini yig'adi, jamoa va hamkorlar topadi. Ochiq qurish — tezroq va halolroq.",
     "manifesto3": "Maydoncha hammaga ochiq: Toshkent va Nukusdagi dasturchiga, birinchi botini yozgan talabaga, investitsiya raundidagi jamoaga. Qancha ko'p bo'lsak — ekotizim shuncha kuchli.",
     "manifestoCta": "Uyga xush kelibsiz, meykerlar. Launch qiling!",
     "ctaSubmit": "Mahsulotni launch qilish",
@@ -328,16 +367,26 @@
     "joined": "{date} dan beri biz bilan"
   },
   "map": {
-    "title": "Ekotizim xaritasi",
+    "title": "Mahsulotlar qayerda yaratilyapti",
     "backHome": "Bosh sahifa",
     "entityProducts": "Mahsulotlar",
     "entityPeople": "Odamlar",
     "viewMap": "Xarita",
-    "viewList": "Ro'yxat"
+    "viewList": "Ro'yxat",
+    "subtitle": "O‘zbekiston shaharlari bo‘yicha mahsulotlar va ishlab chiquvchilar.",
+    "homeTitle": "Mahsulotlar qayerda yaratiladi",
+    "openMap": "Xaritani ochish",
+    "viewLabel": "Ko‘rinish",
+    "summary": "{cities} ta shaharda {products} ta mahsulot",
+    "cityCounts": "{products} ta mahsulot · {makers} ta ishlab chiquvchi",
+    "noneHere": "Hozircha yo‘q",
+    "close": "Yopish",
+    "emptyTitle": "Xarita hali bo‘sh",
+    "emptyHint": "Ishlab chiquvchilar profilida shaharni ko‘rsatganda belgilar paydo bo‘ladi."
   },
   "guide": {
     "badge": "Launch qo'llanmasi",
-    "title": "TechRadar.uz da qanday launch qilinadi",
+    "title": "YaRato da qanday launch qilinadi",
     "subtitle": "Arizadan reyting cho'qqisigacha besh qadam",
     "step1Title": "Mahsulotni tayyorlang",
     "step1Text": "Tushunarli nom, bir jumlalik aniq tagline va 256×256 dan kichik bo'lmagan kvadrat logotip. Yaxshi tavsif «qaysi muammoni kim uchun hal qilyapsiz» savoliga javob beradi.",
@@ -368,7 +417,7 @@
     "privacy5Text": "Profil ma'lumotlarini o'zgartirishingiz, dayjestdan voz kechishingiz yoki bizga yozib akkauntni o'chirishingiz mumkin. Rozilikni istalgan vaqtda qaytarib olish mumkin.",
     "termsTitle": "Foydalanuvchi shartnomasi",
     "terms1Title": "Servis haqida",
-    "terms1Text": "TechRadar.uz — O'zbekiston texnologik mahsulotlarini joylashtirish va muhokama qilish maydonchasi. Saytdan foydalanish orqali siz ushbu shartnoma shartlarini qabul qilasiz.",
+    "terms1Text": "YaRato — O'zbekiston texnologik mahsulotlarini joylashtirish va muhokama qilish maydonchasi. Saytdan foydalanish orqali siz ushbu shartnoma shartlarini qabul qilasiz.",
     "terms2Title": "Akkaunt",
     "terms2Text": "Kirish Google, Telegram orqali yoki mavjud hisob ma'lumotlari bilan amalga oshiriladi. Akkauntingiz orqali qilingan harakatlar uchun siz javobgarsiz.",
     "terms3Title": "Kontent",
@@ -377,5 +426,15 @@
     "terms4Text": "Barcha mahsulotlar moderatsiyadan o'tadi. Administratsiya sabab ko'rsatib rad etishi yoki nashrdan olishi, qoidabuzarliklarda esa akkauntga kirishni cheklashi mumkin.",
     "terms5Title": "Mas'uliyat",
     "terms5Text": "Maydoncha «boricha» taqdim etiladi. Katalogga joylashtirilgan uchinchi tomon mahsulotlari ishi va ularning yaratuvchilari harakatlari uchun javobgar emasmiz."
+  },
+  "rail": {
+    "categories": "Yo‘nalishlar",
+    "cities": "Faol shaharlar",
+    "makers": "Faol ishlab chiquvchilar"
+  },
+  "community": {
+    "title": "Hamjamiyat",
+    "subtitle": "O‘zbekistonda mahsulot yaratayotgan ishlab chiquvchilar.",
+    "empty": "Hozircha ishlab chiquvchilar yo‘q."
   }
 }

@@ -1,68 +1,105 @@
-import { MessageCircle, Star } from "lucide-react";
+import { MapPin, MessageCircle, Star } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { CATEGORY_EMOJI } from "@/lib/categories";
+import { cityLabel } from "@/lib/cities";
 import { categoryName, type Product } from "@/lib/types";
 import { ProductLogo } from "./ProductLogo";
+import { Badge } from "./ui/Badge";
 import { VoteButton } from "./VoteButton";
+import { CategoryIcon } from "./ui/CategoryIcon";
 
+/**
+ * Feed card. Shows only fields the schema actually carries — no invented
+ * stage/price/metric badges — and never more than two badges at once.
+ *
+ * The click target is a stretched link: `group relative` here, `after:inset-0`
+ * on the title link, and the vote button lifted to `z-10` so it stays
+ * clickable. Changing any one of those three breaks the other two.
+ */
 export async function ProductCard({
   product,
   rank,
+  voted = false,
 }: {
   product: Product;
   rank?: number;
+  voted?: boolean;
 }) {
   const locale = await getLocale();
   const t = await getTranslations("common");
+  const city = cityLabel(product.maker?.city, locale);
+  const ratingCount = product.rating_count ?? 0;
+  const rating =
+    ratingCount > 0 ? (product.rating_sum ?? 0) / ratingCount : null;
 
   return (
-    <article className="group relative flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 transition-all hover:border-slate-300 hover:shadow-md">
+    <article className="group relative flex items-center gap-3 rounded-card border border-line bg-surface p-3.5 transition-colors hover:border-line-strong has-[a:focus-visible]:border-brand sm:gap-4 sm:p-4">
       {rank !== undefined && (
-        <span className="hidden w-6 text-center text-sm font-semibold text-slate-400 sm:block">
+        <span className="hidden w-5 shrink-0 text-center text-sm font-semibold text-ink-subtle sm:block">
           {rank}
         </span>
       )}
-      <ProductLogo name={product.name} logoUrl={product.logo_url} size={56} />
+
+      <ProductLogo
+        name={product.name}
+        logoUrl={product.logo_url}
+        categorySlug={product.category?.slug}
+        size={52}
+      />
+
       <div className="min-w-0 flex-1">
-        <h3 className="truncate font-semibold text-slate-900">
+        <h3 className="truncate text-[15px] font-semibold text-ink">
           <Link
             href={`/products/${product.slug}`}
-            className="after:absolute after:inset-0 group-hover:text-teal-700"
+            className="rounded after:absolute after:inset-0 after:rounded-card group-hover:text-brand-ink focus-visible:outline-none"
           >
             {product.name}
           </Link>
         </h3>
-        <p className="mt-0.5 line-clamp-2 text-sm text-slate-600">
+
+        <p className="mt-0.5 line-clamp-2 text-sm leading-snug text-ink-muted">
           {product.tagline}
         </p>
-        <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500">
+
+        <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
           {product.category && (
-            <span className="inline-flex items-center gap-1">
-              <span aria-hidden>
-                {CATEGORY_EMOJI[product.category.slug] ?? "✨"}
-              </span>
+            <Badge icon={<CategoryIcon slug={product.category.slug} size={12} />}>
               {categoryName(product.category, locale)}
-            </span>
+            </Badge>
           )}
-          <span className="inline-flex items-center gap-1">
-            <MessageCircle size={12} />
-            {product.comments_count} {t("comments")}
-          </span>
-          {(product.rating_count ?? 0) > 0 && (
+
+          <span className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-ink-muted">
+            {product.maker && (
+              <span className="truncate">
+                {product.maker.full_name ?? product.maker.username}
+              </span>
+            )}
+            {city && (
+              <span className="inline-flex items-center gap-1">
+                <MapPin size={12} aria-hidden />
+                {city}
+              </span>
+            )}
             <span className="inline-flex items-center gap-1">
-              <Star size={12} className="fill-amber-400 text-amber-400" />
-              {((product.rating_sum ?? 0) / (product.rating_count ?? 1)).toFixed(
-                1
-              )}
+              <MessageCircle size={12} aria-hidden />
+              {product.comments_count}
+              <span className="sr-only"> {t("comments")}</span>
             </span>
-          )}
+            {rating !== null && (
+              <span className="inline-flex items-center gap-1">
+                <Star size={12} aria-hidden />
+                {rating.toFixed(1)}
+              </span>
+            )}
+          </span>
         </div>
       </div>
+
       <div className="relative z-10">
         <VoteButton
           productId={product.id}
           initialVotes={product.votes_count}
+          initialVoted={voted}
         />
       </div>
     </article>

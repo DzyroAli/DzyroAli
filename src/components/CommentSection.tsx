@@ -6,20 +6,10 @@ import { useRouter as useNextRouter } from "next/navigation";
 import { addComment, deleteComment } from "@/lib/actions";
 import { Link } from "@/i18n/navigation";
 import type { Comment } from "@/lib/types";
-import { cn, gradientFor, initials, timeAgo } from "@/lib/utils";
-
-function Avatar({ name }: { name: string }) {
-  return (
-    <span
-      className={cn(
-        "flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-xs font-bold text-white",
-        gradientFor(name)
-      )}
-    >
-      {initials(name)}
-    </span>
-  );
-}
+import { timeAgo } from "@/lib/utils";
+import { Avatar } from "./ui/Avatar";
+import { Button } from "./ui/Button";
+import { Textarea } from "./ui/Field";
 
 function CommentForm({
   productId,
@@ -64,24 +54,28 @@ function CommentForm({
 
   return (
     <div className="space-y-2">
-      <textarea
+      <Textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder={t("commentPlaceholder")}
         rows={3}
         autoFocus={autoFocus}
         maxLength={2000}
-        className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm outline-none transition-colors focus:border-teal-500"
+        aria-invalid={error ? true : undefined}
       />
-      {error && <p className="text-xs text-rose-600">{error}</p>}
-      <button
-        type="button"
+      {error && (
+        <p role="alert" className="text-xs text-critical">
+          {error}
+        </p>
+      )}
+      <Button
         onClick={submit}
-        disabled={pending || !content.trim()}
-        className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+        disabled={!content.trim()}
+        loading={pending}
+        size="sm"
       >
         {t("commentSubmit")}
-      </button>
+      </Button>
     </div>
   );
 }
@@ -114,24 +108,30 @@ function CommentItem({
 
   return (
     <div className="flex gap-3">
-      <Avatar name={name} />
+      <Avatar name={name} username={comment.author?.username} src={comment.author?.avatar_url} size={36} />
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-baseline gap-x-2">
           {comment.author ? (
             <Link
               href={`/makers/${comment.author.username}`}
-              className="text-sm font-semibold text-slate-900 hover:text-teal-700"
+              className="rounded text-sm font-medium text-ink hover:text-brand-ink"
             >
               {name}
             </Link>
           ) : (
-            <span className="text-sm font-semibold text-slate-900">{name}</span>
+            <span className="text-sm font-medium text-ink">{name}</span>
           )}
-          <span className="text-xs text-slate-400">
+          {/* Node and browser ICU disagree on uz relative-time output, and the
+              value depends on Date.now() anyway — keep the server's text. */}
+          <time
+            dateTime={comment.created_at}
+            suppressHydrationWarning
+            className="text-xs text-ink-muted"
+          >
             {timeAgo(comment.created_at, locale)}
-          </span>
+          </time>
         </div>
-        <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-slate-700">
+        <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-ink">
           {comment.content}
         </p>
         <div className="mt-1 flex items-center gap-3">
@@ -139,7 +139,7 @@ function CommentItem({
             <button
               type="button"
               onClick={() => setReplying((v) => !v)}
-              className="text-xs font-medium text-slate-400 hover:text-teal-600"
+              className="rounded text-xs font-medium text-ink-muted hover:text-brand"
             >
               {t("reply")}
             </button>
@@ -149,7 +149,7 @@ function CommentItem({
               type="button"
               onClick={remove}
               disabled={deletePending}
-              className="text-xs font-medium text-slate-400 hover:text-rose-600 disabled:opacity-50"
+              className="rounded text-xs font-medium text-ink-muted hover:text-critical disabled:opacity-50"
             >
               {t("delete")}
             </button>
@@ -166,7 +166,7 @@ function CommentItem({
           </div>
         )}
         {replies.length > 0 && (
-          <div className="mt-4 space-y-4 border-l-2 border-slate-100 pl-4">
+          <div className="mt-4 space-y-4 border-l border-line pl-4">
             {replies.map((r) => (
               <CommentItem
                 key={r.id}
@@ -201,23 +201,26 @@ export function CommentSection({
 
   return (
     <section className="space-y-6">
-      <h2 className="text-lg font-bold text-slate-900">
+      <h2 className="text-base font-semibold text-ink">
         {t("comments")}{" "}
-        <span className="font-normal text-slate-400">({comments.length})</span>
+        <span className="font-normal text-ink-muted">({comments.length})</span>
       </h2>
 
       {canComment ? (
         <CommentForm productId={productId} />
       ) : (
-        <p className="rounded-xl bg-slate-100 px-4 py-3 text-sm text-slate-600">
-          <Link href="/login" className="font-semibold text-teal-700 underline">
+        <p className="rounded-xl bg-surface-muted px-4 py-3 text-sm text-ink-muted">
+          <Link
+            href="/login"
+            className="rounded font-medium text-brand-ink underline"
+          >
             {t("commentLoginRequired")}
           </Link>
         </p>
       )}
 
       {topLevel.length === 0 ? (
-        <p className="text-sm text-slate-500">{t("noComments")}</p>
+        <p className="text-sm text-ink-muted">{t("noComments")}</p>
       ) : (
         <div className="space-y-6">
           {topLevel.map((c) => (

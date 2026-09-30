@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "TechRadar.uz",
+    "appName": "YaRato",
     "tagline": "The launchpad for Uzbekistan's startups",
     "products": "Products",
     "categories": "Categories",
@@ -22,7 +22,14 @@
     "notFound": "Page not found",
     "notFoundText": "The page you are looking for does not exist or has been moved.",
     "goHome": "Go home",
-    "searchAll": "Search everywhere"
+    "searchAll": "Search everywhere",
+    "language": "Language",
+    "themeDark": "Dark theme",
+    "themeLight": "Light theme",
+    "pagination": "Pagination",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "backendUnreachable": "Can't reach the database. The Supabase project may be paused — actions on the site won't work until it's back."
   },
   "home": {
     "heroBadge": "Uzbekistan's tech product radar",
@@ -36,11 +43,19 @@
     "topDay": "Top of the day",
     "topWeek": "Top of the week",
     "topMonth": "Top of the month",
-    "newest": "Recently added",
+    "newest": "New products",
     "empty": "No products yet. Be the first!",
     "subscribeTitle": "Subscribe to updates",
     "subscribeText": "The best products of the week — every Monday in your inbox.",
-    "launchedBadge": "We launched today! 🎉"
+    "launchedBadge": "We launched today!",
+    "title": "Today's launches",
+    "subtitle": "Discover new products being built in Uzbekistan.",
+    "periodLabel": "Period",
+    "featuredLabel": "Radar pick",
+    "featuredBy": "Built by {name}",
+    "rankingTitle": "Ranking",
+    "launchCount": "{count} launches",
+    "emptyHint": "Be the first to submit a product."
   },
   "products": {
     "title": "Product catalog",
@@ -53,7 +68,9 @@
     "allCategories": "All categories",
     "empty": "Nothing found. Try a different query.",
     "found": "products found",
-    "clear": "Clear"
+    "clear": "Clear",
+    "filters": "Filters",
+    "emptyHint": "Try adjusting the filters."
   },
   "product": {
     "visit": "Visit website",
@@ -81,7 +98,8 @@
     "ratingNone": "No ratings yet",
     "yourRating": "Your rating",
     "rateHint": "Rate this product",
-    "delete": "Delete"
+    "delete": "Delete",
+    "copyFailed": "Couldn't copy"
   },
   "bookmarks": {
     "title": "Bookmarks",
@@ -96,7 +114,12 @@
     "loginRequired": "Sign in to open settings.",
     "notifications": "Notifications",
     "commentNotifications": "Comment emails",
-    "commentNotificationsDesc": "Get an email when someone comments on your product."
+    "commentNotificationsDesc": "Get an email when someone comments on your product.",
+    "profile": "Profile",
+    "city": "City",
+    "cityNone": "Not set",
+    "cityHint": "Your city appears on the map and on your profile.",
+    "citySaved": "Saved"
   },
   "submit": {
     "title": "Submit a product",
@@ -119,7 +142,7 @@
     "moderationNote": "All products are reviewed before publication (usually within 24 hours)."
   },
   "login": {
-    "title": "Sign in to TechRadar.uz",
+    "title": "Sign in to YaRato",
     "subtitle": "Sign in to upvote, comment and submit products",
     "telegramHint": "Instant sign-in via Telegram — no password needed",
     "emailDivider": "or with email",
@@ -129,7 +152,7 @@
     "telegramUnavailable": "Telegram sign-in is not configured (TELEGRAM_BOT env variable missing).",
     "consentPrivacy": "I <link>consent</link> to the processing of my personal data",
     "consentTerms": "I accept the <link>terms of service</link>",
-    "consentDigest": "Receive the TechRadar digest — best products of the week by email",
+    "consentDigest": "Receive the YaRato digest — best products of the week by email",
     "consentHint": "Check the required boxes (*) to continue",
     "googleButton": "Sign in with Google",
     "telegramButton": "Sign in with Telegram",
@@ -147,7 +170,7 @@
     "registering": "Creating...",
     "registerConfirm": "Check your email to confirm your registration.",
     "namePlaceholder": "Your name (optional)",
-    "newPasswordPlaceholder": "Password (min 8 characters)",
+    "newPasswordPlaceholder": "New password (8+ characters)",
     "passwordHint": "Password must be at least 8 characters.",
     "emailExists": "This email is already registered.",
     "credentialsError": "Invalid username or password",
@@ -160,7 +183,6 @@
     "resetSent": "Password reset link sent. Check your inbox!",
     "resetTitle": "New password",
     "resetSubtitle": "Create a new password for your account",
-    "newPasswordPlaceholder": "New password (8+ characters)",
     "savePassword": "Save password",
     "passwordUpdated": "Password updated! You are signed in.",
     "passwordTooShort": "Password must be at least 8 characters",
@@ -170,7 +192,17 @@
   "maker": {
     "products": "Products",
     "joined": "Joined",
-    "noProducts": "No products yet"
+    "noProducts": "No products yet",
+    "tabsLabel": "Profile sections",
+    "tab_projects": "Projects",
+    "tab_launches": "Launches",
+    "tab_activity": "Activity",
+    "tab_about": "About",
+    "statProducts": "products",
+    "statVotes": "votes",
+    "statComments": "comments",
+    "noActivity": "No activity yet.",
+    "noBio": "This maker hasn't written a bio yet."
   },
   "admin": {
     "title": "Admin panel",
@@ -184,7 +216,7 @@
     "moderationQueue": "Moderation queue",
     "approve": "Approve",
     "reject": "Reject",
-    "emptyQueue": "The moderation queue is empty 🎉",
+    "emptyQueue": "The moderation queue is empty",
     "recentUsers": "Recent users",
     "accessDenied": "Access denied. This page is for administrators only.",
     "navOverview": "Overview",
@@ -264,7 +296,7 @@
     "subscribeText": "The best new products in a weekly digest",
     "subscribePlaceholder": "Your email",
     "subscribeButton": "Subscribe",
-    "subscribeSuccess": "Thanks for subscribing! Expect Uzbekistan's best startups every Thursday 🚀",
+    "subscribeSuccess": "Thanks for subscribing! Expect Uzbekistan's best startups every Thursday",
     "subscribeError": "Something went wrong. Please try again.",
     "rights": "All rights reserved.",
     "leaderboard": "Leaderboard",
@@ -274,7 +306,7 @@
     "terms": "Terms"
   },
   "meta": {
-    "homeTitle": "TechRadar.uz — the launchpad for Uzbekistan's startups",
+    "homeTitle": "YaRato — the launchpad for Uzbekistan's startups",
     "homeDescription": "The best startups, AI assistants, Telegram bots and Mini Apps of Uzbekistan. Launch your project, collect upvotes, find investors and a team.",
     "productsTitle": "Product catalog",
     "productsDescription": "Catalog of all startups, bots and services of the Uzbekistan ecosystem.",
@@ -296,15 +328,22 @@
     "launchArchive": "Launch archive",
     "launchGuide": "Launch Guide",
     "community": "Community",
-    "leaderboard": "Makers Leaderboard",
+    "leaderboard": "Leaderboard",
     "ecosystemMap": "Ecosystem Map",
-    "about": "About"
+    "about": "About",
+    "primary": "Primary navigation",
+    "today": "Today",
+    "catalog": "Catalog",
+    "map": "Map",
+    "telegram": "Telegram",
+    "investment": "Seeking investment",
+    "partners": "Seeking partners"
   },
   "about": {
     "metaTitle": "About — we launched today!",
     "badge": "Day 1",
-    "title": "We launched today! 🎉",
-    "subtitle": "TechRadar.uz is the open stage of Uzbekistan's tech ecosystem. Today is day one. Everything you see is being built by the community right now.",
+    "title": "We launched today!",
+    "subtitle": "YaRato is the open stage of Uzbekistan's tech ecosystem. Today is day one. Everything you see is being built by the community right now.",
     "counterProducts": "products in the catalog",
     "counterMakers": "makers with us",
     "counterVotes": "votes cast",
@@ -313,7 +352,7 @@
     "counterSignups": "new members today",
     "manifestoTitle": "Community Manifesto",
     "manifesto1": "We believe world-class products are born in Uzbekistan — startups, AI services, Telegram bots and Mini Apps. They need a stage where first users, investors and future teammates can see them.",
-    "manifesto2": "TechRadar.uz is that stage. Founders launch in public here, collect honest feedback and community votes, find teams and partners. Building in public is faster and fairer.",
+    "manifesto2": "YaRato is that stage. Founders launch in public here, collect honest feedback and community votes, find teams and partners. Building in public is faster and fairer.",
     "manifesto3": "The platform is open to everyone: a developer from Tashkent or Nukus, a student with their first bot, a team raising a round. The more of us there are, the stronger the ecosystem.",
     "manifestoCta": "Welcome home, makers. Go launch!",
     "ctaSubmit": "Launch your product",
@@ -328,16 +367,26 @@
     "joined": "with us since {date}"
   },
   "map": {
-    "title": "Ecosystem Map",
+    "title": "Where products are built",
     "backHome": "Home",
     "entityProducts": "Products",
     "entityPeople": "People",
     "viewMap": "Map",
-    "viewList": "List"
+    "viewList": "List",
+    "subtitle": "Products and makers across the cities of Uzbekistan.",
+    "homeTitle": "Where products are built",
+    "openMap": "Open map",
+    "viewLabel": "View",
+    "summary": "{products} products across {cities} cities",
+    "cityCounts": "{products} products · {makers} makers",
+    "noneHere": "None yet",
+    "close": "Close",
+    "emptyTitle": "The map is empty",
+    "emptyHint": "Markers appear once makers set a city on their profile."
   },
   "guide": {
     "badge": "Launch Guide",
-    "title": "How to launch on TechRadar.uz",
+    "title": "How to launch on YaRato",
     "subtitle": "Five steps from submission to the top of the ranking",
     "step1Title": "Prepare your product",
     "step1Text": "A clear name, a precise one-sentence tagline and a square logo of at least 256×256. A good description answers “what problem do you solve and for whom”.",
@@ -368,7 +417,7 @@
     "privacy5Text": "You can edit your profile, unsubscribe from the digest, or delete your account by contacting us. Consent can be withdrawn at any time.",
     "termsTitle": "Terms of Service",
     "terms1Title": "About the service",
-    "terms1Text": "TechRadar.uz is a platform for publishing and discussing Uzbekistan's tech products. By using the site you accept these terms.",
+    "terms1Text": "YaRato is a platform for publishing and discussing Uzbekistan's tech products. By using the site you accept these terms.",
     "terms2Title": "Account",
     "terms2Text": "Sign-in is via Google, Telegram or existing credentials. You are responsible for actions performed under your account.",
     "terms3Title": "Content",
@@ -377,5 +426,15 @@
     "terms4Text": "All products pass moderation. Administration may reject or unpublish content stating a reason, and restrict account access in case of violations.",
     "terms5Title": "Liability",
     "terms5Text": "The platform is provided “as is”. We are not responsible for the operation of third-party products listed in the catalog or the actions of their creators."
+  },
+  "rail": {
+    "categories": "Categories",
+    "cities": "Active cities",
+    "makers": "Active makers"
+  },
+  "community": {
+    "title": "Community",
+    "subtitle": "The makers building products in Uzbekistan.",
+    "empty": "No makers yet."
   }
 }

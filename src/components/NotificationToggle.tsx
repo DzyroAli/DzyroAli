@@ -24,12 +24,12 @@ export function NotificationToggle({
   }
 
   return (
-    <div className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-900">
+    <div className="flex items-center justify-between gap-4">
       <div className="min-w-0">
-        <p className="font-medium text-slate-900 dark:text-slate-100">
+        <p className="text-sm font-medium text-ink">
           {t("commentNotifications")}
         </p>
-        <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mt-0.5 text-sm text-ink-muted">
           {t("commentNotificationsDesc")}
         </p>
       </div>
@@ -42,12 +42,12 @@ export function NotificationToggle({
         onClick={toggle}
         className={cn(
           "relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-60",
-          enabled ? "bg-teal-600" : "bg-slate-300 dark:bg-slate-600"
+          enabled ? "bg-brand" : "bg-line-strong"
         )}
       >
         <span
           className={cn(
-            "absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform",
+            "absolute top-0.5 h-5 w-5 rounded-full bg-surface shadow transition-transform",
             enabled ? "translate-x-5" : "translate-x-0.5"
           )}
         />

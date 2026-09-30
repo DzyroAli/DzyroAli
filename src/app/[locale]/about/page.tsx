@@ -43,14 +43,14 @@ export default async function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
       {/* Баннер запуска */}
-      <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-teal-600 via-cyan-600 to-sky-600 p-8 text-white shadow-xl sm:p-12">
-        <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider backdrop-blur">
-          <PartyPopper size={14} /> {t("badge")}
+      <div className="overflow-hidden rounded-card bg-brand p-6 text-on-brand sm:p-10">
+        <span className="inline-flex items-center gap-2 rounded-full bg-on-brand/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em]">
+          <PartyPopper size={13} aria-hidden /> {t("badge")}
         </span>
-        <h1 className="mt-4 text-3xl font-extrabold leading-tight sm:text-4xl">
+        <h1 className="mt-4 text-[26px] font-semibold leading-tight tracking-tight sm:text-[32px]">
           {t("title")}
         </h1>
-        <p className="mt-3 max-w-xl text-sm leading-relaxed text-teal-50 sm:text-base">
+        <p className="mt-3 max-w-xl text-sm leading-relaxed text-on-brand/85 sm:text-base">
           {t("subtitle")}
         </p>
       </div>
@@ -60,38 +60,38 @@ export default async function AboutPage() {
         {counters.map((c) => (
           <div
             key={c.label}
-            className="rounded-2xl border border-slate-200 bg-white p-4 text-center"
+            className="rounded-card border border-line bg-surface p-4 text-center"
           >
-            <c.icon size={18} className="mx-auto text-teal-600" />
-            <p className="mt-1.5 text-2xl font-extrabold text-slate-900">
+            <c.icon size={18} className="mx-auto text-brand" />
+            <p className="mt-1.5 text-2xl font-semibold text-ink">
               {c.value}
             </p>
-            <p className="text-xs text-slate-500">{c.label}</p>
+            <p className="text-xs text-ink-muted">{c.label}</p>
           </div>
         ))}
       </div>
 
       {/* Манифест */}
-      <div className="prose-slate mt-10 space-y-4 text-[15px] leading-relaxed text-slate-700">
-        <h2 className="text-xl font-bold text-slate-900">
+      <div className="mt-10 space-y-4 text-[15px] leading-relaxed text-ink">
+        <h2 className="text-xl font-semibold text-ink">
           {t("manifestoTitle")}
         </h2>
         <p>{t("manifesto1")}</p>
         <p>{t("manifesto2")}</p>
         <p>{t("manifesto3")}</p>
-        <p className="font-semibold text-slate-900">{t("manifestoCta")}</p>
+        <p className="font-semibold text-ink">{t("manifestoCta")}</p>
       </div>
 
       <div className="mt-8 flex flex-wrap gap-3">
         <Link
           href="/submit"
-          className="rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition-opacity hover:opacity-90"
+          className="rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-on-brand shadow-sm transition-opacity hover:opacity-90"
         >
-          🚀 {t("ctaSubmit")}
+          {t("ctaSubmit")}
         </Link>
         <Link
           href="/products"
-          className="rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50"
+          className="rounded-xl border border-line bg-surface px-5 py-3 text-sm font-semibold text-ink transition-colors hover:border-line-strong hover:bg-surface-muted"
         >
           {t("ctaBrowse")}
         </Link>

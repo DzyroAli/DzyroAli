@@ -62,20 +62,24 @@ export function timeAgo(iso: string, locale: string): string {
   return rtf.format(Math.round(diff), "second");
 }
 
-/** Deterministic gradient for letter avatars, keyed by name. */
-export function gradientFor(seed: string): string {
-  const gradients = [
-    "from-teal-500 to-cyan-500",
-    "from-violet-500 to-purple-500",
-    "from-amber-500 to-orange-500",
-    "from-sky-500 to-blue-600",
-    "from-rose-500 to-pink-500",
-    "from-emerald-500 to-teal-500",
-    "from-indigo-500 to-violet-500",
-  ];
+export function hashOf(seed: string): number {
   let hash = 0;
   for (let i = 0; i < seed.length; i++) {
     hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
   }
-  return gradients[hash % gradients.length];
+  return hash;
+}
+
+/**
+ * Deterministic tint for letter avatars and logo fallbacks. Four steps of the
+ * same blue, so a list of avatars reads as one family instead of a rainbow.
+ */
+export function avatarTone(seed: string): string {
+  const tones = [
+    "bg-brand-soft text-brand-ink",
+    "bg-brand text-on-brand",
+    "bg-surface-muted text-ink",
+    "bg-brand-softer text-brand-ink",
+  ];
+  return tones[hashOf(seed) % tones.length];
 }

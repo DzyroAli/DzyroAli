@@ -18,14 +18,14 @@ export default async function TermsPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-12">
-      <h1 className="text-3xl font-extrabold text-slate-900">
+      <h1 className="text-[26px] font-semibold tracking-tight text-ink sm:text-[30px]">
         {t("termsTitle")}
       </h1>
-      <p className="mt-2 text-sm text-slate-400">{t("updated")}</p>
-      <div className="mt-8 space-y-6 text-[15px] leading-relaxed text-slate-700">
+      <p className="mt-2 text-sm text-ink-muted">{t("updated")}</p>
+      <div className="mt-8 space-y-6 text-[15px] leading-relaxed text-ink">
         {sections.map((n) => (
           <section key={n}>
-            <h2 className="mb-1.5 font-bold text-slate-900">
+            <h2 className="mb-1.5 font-semibold text-ink">
               {n}. {t(`terms${n}Title`)}
             </h2>
             <p>{t(`terms${n}Text`)}</p>

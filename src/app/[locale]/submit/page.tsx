@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
 import { SubmitForm } from "@/components/SubmitForm";
+import { PageBody } from "@/components/shell/AppShell";
+import { buttonClass } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/data";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
@@ -22,25 +25,26 @@ export default async function SubmitPage() {
   const needsLogin = isSupabaseConfigured() && !userId;
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-10">
-      <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
-      <p className="mt-1 text-sm text-slate-500">{t("subtitle")}</p>
+    <PageBody className="mx-auto max-w-2xl px-4 py-6 sm:py-8">
+      <header>
+        <h1 className="text-[26px] font-semibold tracking-tight text-ink sm:text-[30px]">
+          {t("title")}
+        </h1>
+        <p className="mt-1 text-sm text-ink-muted sm:text-[15px]">{t("subtitle")}</p>
+      </header>
 
-      <div className="mt-8">
+      <div className="mt-6">
         {needsLogin ? (
-          <div className="rounded-2xl border border-slate-200 bg-white p-10 text-center">
-            <p className="text-slate-700">{t("loginRequired")}</p>
-            <Link
-              href="/login"
-              className="mt-5 inline-block rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-2.5 text-sm font-bold text-white"
-            >
+          <Card className="p-8 text-center">
+            <p className="text-sm text-ink">{t("loginRequired")}</p>
+            <Link href="/login" className={buttonClass("primary", "md", "mt-5")}>
               {tc("login")}
             </Link>
-          </div>
+          </Card>
         ) : (
           <SubmitForm />
         )}
       </div>
-    </div>
+    </PageBody>
   );
 }

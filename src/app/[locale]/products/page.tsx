@@ -3,7 +3,9 @@ import { getTranslations } from "next-intl/server";
 import { Pagination } from "@/components/Pagination";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductFilters } from "@/components/ProductFilters";
-import { getCategories, getProducts } from "@/lib/data";
+import { PageBody } from "@/components/shell/AppShell";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { getCategories, getProducts, getVotedProductIds } from "@/lib/data";
 
 const PER_PAGE = 20;
 
@@ -44,53 +46,37 @@ export default async function ProductsPage({
     perPage: PER_PAGE,
   });
   const totalPages = Math.ceil(total / PER_PAGE);
-
-  const filterHref = (next: Record<string, string | undefined>) => {
-    const merged = { q, category, sort: rawSort, ...next };
-    const search = new URLSearchParams();
-    for (const [k, v] of Object.entries(merged)) {
-      if (v) search.set(k, v);
-    }
-    const qs = search.toString();
-    return qs ? `/products?${qs}` : "/products";
-  };
+  const voted = await getVotedProductIds(products.map((p) => p.id));
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900">
+    <PageBody>
+      <header>
+        <h1 className="text-[26px] font-semibold tracking-tight text-ink sm:text-[30px]">
           {t("title")}
         </h1>
-        <p className="mt-2 text-slate-600">
+        <p className="mt-1 text-sm text-ink-muted sm:text-[15px]">
           {total > 0 ? `${total} ${t("found")}` : t("subtitle")}
         </p>
-      </div>
+      </header>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-[300px_1fr]">
-        {/* Фильтры */}
-        <aside className="hidden lg:block">
-          <div className="sticky top-20 rounded-xl border border-slate-200 bg-white p-4">
-            <ProductFilters
-              categories={categories}
-              currentCategory={category}
-              currentSort={sort}
-              currentSearch={q}
-              onFilterChange={filterHref}
-            />
-          </div>
-        </aside>
+      <div className="mt-6 grid gap-5 lg:grid-cols-[264px_minmax(0,1fr)]">
+        <div className="lg:sticky lg:top-[89px] lg:self-start lg:rounded-card lg:border lg:border-line lg:bg-surface lg:p-4">
+          <ProductFilters
+            categories={categories}
+            currentCategory={category}
+            currentSort={sort}
+            currentSearch={q}
+          />
+        </div>
 
-        {/* Результаты */}
-        <main>
+        <div className="min-w-0">
           {products.length === 0 ? (
-            <div className="rounded-2xl border-2 border-dashed border-slate-300 p-12 text-center">
-              <p className="text-slate-500">{t("empty")}</p>
-            </div>
+            <EmptyState title={t("empty")} description={t("emptyHint")} />
           ) : (
             <>
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {products.map((p) => (
-                  <ProductCard key={p.id} product={p} />
+                  <ProductCard key={p.id} product={p} voted={voted.has(p.id)} />
                 ))}
               </div>
 
@@ -104,8 +90,8 @@ export default async function ProductsPage({
               </div>
             </>
           )}
-        </main>
+        </div>
       </div>
-    </div>
+    </PageBody>
   );
 }

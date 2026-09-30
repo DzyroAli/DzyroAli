@@ -28,7 +28,7 @@ export function AdminNav() {
 
   return (
     <aside className="shrink-0 lg:w-56">
-      <nav className="flex gap-1 overflow-x-auto rounded-2xl border border-slate-200 bg-white p-2 lg:flex-col lg:overflow-visible">
+      <nav className="flex gap-1 overflow-x-auto rounded-card border border-line bg-surface p-2 lg:flex-col lg:overflow-visible">
         {items.map((item) => {
           const active =
             item.href === "/admin"
@@ -41,11 +41,11 @@ export function AdminNav() {
               className={cn(
                 "flex shrink-0 items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
                 active
-                  ? "bg-teal-50 text-teal-800"
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                  ? "bg-brand-soft text-brand-ink"
+                  : "text-ink-muted hover:bg-surface-muted hover:text-ink"
               )}
             >
-              <item.icon size={16} className={active ? "text-teal-600" : ""} />
+              <item.icon size={16} className={active ? "text-brand" : ""} />
               {item.label}
             </Link>
           );

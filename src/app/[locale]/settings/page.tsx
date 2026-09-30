@@ -1,8 +1,12 @@
-import { Settings } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
+import { CityPicker } from "@/components/CityPicker";
 import { NotificationToggle } from "@/components/NotificationToggle";
+import { PageBody } from "@/components/shell/AppShell";
+import { buttonClass } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Label } from "@/components/ui/Field";
+import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/data";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
@@ -23,41 +27,43 @@ export default async function SettingsPage() {
   const needsLogin = isSupabaseConfigured() && !profile;
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-10">
-      <div className="flex items-center gap-2.5">
-        <Settings size={24} className="text-slate-500" />
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+    <PageBody className="mx-auto max-w-2xl px-4 py-6 sm:py-8">
+      <header>
+        <h1 className="text-[26px] font-semibold tracking-tight text-ink sm:text-[30px]">
           {t("title")}
         </h1>
-      </div>
-      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-        {t("subtitle")}
-      </p>
+        <p className="mt-1 text-sm text-ink-muted sm:text-[15px]">{t("subtitle")}</p>
+      </header>
 
-      <div className="mt-8">
+      <div className="mt-6">
         {needsLogin ? (
-          <div className="rounded-2xl border border-slate-200 bg-white p-10 text-center dark:border-slate-700 dark:bg-slate-900">
-            <p className="text-slate-700 dark:text-slate-200">
-              {t("loginRequired")}
-            </p>
-            <Link
-              href="/login"
-              className="mt-5 inline-block rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-2.5 text-sm font-bold text-white"
-            >
+          <Card className="p-8 text-center">
+            <p className="text-sm text-ink">{t("loginRequired")}</p>
+            <Link href="/login" className={buttonClass("primary", "md", "mt-5")}>
               {tc("login")}
             </Link>
-          </div>
+          </Card>
         ) : (
-          <div className="space-y-4">
-            <h2 className="text-xs font-bold uppercase tracking-wide text-slate-400">
-              {t("notifications")}
-            </h2>
-            <NotificationToggle
-              initialEnabled={profile?.comment_notifications ?? true}
-            />
+          <div className="space-y-5">
+            <Card className="p-5">
+              <h2 className="mb-3 text-[13px] font-semibold uppercase tracking-[0.04em] text-ink-muted">
+                {t("profile")}
+              </h2>
+              <Label htmlFor="city">{t("city")}</Label>
+              <CityPicker initialCity={profile?.city ?? null} />
+            </Card>
+
+            <Card className="p-5">
+              <h2 className="mb-3 text-[13px] font-semibold uppercase tracking-[0.04em] text-ink-muted">
+                {t("notifications")}
+              </h2>
+              <NotificationToggle
+                initialEnabled={profile?.comment_notifications ?? true}
+              />
+            </Card>
           </div>
         )}
       </div>
-    </div>
+    </PageBody>
   );
 }

@@ -1,5 +1,6 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { SUPABASE_URL } from "./config";
+import { SUPABASE_TIMEOUT_MS, timeoutFetch } from "./fetch";
 
 /**
  * Service-role client for trusted server-side operations
@@ -12,5 +13,6 @@ export function createAdminClient() {
   }
   return createSupabaseClient(SUPABASE_URL, serviceKey, {
     auth: { autoRefreshToken: false, persistSession: false },
+    global: { fetch: timeoutFetch(SUPABASE_TIMEOUT_MS.admin) },
   });
 }

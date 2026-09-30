@@ -1,24 +1,50 @@
 "use client";
 
-import { Check, Link2, Send } from "lucide-react";
+import { Check, Link2, Send, TriangleAlert } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
+
+const chip =
+  "inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-1.5 text-[13px] font-medium text-ink-muted transition-colors hover:border-line-strong hover:text-ink";
 
 export function ShareButtons({ url, title }: { url: string; title: string }) {
   const t = useTranslations("product");
-  const [copied, setCopied] = useState(false);
+  const [state, setState] = useState<"idle" | "copied" | "failed">("idle");
+  const copied = state === "copied";
 
   const encodedUrl = encodeURIComponent(url);
   const encodedText = encodeURIComponent(title);
 
+  /** execCommand fallback: the async clipboard API needs a secure context. */
+  function legacyCopy(text: string): boolean {
+    try {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(area);
+      return ok;
+    } catch {
+      return false;
+    }
+  }
+
   async function copyLink() {
+    let ok = false;
     try {
       await navigator.clipboard.writeText(url);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
+      ok = true;
     } catch {
-      // Буфер обмена недоступен (не-HTTPS / отказ в доступе) — тихо игнорируем
+      ok = legacyCopy(url);
     }
+    // Always report the outcome — silently doing nothing reads as a dead button.
+    setState(ok ? "copied" : "failed");
+    window.setTimeout(() => setState("idle"), ok ? 2000 : 4000);
   }
 
   const targets = [
@@ -26,55 +52,62 @@ export function ShareButtons({ url, title }: { url: string; title: string }) {
       key: "telegram",
       label: "Telegram",
       href: `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`,
-      className:
-        "border-sky-200 bg-sky-50 text-sky-700 hover:bg-sky-100 dark:border-sky-900 dark:bg-sky-950 dark:text-sky-300",
     },
     {
       key: "whatsapp",
       label: "WhatsApp",
       href: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
-      className:
-        "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300",
     },
     {
       key: "x",
       label: "X",
       href: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`,
-      className:
-        "border-slate-300 bg-white text-slate-800 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200",
     },
   ];
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
-        {t("share")}:
-      </span>
+      <span className="text-[13px] font-medium text-ink-muted">{t("share")}:</span>
       <button
+        type="button"
         onClick={copyLink}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+        className={cn(
+          chip,
+          copied && "border-positive text-positive",
+          state === "failed" && "border-critical text-critical"
+        )}
       >
-        {copied ? (
+        {copied && (
           <>
-            <Check size={14} className="text-emerald-600" />
+            <Check size={14} aria-hidden />
             {t("copied")}
           </>
-        ) : (
+        )}
+        {state === "failed" && (
           <>
-            <Link2 size={14} />
+            <TriangleAlert size={14} aria-hidden />
+            {t("copyFailed")}
+          </>
+        )}
+        {state === "idle" && (
+          <>
+            <Link2 size={14} aria-hidden />
             {t("copyLink")}
           </>
         )}
       </button>
+      <span role="status" className="sr-only">
+        {copied ? t("copied") : state === "failed" ? t("copyFailed") : ""}
+      </span>
       {targets.map((target) => (
         <a
           key={target.key}
           href={target.href}
           target="_blank"
           rel="noopener noreferrer"
-          className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${target.className}`}
+          className={cn(chip)}
         >
-          <Send size={14} />
+          <Send size={14} aria-hidden />
           {target.label}
         </a>
       ))}

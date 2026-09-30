@@ -1,7 +1,7 @@
 "use client";
 
 import { Eye, EyeOff, Lock, User } from "lucide-react";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import {
@@ -64,7 +64,23 @@ export function AuthPanel({
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [oauthError, setOauthError] = useState(false);
 
+  const [consentError, setConsentError] = useState(false);
+  const consentRef = useRef<HTMLDivElement>(null);
+
   const consented = agreePrivacy && agreeTerms;
+
+  /**
+   * Gate the sign-in actions on consent without disabling the buttons.
+   * A greyed-out primary button with no response to a click reads as broken;
+   * this lets the click land and says what is missing.
+   */
+  function blockedByConsent(event?: { preventDefault: () => void }): boolean {
+    if (consented) return false;
+    event?.preventDefault();
+    setConsentError(true);
+    consentRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    return true;
+  }
   // Google показываем только если провайдер включён в Supabase и задан флаг —
   // иначе клик падал бы с «provider is not enabled».
   const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_ENABLED === "true";
@@ -108,7 +124,7 @@ export function AuthPanel({
   }, [signUpState.ok, signUpState.needsConfirm, onSuccess]);
 
   async function signInGoogle() {
-    if (!consented) return;
+    if (blockedByConsent()) return;
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -120,29 +136,40 @@ export function AuthPanel({
   }
 
   const checkboxCls =
-    "mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 accent-teal-600";
+    "mt-0.5 h-4 w-4 shrink-0 rounded border-line-strong accent-brand";
   const inputCls =
-    "w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-3 text-sm outline-none transition-colors focus:border-teal-500";
+    "w-full rounded-xl border border-line bg-surface py-2.5 pl-9 pr-3 text-sm transition-colors focus:border-brand";
 
   return (
     <div className="space-y-4">
       {/* Согласия — обязательные пункты помечены красной звёздочкой */}
-      <div className="space-y-2 rounded-xl bg-slate-50 p-3.5 text-xs leading-relaxed text-slate-600">
+      <div
+        ref={consentRef}
+        className={cn(
+          "space-y-2 rounded-xl p-3.5 text-xs leading-relaxed text-ink-muted transition-colors",
+          consentError
+            ? "bg-critical-soft ring-1 ring-critical/40"
+            : "bg-surface-muted"
+        )}
+      >
         <label className="flex cursor-pointer items-start gap-2">
           <input
             type="checkbox"
             checked={agreePrivacy}
-            onChange={(e) => setAgreePrivacy(e.target.checked)}
+            onChange={(e) => {
+              setAgreePrivacy(e.target.checked);
+              if (e.target.checked && agreeTerms) setConsentError(false);
+            }}
             className={checkboxCls}
           />
           <span>
-            <span className="font-bold text-rose-500">*</span>{" "}
+            <span className="font-semibold text-critical">*</span>{""}
             {t.rich("consentPrivacy", {
               link: (chunks) => (
                 <Link
                   href="/privacy"
                   target="_blank"
-                  className="font-medium text-teal-700 underline"
+                  className="font-medium text-brand-ink underline"
                 >
                   {chunks}
                 </Link>
@@ -154,17 +181,20 @@ export function AuthPanel({
           <input
             type="checkbox"
             checked={agreeTerms}
-            onChange={(e) => setAgreeTerms(e.target.checked)}
+            onChange={(e) => {
+              setAgreeTerms(e.target.checked);
+              if (e.target.checked && agreePrivacy) setConsentError(false);
+            }}
             className={checkboxCls}
           />
           <span>
-            <span className="font-bold text-rose-500">*</span>{" "}
+            <span className="font-semibold text-critical">*</span>{""}
             {t.rich("consentTerms", {
               link: (chunks) => (
                 <Link
                   href="/terms"
                   target="_blank"
-                  className="font-medium text-teal-700 underline"
+                  className="font-medium text-brand-ink underline"
                 >
                   {chunks}
                 </Link>
@@ -182,7 +212,15 @@ export function AuthPanel({
           <span>{t("consentDigest")}</span>
         </label>
         {!consented && (
-          <p className="pt-0.5 text-[11px] text-slate-400">{t("consentHint")}</p>
+          <p
+            role={consentError ? "alert" : undefined}
+            className={cn(
+              "pt-0.5 text-[11px]",
+              consentError ? "font-medium text-critical" : "text-ink-muted"
+            )}
+          >
+            {t("consentHint")}
+          </p>
         )}
       </div>
 
@@ -194,8 +232,7 @@ export function AuthPanel({
               <button
                 type="button"
                 onClick={signInGoogle}
-                disabled={!consented}
-                className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-line bg-surface px-4 py-2.5 text-sm font-semibold text-ink transition-all hover:border-line-strong hover:bg-surface-muted"
               >
                 <GoogleIcon />
                 {t("googleButton")}
@@ -206,74 +243,76 @@ export function AuthPanel({
               <div className="relative">
                 <TelegramLogin botUsername={telegramBot} />
                 {!consented && (
-                  <div
-                    className="absolute inset-0 z-10 cursor-not-allowed rounded-xl bg-white/60"
-                    title={t("consentHint")}
+                  <button
+                    type="button"
+                    onClick={() => blockedByConsent()}
+                    aria-label={t("consentHint")}
+                    className="absolute inset-0 z-10 rounded-xl bg-surface/60"
                   />
                 )}
               </div>
             )}
             {oauthError && (
-              <p className="text-xs text-rose-600">{t("oauthError")}</p>
+              <p className="text-xs text-critical">{t("oauthError")}</p>
             )}
           </div>
 
-          <div className="flex items-center gap-3 text-xs text-slate-400">
-            <span className="h-px flex-1 bg-slate-200" />
+          <div className="flex items-center gap-3 text-xs text-ink-muted">
+            <span className="h-px flex-1 bg-line" />
             {t("passwordDivider")}
-            <span className="h-px flex-1 bg-slate-200" />
+            <span className="h-px flex-1 bg-line" />
           </div>
         </>
       )}
 
       {resetMode ? (
         resetState.ok ? (
-          <p className="rounded-xl bg-teal-50 px-4 py-3 text-sm font-medium text-teal-700">
+          <p className="rounded-xl bg-brand-soft px-4 py-3 text-sm font-medium text-brand-ink">
             {t("resetSent")}
           </p>
         ) : (
           <form action={resetAction} className="space-y-2.5">
-            <p className="text-xs text-slate-500">{t("resetHint")}</p>
+            <p className="text-xs text-ink-muted">{t("resetHint")}</p>
             <input
               type="email"
               name="email"
               required
               placeholder={t("emailPlaceholder")}
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-teal-500"
+              className="w-full rounded-xl border border-line bg-surface px-3 py-2.5 text-sm focus:border-brand"
             />
             <div className="flex gap-2">
               <button
                 type="submit"
                 disabled={resetPending}
-                className="flex-1 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+                className="flex-1 rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand transition-opacity hover:opacity-90 disabled:opacity-60"
               >
                 {t("resetSubmit")}
               </button>
               <button
                 type="button"
                 onClick={() => setResetMode(false)}
-                className="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                className="rounded-xl border border-line px-4 py-2.5 text-sm font-semibold text-ink-muted hover:bg-surface-muted"
               >
                 {t("resetBack")}
               </button>
             </div>
             {resetState.error && (
-              <p className="text-xs text-rose-600">{t("genericError")}</p>
+              <p className="text-xs text-critical">{t("genericError")}</p>
             )}
           </form>
         )
       ) : (
         <div className="space-y-3">
           {/* Вкладки: вход / регистрация */}
-          <div className="flex rounded-xl bg-slate-100 p-1 text-sm font-semibold">
+          <div className="flex rounded-xl bg-surface-muted p-1 text-sm font-semibold">
             <button
               type="button"
               onClick={() => setAuthMode("login")}
               className={cn(
                 "flex-1 rounded-lg py-1.5 transition-colors",
                 authMode === "login"
-                  ? "bg-white text-slate-900 shadow-sm"
-                  : "text-slate-500 hover:text-slate-700"
+                  ? "bg-surface text-ink shadow-sm"
+                  : "text-ink-muted hover:text-ink"
               )}
             >
               {t("loginTab")}
@@ -284,8 +323,8 @@ export function AuthPanel({
               className={cn(
                 "flex-1 rounded-lg py-1.5 transition-colors",
                 authMode === "register"
-                  ? "bg-white text-slate-900 shadow-sm"
-                  : "text-slate-500 hover:text-slate-700"
+                  ? "bg-surface text-ink shadow-sm"
+                  : "text-ink-muted hover:text-ink"
               )}
             >
               {t("registerTab")}
@@ -297,7 +336,7 @@ export function AuthPanel({
               <div className="relative">
                 <User
                   size={15}
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted"
                 />
                 <input
                   type="text"
@@ -311,7 +350,7 @@ export function AuthPanel({
               <div className="relative">
                 <Lock
                   size={15}
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted"
                 />
                 <input
                   type={showPassword ? "text" : "password"}
@@ -326,7 +365,7 @@ export function AuthPanel({
                   type="button"
                   tabIndex={-1}
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted hover:text-ink-muted"
                   aria-label={showPassword ? t("hidePassword") : t("showPassword")}
                 >
                   {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
@@ -334,32 +373,33 @@ export function AuthPanel({
               </div>
               {digest && <input type="hidden" name="digest" value="on" />}
               <div className="flex items-center justify-between text-xs">
-                <label className="flex cursor-pointer items-center gap-1.5 text-slate-600">
+                <label className="flex cursor-pointer items-center gap-1.5 text-ink-muted">
                   <input
                     type="checkbox"
                     name="remember"
                     defaultChecked
-                    className="h-3.5 w-3.5 rounded accent-teal-600"
+                    className="h-3.5 w-3.5 rounded accent-brand"
                   />
                   {t("rememberMe")}
                 </label>
                 <button
                   type="button"
                   onClick={() => setResetMode(true)}
-                  className="font-medium text-teal-700 hover:underline"
+                  className="font-medium text-brand-ink hover:underline"
                 >
                   {t("forgotPassword")}
                 </button>
               </div>
               <button
                 type="submit"
-                disabled={!consented || loginPending}
-                className="w-full rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+                onClick={blockedByConsent}
+                disabled={loginPending}
+                className="w-full rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loginPending ? t("loggingIn") : t("loginButton")}
               </button>
               {loginState.error && (
-                <p className="text-xs text-rose-600">
+                <p className="text-xs text-critical">
                   {loginState.error === "credentials"
                     ? t("credentialsError")
                     : t("genericError")}
@@ -367,7 +407,7 @@ export function AuthPanel({
               )}
             </form>
           ) : signUpState.ok && signUpState.needsConfirm ? (
-            <p className="rounded-xl bg-teal-50 px-4 py-3 text-sm font-medium text-teal-700">
+            <p className="rounded-xl bg-brand-soft px-4 py-3 text-sm font-medium text-brand-ink">
               {t("registerConfirm")}
             </p>
           ) : (
@@ -375,7 +415,7 @@ export function AuthPanel({
               <div className="relative">
                 <User
                   size={15}
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted"
                 />
                 <input
                   type="text"
@@ -391,12 +431,12 @@ export function AuthPanel({
                 required
                 autoComplete="email"
                 placeholder={t("emailPlaceholder")}
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-teal-500"
+                className="w-full rounded-xl border border-line bg-surface px-3 py-2.5 text-sm focus:border-brand"
               />
               <div className="relative">
                 <Lock
                   size={15}
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted"
                 />
                 <input
                   type={showPassword ? "text" : "password"}
@@ -411,23 +451,24 @@ export function AuthPanel({
                   type="button"
                   tabIndex={-1}
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted hover:text-ink-muted"
                   aria-label={showPassword ? t("hidePassword") : t("showPassword")}
                 >
                   {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
               </div>
-              <p className="text-[11px] text-slate-400">{t("passwordHint")}</p>
+              <p className="text-[11px] text-ink-muted">{t("passwordHint")}</p>
               {digest && <input type="hidden" name="digest" value="on" />}
               <button
                 type="submit"
-                disabled={!consented || signUpPending}
-                className="w-full rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+                onClick={blockedByConsent}
+                disabled={signUpPending}
+                className="w-full rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {signUpPending ? t("registering") : t("registerButton")}
               </button>
               {signUpState.error && (
-                <p className="text-xs text-rose-600">
+                <p className="text-xs text-critical">
                   {signUpState.error === "exists"
                     ? t("emailExists")
                     : signUpState.error === "validation"
@@ -440,10 +481,10 @@ export function AuthPanel({
         </div>
       )}
 
-      <div className="flex items-center gap-3 text-xs text-slate-400">
-        <span className="h-px flex-1 bg-slate-200" />
+      <div className="flex items-center gap-3 text-xs text-ink-muted">
+        <span className="h-px flex-1 bg-line" />
         {t("emailDivider")}
-        <span className="h-px flex-1 bg-slate-200" />
+        <span className="h-px flex-1 bg-line" />
       </div>
       <MagicLinkForm />
     </div>

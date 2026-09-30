@@ -26,12 +26,12 @@ export default async function AdminLayout({
   if (profile?.role !== "admin") {
     return (
       <div className="mx-auto max-w-md px-4 py-24 text-center">
-        <ShieldAlert className="mx-auto mb-4 text-rose-500" size={40} />
-        <p className="font-medium text-slate-700">{t("accessDenied")}</p>
+        <ShieldAlert className="mx-auto mb-4 text-critical" size={40} />
+        <p className="font-medium text-ink">{t("accessDenied")}</p>
         {!userId && (
           <Link
             href="/login"
-            className="mt-5 inline-block rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-2.5 text-sm font-bold text-white"
+            className="mt-5 inline-block rounded-xl bg-brand px-6 py-2.5 text-sm font-semibold text-on-brand"
           >
             {tc("login")}
           </Link>

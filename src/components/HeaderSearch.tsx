@@ -102,7 +102,7 @@ export function HeaderSearch({
       <form action={action} className="relative w-full">
         <Search
           size={16}
-          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-subtle"
         />
         <input
           ref={inputRef}
@@ -113,28 +113,28 @@ export function HeaderSearch({
           onFocus={() => items.length > 0 && setOpen(true)}
           placeholder={placeholder}
           autoComplete="off"
-          className="w-full rounded-xl border border-slate-200 bg-slate-100/70 py-2 pl-9 pr-14 text-sm outline-none transition-colors placeholder:text-slate-400 focus:border-teal-500 focus:bg-white"
+          className="w-full rounded-xl border border-line bg-surface-muted py-2 pl-9 pr-14 text-sm text-ink transition-colors placeholder:text-ink-subtle hover:border-line-strong focus:border-brand focus:bg-surface "
         />
         {hotkey && (
-          <kbd className="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-md border border-slate-200 bg-white px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 lg:block">
+          <kbd className="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-md border border-line bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-ink-subtle lg:block">
             ⌘K
           </kbd>
         )}
       </form>
 
       {open && items.length > 0 && (
-        <div className="anim-fade-in absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-xl">
+        <div className="anim-fade-in absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-line bg-surface py-1 shadow-lg">
           {items.map((item) => (
             <Link
               key={item.slug}
               href={`/products/${item.slug}`}
               onClick={() => setOpen(false)}
-              className="block px-3.5 py-2 transition-colors hover:bg-slate-50"
+              className="block px-3.5 py-2 transition-colors hover:bg-surface-muted"
             >
-              <span className="block truncate text-sm font-semibold text-slate-900">
+              <span className="block truncate text-sm font-medium text-ink">
                 {item.name}
               </span>
-              <span className="block truncate text-xs text-slate-500">
+              <span className="block truncate text-xs text-ink-muted">
                 {item.tagline}
               </span>
             </Link>
@@ -142,7 +142,7 @@ export function HeaderSearch({
           <Link
             href={`/products?q=${encodeURIComponent(query)}`}
             onClick={() => setOpen(false)}
-            className="block border-t border-slate-100 px-3.5 py-2 text-xs font-semibold text-teal-700 hover:bg-slate-50"
+            className="block border-t border-line px-3.5 py-2 text-xs font-semibold text-brand-ink hover:bg-surface-muted"
           >
             {t("searchAll")} «{query}» →
           </Link>

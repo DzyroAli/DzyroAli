@@ -1,14 +1,22 @@
 import Image from "next/image";
-import { cn, gradientFor, initials } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import { CategoryIcon } from "./ui/CategoryIcon";
 
+/**
+ * Product mark: the uploaded logo when present, otherwise the product's
+ * category icon on a soft blue tile — deliberately uniform rather than a
+ * per-product colour, so a feed of cards reads as one list.
+ */
 export function ProductLogo({
   name,
   logoUrl,
+  categorySlug,
   size = 56,
   className,
 }: {
   name: string;
   logoUrl?: string | null;
+  categorySlug?: string;
   size?: number;
   className?: string;
 }) {
@@ -19,21 +27,24 @@ export function ProductLogo({
         alt={`${name} logo`}
         width={size}
         height={size}
-        className={cn("rounded-xl object-cover bg-white", className)}
+        className={cn(
+          "shrink-0 rounded-xl border border-line bg-surface object-cover",
+          className
+        )}
       />
     );
   }
+
   return (
-    <div
-      style={{ width: size, height: size, fontSize: size * 0.36 }}
+    <span
+      style={{ width: size, height: size }}
       className={cn(
-        "flex items-center justify-center rounded-xl bg-gradient-to-br font-bold text-white shrink-0",
-        gradientFor(name),
+        "flex shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand",
         className
       )}
       aria-hidden
     >
-      {initials(name)}
-    </div>
+      <CategoryIcon slug={categorySlug} size={Math.round(size * 0.42)} strokeWidth={1.75} />
+    </span>
   );
 }

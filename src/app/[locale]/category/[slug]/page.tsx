@@ -3,9 +3,11 @@ import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Pagination } from "@/components/Pagination";
 import { ProductCard } from "@/components/ProductCard";
-import { CATEGORY_EMOJI } from "@/lib/categories";
-import { getCategories, getProducts } from "@/lib/data";
+import { PageBody } from "@/components/shell/AppShell";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { getCategories, getProducts, getVotedProductIds } from "@/lib/data";
 import { categoryName } from "@/lib/types";
+import { CategoryIcon } from "@/components/ui/CategoryIcon";
 
 const PER_PAGE = 20;
 
@@ -44,37 +46,47 @@ export default async function CategoryPage({
     page,
     perPage: PER_PAGE,
   });
+  const voted = await getVotedProductIds(products.map((p) => p.id));
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-10">
-      <h1 className="flex items-center gap-3 text-2xl font-bold text-slate-900">
-        <span aria-hidden className="text-3xl">
-          {CATEGORY_EMOJI[slug]}
+    <PageBody>
+      <header className="flex items-start gap-3">
+        <span
+          aria-hidden
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand"
+        >
+          <CategoryIcon slug={slug} size={20} strokeWidth={1.75} />
         </span>
-        {categoryName(category, locale)}
-      </h1>
-      <p className="mt-1 text-sm text-slate-500">
-        {total} {t("found")}
-      </p>
+        <div className="min-w-0">
+          <h1 className="text-[22px] font-semibold tracking-tight text-ink sm:text-[26px]">
+            {categoryName(category, locale)}
+          </h1>
+          <p className="mt-0.5 text-sm text-ink-muted">
+            {total} {t("found")}
+          </p>
+        </div>
+      </header>
 
       {products.length === 0 ? (
-        <p className="mt-10 rounded-2xl border border-dashed border-slate-300 p-10 text-center text-slate-500">
-          {t("empty")}
-        </p>
+        <div className="mt-6">
+          <EmptyState title={t("empty")} description={t("emptyHint")} />
+        </div>
       ) : (
-        <div className="mt-6 space-y-3">
-          {products.map((p, i) => (
-            <ProductCard key={p.id} product={p} rank={(page - 1) * PER_PAGE + i + 1} />
+        <div className="mt-6 space-y-2.5">
+          {products.map((p) => (
+            <ProductCard key={p.id} product={p} voted={voted.has(p.id)} />
           ))}
         </div>
       )}
 
-      <Pagination
-        page={page}
-        totalPages={Math.ceil(total / PER_PAGE)}
-        basePath={`/category/${slug}`}
-        params={{}}
-      />
-    </div>
+      <div className="mt-8">
+        <Pagination
+          page={page}
+          totalPages={Math.ceil(total / PER_PAGE)}
+          basePath={`/category/${slug}`}
+          params={{}}
+        />
+      </div>
+    </PageBody>
   );
 }

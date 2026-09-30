@@ -19,11 +19,11 @@ export default async function AdminImportPage() {
   return (
     <div>
       <div className="flex items-center gap-2">
-        <Upload size={22} className="text-teal-600" />
-        <h1 className="text-2xl font-bold text-slate-900">{t("importTitle")}</h1>
+        <Upload size={22} className="text-brand" />
+        <h1 className="text-2xl font-semibold text-ink">{t("importTitle")}</h1>
       </div>
-      <p className="mt-1 text-sm text-slate-500">{t("importSubtitle")}</p>
-      <p className="mt-4 rounded-2xl bg-slate-100 px-4 py-3 text-xs leading-relaxed text-slate-500">
+      <p className="mt-1 text-sm text-ink-muted">{t("importSubtitle")}</p>
+      <p className="mt-4 rounded-card bg-surface-muted px-4 py-3 text-xs leading-relaxed text-ink-muted">
         {t("importHint")}
       </p>
 
