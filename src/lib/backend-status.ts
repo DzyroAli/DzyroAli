@@ -1,10 +1,11 @@
 import { cache } from "react";
+import { backendLooksDown } from "./supabase/fetch";
 import { isSupabaseConfigured } from "./supabase/config";
 import { createClient } from "./supabase/server";
 
 export type BackendStatus = "demo" | "ok" | "unreachable";
 
-/** A paused Supabase project doesn't refuse connections, it hangs. */
+/** Backstop in case the client's own deadline doesn't fire. */
 const HEALTH_TIMEOUT_MS = 3000;
 
 /**
@@ -18,6 +19,8 @@ const HEALTH_TIMEOUT_MS = 3000;
  */
 export const getBackendStatus = cache(async (): Promise<BackendStatus> => {
   if (!isSupabaseConfigured()) return "demo";
+  // A recent failure already told us; don't spend a round trip re-learning it.
+  if (backendLooksDown()) return "unreachable";
 
   try {
     const supabase = await createClient();

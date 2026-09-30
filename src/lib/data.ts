@@ -1,7 +1,7 @@
 import { CATEGORIES, findCategory, findCategoryById } from "./categories";
 import { DEMO_COMMENTS, DEMO_MAKERS, DEMO_PRODUCTS } from "./demo-data";
 import { isSupabaseConfigured } from "./supabase/config";
-import { createClient } from "./supabase/server";
+import { createClient, getUserOrNull } from "./supabase/server";
 import type {
   AdminStats,
   Category,
@@ -38,9 +38,7 @@ export async function getCurrentUser(): Promise<{
 }> {
   if (!isSupabaseConfigured()) return { userId: null, profile: null };
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUserOrNull(supabase);
   if (!user) return { userId: null, profile: null };
   const { data: profile } = await supabase
     .from("profiles")
@@ -227,9 +225,7 @@ export async function getComments(productId: string): Promise<Comment[]> {
 export async function hasVoted(productId: string): Promise<boolean> {
   if (!isSupabaseConfigured()) return false;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUserOrNull(supabase);
   if (!user) return false;
   const { data } = await supabase
     .from("votes")
@@ -249,9 +245,7 @@ export async function getVotedProductIds(
 ): Promise<Set<string>> {
   if (!isSupabaseConfigured() || productIds.length === 0) return new Set();
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUserOrNull(supabase);
   if (!user) return new Set();
   const { data } = await supabase
     .from("votes")
@@ -264,9 +258,7 @@ export async function getVotedProductIds(
 export async function isBookmarked(productId: string): Promise<boolean> {
   if (!isSupabaseConfigured()) return false;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUserOrNull(supabase);
   if (!user) return false;
   const { data } = await supabase
     .from("bookmarks")
@@ -281,9 +273,7 @@ export async function isBookmarked(productId: string): Promise<boolean> {
 export async function getBookmarkedProducts(): Promise<Product[]> {
   if (!isSupabaseConfigured()) return [];
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUserOrNull(supabase);
   if (!user) return [];
 
   const { data: rows } = await supabase
@@ -315,9 +305,7 @@ export async function getBookmarkedProducts(): Promise<Product[]> {
 export async function getUserRating(productId: string): Promise<number | null> {
   if (!isSupabaseConfigured()) return null;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUserOrNull(supabase);
   if (!user) return null;
   const { data } = await supabase
     .from("ratings")

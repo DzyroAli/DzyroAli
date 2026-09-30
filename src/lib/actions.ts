@@ -12,7 +12,7 @@ import {
   SUPABASE_ANON_KEY,
   SUPABASE_URL,
 } from "./supabase/config";
-import { createClient } from "./supabase/server";
+import { createClient, getUserOrNull } from "./supabase/server";
 import { slugify } from "./utils";
 
 /** Origin текущего запроса: работает на vercel.app, кастомном домене и localhost. */
@@ -40,9 +40,7 @@ export interface ActionResult {
 
 async function requireUser() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUserOrNull(supabase);
   return { supabase, user };
 }
 
